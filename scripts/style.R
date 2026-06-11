@@ -11,6 +11,11 @@ systemfonts::register_variant(
   weight = "medium",
 )
 
+font_theme <- theme(
+  text = element_text(family = "Avenir"),
+)
+
+
 plot_theme <- theme_minimal() +
         theme(axis.ticks = element_blank(),
               axis.text.x = element_blank(),
@@ -18,5 +23,7 @@ plot_theme <- theme_minimal() +
               panel.background = element_rect(),
               panel.grid.major = element_line(size = 0),
               panel.grid.minor = element_line(size = 0),
-              plot.margin=unit(c(0,0,0,0),"mm"),
-              text = element_text(family = "Avenir", color = "black"))
+              plot.margin=unit(c(0,0,0,0),"mm")) + 
+              font_theme
+
+darkgrey <- "#1d1d1d"

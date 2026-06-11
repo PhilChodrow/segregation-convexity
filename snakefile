@@ -1,12 +1,39 @@
 rule all: 
     input:
-        "fig/checkerboards.png",
+        "fig/checkerboard.png",
         "main.tex"
+    output: 
+        "main.pdf"
     shell: 
         "latexmk -pdf main.tex"
 
-rule basic_checkerboards:        
+
+rule checkerboard_viz: 
+    input: 
+        "throughput/checkerboard/shapefile", 
+        "throughput/checkerboard/demographics.csv"
+    output: 
+        "fig/checkerboard.png"
+    shell: 
+        "Rscript scripts/viz-checkerboards.R"
+
+
+rule checkerboard_data:        
     output:
-        "fig/checkerboards.png"
+        directory("throughput/checkerboard/shapefile"), 
+        "throughput/checkerboard/demographics.csv"
     shell:
-        "Rscript scripts/checkerboards.R"
+        "Rscript scripts/make-checkerboard-data.R"
+
+rule setup: 
+    output:
+        directory("throughput"), 
+        directory("fig")
+    shell:
+        "Rscript scripts/setup.R"
+
+rule clean: 
+    shell: 
+        """
+        rm -rf throughput/* fig/* main.pdf main.log main.aux main.out main.fls main.fdb_latexmk
+        """
