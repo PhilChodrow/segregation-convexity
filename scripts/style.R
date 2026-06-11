@@ -1,18 +1,15 @@
 library(systemfonts)
 
+# system_fonts() |>
+#   filter(grepl("Avenir", family)) |>
+#   select(name, family, style, weight, width) |>
+#   print(n = Inf)
+
 systemfonts::register_variant(
-  name = "Avenir-Light",
+  name = "Avenir-Medium",
   family = "Avenir",
-  weight = "Regular",
+  weight = "medium",
 )
-
-system_fonts() |>
-    filter(str_detect(family, "Avenir")) |>
-    View()
-
-
-
-
 
 plot_theme <- theme_minimal() +
         theme(axis.ticks = element_blank(),
@@ -22,4 +19,4 @@ plot_theme <- theme_minimal() +
               panel.grid.major = element_line(size = 0),
               panel.grid.minor = element_line(size = 0),
               plot.margin=unit(c(0,0,0,0),"mm"),
-              text = element_text(family = "Avenir Next Medium", color = "black"))
+              text = element_text(family = "Avenir", color = "black"))

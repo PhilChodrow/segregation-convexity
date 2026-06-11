@@ -21,7 +21,7 @@ r <- df %>%
 	gather(key = model, value = p, -x, -y) %>%
 	ggplot(aes(x = x, y = y)) +
 	plot_theme + 
-	geom_tile(aes(fill = p)) +
+	geom_tile(aes(fill = p), color = 'black') +
 	scale_fill_continuous(
 		low = 'white', 
 		high = '#1d1d1d', 
@@ -39,8 +39,7 @@ r <- df %>%
 		  strip.text = element_text(size = 16), 
 		  legend.position = 'bottom', 
 		  panel.spacing.x = unit(1.2, 'lines'), 
-		  plot.margin=grid::unit(c(0,0,0,0), "mm"), 
-		  text = element_text(family = "Avenir", color = "black")) + 
+		  plot.margin=grid::unit(c(0,0,0,0), "mm")) + 
 	guides(fill = guide_colorbar(title.position = 'top', title.hjust = 0.5, nrow = 1)) + 
 	labs(fill = 'Density of Group A') 
 
@@ -54,10 +53,3 @@ if (!dir.exists("fig")) {
 
 ggsave("fig/checkerboards.png", r, width = 5, height = 6, dpi = 300,   bg = "#FFFFFF"
 )
-
-system2(command = "pdfcrop", 
-        args    = c("fig/checkerboards.pdf", 
-                    "fig/checkerboards.pdf") 
-        )
-
-

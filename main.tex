@@ -3,6 +3,7 @@
 \usepackage{graphicx}
 \usepackage{hyperref}
 \usepackage{cleveref}
+\usepackage{libertinus}
 
 
 \title{
@@ -22,8 +23,51 @@
 
 \maketitle
 
-\section*{}
+
+\subsection*{Outline}
+
+Broad motivation for the article
+
+\begin{itemize}
+  \item Folks in the math community are turning to quantitative measures of segregation \cite{duchin2023measuring,topaz2025diversity,hoogstraQuantitativeMetricsTrait2025}. 
+  \item There's actually a pretty interesting and rich literature in quantitative sociology on this set of topics \cite{reardonMeasuresIncomeSegregation,reardonMeasuresMultigroupSegregation2002}, going back all the way at least to \cite{simpsonMeasurementDiversity1949}.  
+  \item MAUP is a thing \cite{openshaw1984modifiable}, and we'd like measures that behave in predictable ways as we change analytical scale. 
+  \item If you start engaging with these ideas systematically and mathematically, then you come naturally to convexity and Bregman divergences, which are what I am here to sell you today. 
+\end{itemize}
+
+Desirable properties of segregation measures.
+
+blah blah blah 
+
+More blah, more blah 
+
+
+das
+
+\Cref{fig:checkerboard} is a simple checkerboard pattern.
+
+
+
+
+
+\begin{itemize}
+  \item What properties to have? Pielou criteria \cite{pielouMathematicalEcology1977}, various axioms from \cite{reardonMeasuresMultigroupSegregation2002}, etc. 
+\end{itemize}
+
+
+
 This document can serve as a template for your article. Here are a few things to keep in mind.  Articles should be understandable by 2nd year math grad students, and should be in the style of a good colloquium talk where the first $\frac{3}{4}$ is non-technical, and the last $\frac{1}{4}$  may be technical (but certainly does not have to be).Your article cannot have an abstract or an author bio.  All figures need to have captions.  You must adhere to the maximum length and number of references given in the SubmissionGuidlines file.
+
+
+
+
+\cite{chodrowEquivalenceInformationsCharacterizes2025b}
+\cite{chodrowStructureInformationSpatial2017}
+
+\cite{banerjeeClusteringBregmanDivergences2005}
+
+
+
 
 \subsection*{headshots, images and permissions}
 The AMS requires documentation that the owner/copyright holder of each
@@ -44,8 +88,10 @@ a layout which may be different than the original work.
 \begin{figure}
   \centering
   \includegraphics[width=0.5\textwidth]{fig/checkerboards.png}
-  \caption{A simple checkerboard pattern.}
+  \caption{A simple checkerboard pattern.} \label{fig:checkerboard}
 \end{figure}
+
+
 
 \subsection*{references: use MR numbers!}
 There is an absolute maximum of 20 references for any article.  The AMS uses MR style for references. If you are using a BibTeX style
