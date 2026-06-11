@@ -1,0 +1,93 @@
+\documentclass{style/notices}
+\usepackage{amsfonts,amssymb,amsmath,amscd}
+
+
+\title{
+    Measuring Segregation Using Convex Functions
+}
+
+
+\author{
+  Philip S. Chodrow
+  \affil{
+    Phil is an assistant professor of computer science at Middlebury College. His email address is \tt{pchodrow@middlebury.edu}.
+    }
+}
+
+\begin{document}
+
+
+\maketitle
+
+\section*{}
+This document can serve as a template for your article. Here are a few things to keep in mind.  Articles should be understandable by 2nd year math grad students, and should be in the style of a good colloquium talk where the first $\frac{3}{4}$ is non-technical, and the last $\frac{1}{4}$  may be technical (but certainly does not have to be).Your article cannot have an abstract or an author bio.  All figures need to have captions.  You must adhere to the maximum length and number of references given in the SubmissionGuidlines file.
+
+\subsection*{headshots, images and permissions}
+The AMS requires documentation that the owner/copyright holder of each
+image gives Notices and the AMS permission to use it.
+
+It is the
+responsibility of authors to secure this permission. For each image, please
+provide (1) a credit line and (2) forwarded correspondence from the
+owner/copyright holder indicating that Notices is granted reprint
+permission. (See the Permissions Tips document.)
+
+\subsection*{what you see $\not=$ what you get} Although you may write your
+original contribution in LaTex or Microsoft Word, the production staff
+converts both of these into a different system entirely. In addition, other
+articles in the issue, sidebars, photographs, etc, will also contribute to
+a layout which may be different than the original work.
+
+\subsection*{references: use MR numbers!}
+There is an absolute maximum of 20 references for any article.  The AMS uses MR style for references. If you are using a BibTeX style
+bibliography file (.bib), these will be formatted automatically by this
+document. Otherwise, follow the guides below. \textbf{Please also be sure
+to include MR numbers, if they exist, for all references listed.}
+If you are cutting and pasting your references from MathSciNet, these are
+included automatically. Otherwise, please add the MR number as in this one
+(from a nice article on Galois theory for quasi-fields \cite{MR0001219}):
+
+\begin{verbatim}
+@article {MR0001219,
+AUTHOR = {Jacobson, N.},
+TITLE = {The fundamental theorem
+  of the {G}alois theory for quasi-fields},
+JOURNAL = {Ann. of Math. (2)},
+FJOURNAL = {Annals of Mathematics.
+  Second Series},
+VOLUME = {41},
+YEAR = {1940},
+PAGES = {1--7},
+ISSN = {0003-486X},
+MRCLASS = {09.1X},
+MRNUMBER = {0001219},
+MRREVIEWER = {R. Brauer},
+DOI = {10.2307/1968817},
+URL = {http://doi-org/10.2307/1968817},
+}
+\end{verbatim}
+
+\subsection*{I can't find an MR number?!}
+
+If you don't have an MR number, the DOI and URL fields are also very useful for
+the Notices staff. The URL field can contain any link which will take the
+user to the paper. For the above paper, for example, we could have used:
+\begin{verbatim}
+URL = {http://www.jstor.org/stable/1968817}
+\end{verbatim}
+
+\subsection*{References won't compile}
+
+If you don't see a reference at the bottom of this document when you compile, 
+then include the extension .bib in the parameter for the \verb!\bibliography!
+command.
+
+%\bibliographystyle{foo}
+\bibliography{refs}
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
