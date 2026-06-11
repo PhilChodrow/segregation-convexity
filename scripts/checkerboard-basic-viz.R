@@ -25,24 +25,9 @@ geo <- geo |>
 r <- ggplot(geo) + 
     geom_sf(aes(fill = n_1), color = 'black', size = 0.02) + 
     facet_wrap(~type, nrow = 2) + 
-    scale_fill_continuous(
-        low = 'white', 
-        high = darkgrey, 
-        limits=c(0,1), 
-        breaks = c(0, .5, 1),
-        labels = scales::percent) +
-    scale_x_continuous(expand = c(0,0)) +
-    scale_y_continuous(expand = c(0,0)) +
-    # theme_void() + 
-    coord_sf() +
-    theme(legend.position = 'bottom', 
-          panel.spacing = unit(1.2, 'lines'), 
-        #   plot.margin=grid::unit(c(0,0,0,0), "mm"), 
-          panel.border = element_rect(color = "black", fill = NA, linewidth = 0.5), 
-          strip.text =  element_text(vjust = 1.5, size = 15), 
-          strip.background = element_blank(), 
-          axis.text = element_blank(), 
-          axis.ticks = element_blank()) +
+    checkerboard_config +
+    checkerboard_theme +
+    font_theme +
     guides(fill = guide_colorbar(title.position = 'top', title.hjust = 0.5)) + 
     labs(fill = 'Density of Group A') + 
     font_theme

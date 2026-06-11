@@ -1,13 +1,14 @@
 \documentclass{style/notices}
-\usepackage{amsfonts,amssymb,amsmath,amscd}
+\usepackage{amsfonts,amssymb,amsmath,amscd,amsthm}
 \usepackage{graphicx}
 \usepackage{hyperref}
 \usepackage{cleveref}
 \usepackage{libertinus}
 
 
+
 \title{
-    Measuring Segregation Using Convex Functions
+    Measuring Diversity and Segregation with Convex Functions
 }
 
 
@@ -18,29 +19,93 @@
     }
 }
 
+
+\input{macros.tex}
+\input{params/checkerboard_params.tex}
+\input{params/local-info-illustration.tex}
+
 \begin{document}
 
 
 \maketitle
 
+% motivation around here
 
-\section*{Outline}
+
+The study of quantitative measures for residential segregation extends far enough back that a review article in 1955 could express frustration and disappointment with the chaotic state of the methodology. 
+Commenting then on the measures extant at the time, Duncan and Duncan \cite{duncanMethodologicalAnalysisSegregation1955} wrote: 
+\begin{enumerate}
+  \item \emph{The proposed indexes of segregation have a number of hitherto unnoticed interrelationships which can be mathematically demonstrated.} 
+  \item \emph{Some of them have mathematical properties of which their proponents were unaware, and which lead to difficulties of interpretation.} 
+  \item \emph{As a consequence, the status of the empirical work already done with segregation indices is questionable, and their validity for further research is undermined.} 
+\end{enumerate}
+Over 70 years later, hints of this chaos remain. 
+This author is aware of two instances in the last ten years of a segregation measure being published as novel despite already existing in the literature under a different name. 
+
+This article is not a systematic review of the literature, but rather a guided tour through one particular perspective on the problem of measuring segregation. 
+This perspective begins with a general class of measures of diversity and segregation which 
+
+
+\subsection{}
+
 
 Broad motivation for the article
 
 \begin{itemize}
-  \item Folks in the math community are turning to quantitative measures of segregation \cite{duchin2023measuring,topaz2025diversity,hoogstraQuantitativeMetricsTrait2025}. 
+  \item Folks in the math community are turning to quantitative measures of segregation \cites{duchin2023measuring,topaz2025diversity,hoogstraQuantitativeMetricsTrait2025}. 
   \item There's actually a pretty interesting and rich literature in quantitative sociology on this set of topics \cite{reardonMeasuresIncomeSegregation,reardonMeasuresMultigroupSegregation2002}, going back all the way at least to \cite{simpsonMeasurementDiversity1949}.  
   \item MAUP is a thing \cite{openshaw1984modifiable}, and we'd like measures that behave in predictable ways as we change analytical scale. 
   \item If you start engaging with these ideas systematically and mathematically, then you come naturally to convexity and Bregman divergences, which are what I am here to sell you today. 
 \end{itemize}
 
-\Cref{fig:checkerboard} is a simple checkerboard pattern. What if we actually oriented the entire piece around the checkerboard: 
+\Cref{fig:checkerboard} is a simple checkerboard pattern. What if we actually oriented the entire piece around the checkerboard\footnote{
+  The problem of constructing segregation measures that distinguish between panels (c) and (d) in \Cref{fig:checkerboard} is often called the ``checkerboard problem.''
+  }: 
 
 \section*{Preliminaries}
+
+
+  To make these ideas concrete, we formalize the idea of a \emph{population} and measurements which reflect the diversity or segregation of that population.  
+  Our framework for defining populations is intentionally discrete, in recognition of the fact that all Census-type data sets provide demographic information in discrete areal units such as counties, tracts, or blockgroups. 
+
+  \begin{dfn} \label{def:simplex}
+      For $\ell \in \N,$ the \emph{probability simplex} $\simplex{\ell}$ is the set 
+      \begin{align}
+          \simplex{\ell} = \braces{\vy \in \R^{\ell} : \sum_{j = 1}^{\ell} y_j = 1, y_j \geq 0 \text{ for all } j \in [\ell]}\;.
+      \end{align}
+      of probability vectors on $\ell$ elements.\footnote{
+        Although it is sometimes common to refer to $\simplex{\ell}$ as an $(\ell-1)$-simplex (this being its manifold dimension), we write $\simplex{\ell}$ to emphasize its role as the set of probability distributions over $\ell$ categories.
+        } 
+  \end{dfn}
+
+  \begin{dfn} \label{def:population}
+      A \emph{population} $\cP$ with $n$ locations in $d$ spatial dimensions and $\ell$ demographic categories is a triple $\cP = \paren{\cX, \mY, \mu}$, where: 
+      \begin{itemize}
+          \item $\cX$ is a finite metric space with $n$ elements labeled $x_i$, $i = 1, \ldots, n$. 
+          \item $\mY \in \R^{n \times \ell}$ is a row-stochastic matrix: for each row $i$, $\vy_i \in \simplex{\ell}$.
+          \item $\mu \in \simplex{n}$.   
+      \end{itemize}
+      We denote the set of all populations with $n$ locations, $d$ dimensions, and $\ell$ demographic categories as $\Pops_{nd\ell}$. 
+  \end{dfn}
+  In this definition, the matrix $\cX$ represents space: element $x_i$ of $\cX$ can be viewed as giving the location of a population unit $i$.
+  The matrix $\mY$ represents the demographic distribution of the population according to some attribute such as gender, race, or education level: the $i$th row $\vy_i$ of $\mY$ gives the proportion of individuals in each demographic category at location $i$.
+  Finally, the probability vector $\mu$ represents the population density across locations; the proportion of individuals living in location $i$ is $\mu_i$. 
+  The probability that a single individual, chosen uniformly at random from the population, lives in location $i$ and is in demographic category $j$ is $\mu_i y_{ij}$. 
+  The mean population vector $\bar{\vy} = \sum_{i = 1}^n \mu_i y_i$ has entries giving the marginal probabilities that an individual chosen uniformly at random belongs to each demographic category. 
+
+  \begin{dfn} \label{def:population-measurement}
+    A \emph{population measurement} is a function $f: \Pops_{nd\ell} \rightarrow \R$.\footnote{The function $\eta$ could reasonably described as a \emph{population measure}, which is an entirely disjoint concept from a population measurement. We will avoid the phrase ``population measure'' and emphasize ``measurement'' whenever possible.} 
+  \end{dfn}
+
+  An example of a population measurement is $f(\cP) = \sum_{i = 1}^n \mu_i^2$, which measures the degree to which the population is concentrated in space.  
+  For fixed $n$, the measure $f$ is maximized (with value $f(\cP) = 1$) when the entire population resides in a single location $x_i$ and minimized (with value $f(\cP) = \frac{1}{n}$) when the population is uniformly distributed across all locations.
+
+
 \section*{Diversity}
 \section*{Segregation}
 \section*{Spatial Scale}
+
+\section*{Extensions}
 
 
 \section*{Figures we want}
@@ -71,73 +136,24 @@ This document can serve as a template for your article. Here are a few things to
 
 
 
-\subsection*{headshots, images and permissions}
-The AMS requires documentation that the owner/copyright holder of each
-image gives Notices and the AMS permission to use it.
-
-It is the
-responsibility of authors to secure this permission. For each image, please
-provide (1) a credit line and (2) forwarded correspondence from the
-owner/copyright holder indicating that Notices is granted reprint
-permission. (See the Permissions Tips document.)
-
-\subsection*{what you see $\not=$ what you get} Although you may write your
-original contribution in LaTex or Microsoft Word, the production staff
-converts both of these into a different system entirely. In addition, other
-articles in the issue, sidebars, photographs, etc, will also contribute to
-a layout which may be different than the original work.
+\begin{figure}
+  \centering
+  \includegraphics[width=0.5\textwidth]{fig/checkerboard.png}
+  \caption{
+    A simple checkerboard pattern. 
+    Each of the four panels is composed of \totalCellsPerSide{} cells. 
+    Panel (c) is further arranged into \numBlocks{} blocks of \cellsPerBlock{} cells each.
+    } \label{fig:checkerboard}
+\end{figure}
 
 \begin{figure}
   \centering
-  \includegraphics[width=0.5\textwidth]{fig/checkerboards.png}
-  \caption{A simple checkerboard pattern.} \label{fig:checkerboard}
+  \includegraphics[width=0.5\textwidth]{fig/checkerboard-smoothed.png}
+  \caption{
+    The smoothing bandwidth is $\smoothingBandwidth{}$ pixels. 
+    } \label{fig:checkerboard-smoothed}
 \end{figure}
 
-
-
-\subsection*{references: use MR numbers!}
-There is an absolute maximum of 20 references for any article.  The AMS uses MR style for references. If you are using a BibTeX style
-bibliography file (.bib), these will be formatted automatically by this
-document. Otherwise, follow the guides below. \textbf{Please also be sure
-to include MR numbers, if they exist, for all references listed.}
-If you are cutting and pasting your references from MathSciNet, these are
-included automatically. Otherwise, please add the MR number as in this one
-(from a nice article on Galois theory for quasi-fields \cite{MR0001219}):
-
-\begin{verbatim}
-@article {MR0001219,
-AUTHOR = {Jacobson, N.},
-TITLE = {The fundamental theorem
-  of the {G}alois theory for quasi-fields},
-JOURNAL = {Ann. of Math. (2)},
-FJOURNAL = {Annals of Mathematics.
-  Second Series},
-VOLUME = {41},
-YEAR = {1940},
-PAGES = {1--7},
-ISSN = {0003-486X},
-MRCLASS = {09.1X},
-MRNUMBER = {0001219},
-MRREVIEWER = {R. Brauer},
-DOI = {10.2307/1968817},
-URL = {http://doi-org/10.2307/1968817},
-}
-\end{verbatim}
-
-\subsection*{I can't find an MR number?!}
-
-If you don't have an MR number, the DOI and URL fields are also very useful for
-the Notices staff. The URL field can contain any link which will take the
-user to the paper. For the above paper, for example, we could have used:
-\begin{verbatim}
-URL = {http://www.jstor.org/stable/1968817}
-\end{verbatim}
-
-\subsection*{References won't compile}
-
-If you don't see a reference at the bottom of this document when you compile, 
-then include the extension .bib in the parameter for the \verb!\bibliography!
-command.
 
 %\bibliographystyle{foo}
 \bibliography{refs}

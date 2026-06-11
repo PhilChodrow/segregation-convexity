@@ -16,6 +16,16 @@ num_blocks <- 8
 cells_per_block <- 8
 total_cells_per_side <- num_blocks * cells_per_block
 
+# write each of these to the file params.tex
+
+tex_macros <- paste0("\\newcommand{\\numBlocks}{", num_blocks, "}\n",
+                    "\\newcommand{\\cellsPerBlock}{", cells_per_block, "}\n",
+                    "\\newcommand{\\totalCellsPerSide}{", total_cells_per_side, "}\n")
+
+
+cat(tex_macros, file = "params/checkerboard_params.tex")
+
+
 # shapefile
 
 poly_sfc <- st_sfc(st_polygon(list(rbind(c(0,0), c(total_cells_per_side,0), c(total_cells_per_side,total_cells_per_side), c(0,total_cells_per_side), c(0,0)))))

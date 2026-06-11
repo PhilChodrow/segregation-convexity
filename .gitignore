@@ -12,3 +12,4 @@
 *.blg
 *.DS_Store
 .snakemake
+throughput

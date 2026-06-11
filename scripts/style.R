@@ -15,6 +15,35 @@ font_theme <- theme(
   text = element_text(family = "Avenir"),
 )
 
+darkgrey <- "#1d1d1d"
+
+
+
+checkerboard_config <- list(
+                        scale_fill_continuous(
+                              low = 'white', 
+                              high = darkgrey, 
+                              breaks = c(0, .5, 1),
+                              labels = scales::percent),
+                        scale_x_continuous(expand = c(0,0)),
+                        scale_y_continuous(expand = c(0,0)),
+                        coord_sf()
+)
+           
+checkerboard_theme <- theme(
+                        legend.position = 'bottom', 
+                        panel.spacing = unit(1.2, 'lines'), 
+                        panel.border = element_rect(color = "black", fill = NA, linewidth = 0.5), 
+                        strip.text =  element_text(vjust = 1.5, size = 15), 
+                        strip.background = element_blank(), 
+                        axis.text = element_blank(), 
+                        axis.ticks = element_blank()
+                        )
+
+
+
+
+
 
 plot_theme <- theme_minimal() +
         theme(axis.ticks = element_blank(),
@@ -26,4 +55,3 @@ plot_theme <- theme_minimal() +
               plot.margin=unit(c(0,0,0,0),"mm")) + 
               font_theme
 
-darkgrey <- "#1d1d1d"
