@@ -24,7 +24,8 @@ checkerboard_config <- list(
                               low = 'white', 
                               high = darkgrey, 
                               breaks = c(0, .5, 1),
-                              labels = scales::percent),
+                              labels = scales::percent, 
+                              limits = c(0, 1)),
                         scale_x_continuous(expand = c(0,0)),
                         scale_y_continuous(expand = c(0,0)),
                         coord_sf()

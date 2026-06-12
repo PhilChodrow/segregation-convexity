@@ -1,6 +1,7 @@
 library(tidyverse)
 library(sf)
 library(patchwork)
+library(ggmagnify)
 source("src/local-info.R")
 source("scripts/style.R")
 
@@ -25,7 +26,7 @@ demographics <- demographics |>
 
 all_geos <- list()
 
-smoothing_bandwidth <- 1
+smoothing_bandwidth <- 0.5
 
 
 # let's redo the RBF smoother so that it gives us the same kind of thing: a data frame with a GEOID and columns for each group. 
@@ -93,6 +94,38 @@ p <- geo_with_info |>
     guides(fill = guide_colorbar(title.position = 'top', title.hjust = 0.5, title = "Mean Local Information")) 
     
 ggsave("fig/checkerboard-metric-tensor-trace.png", p, width = 4.5, height = 5, bg = "white")
+
+# inset zooms for the checkerboard
+
+side_length <- sqrt(nrow(geo))
+
+from_1 <- c(xmin = side_length/4 - 1, xmax = side_length/4 + 1, ymin = 3*side_length/4 - 1, ymax = 3*side_length/4 + 1)
+
+to_1 <- c(xmin = 3*side_length/4 - 5, xmax = 3*side_length/4 + 5, ymin = 3*side_length/4 - 5, ymax = 3*side_length/4 + 5)
+
+from_2 <- c(xmin = side_length/2 - 1, xmax = side_length/2 + 1, ymin = side_length/4 - 1, ymax = side_length/4 + 1)
+
+to_2 <- c(xmin = 3*side_length/4 - 5, xmax = 3*side_length/4 + 5, ymin = side_length/4 - 5, ymax = side_length/4 + 5)
+
+geo_with_demos <- geo_with_demos |>
+    mutate(from_1 = map(type, ~ if(.x == "seg") from_1 else NULL), 
+           to_1 = map(type, ~ if(.x == "seg") to_1 else NULL), 
+           from_2 = map(type, ~ if(.x == "seg") from_2 else NULL),
+           to_2 = map(type, ~ if(.x == "seg") to_2 else NULL))
+
+
+r <- ggplot(geo_with_demos) +
+    geom_sf(aes(fill = n_1 / (n_1 + n_2)), size = 0.02) + 
+    checkerboard_config +
+    checkerboard_theme + 
+    facet_wrap(~label) +
+    font_theme +
+    guides(fill = guide_colorbar(title.position = 'top', title.hjust = 0.5)) + 
+    labs(fill = 'Density of Group A')
+
+r <- r + 
+    geom_magnify(aes(from = from_1, to = to_1), colour = "grey") +
+    geom_magnify(aes(from = from_2, to = to_2), colour = "grey")
 
 q <- r / p + plot_layout(guides = "collect") & theme(legend.position = "bottom")
 
