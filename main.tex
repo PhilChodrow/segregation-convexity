@@ -101,29 +101,42 @@ Broad motivation for the article
   For fixed $n$, the measure $f$ is maximized (with value $f(\cP) = 1$) when the entire population resides in a single location $x_i$ and minimized (with value $f(\cP) = \frac{1}{n}$) when the population is uniformly distributed across all locations.
 
 
-\section*{Diversity}
+\section*{Diversity and Convexity}
+
+  Heuristically, we often say that a population is \emph{diverse} with respect to an attribute when it contains many categories of that attribute in roughly equal proportions.
+  Diversity is usually considered to be a property of a population as a whole, without regard for spatial or demographic subdivisions. 
+  In our formal structure from \Cref{def:population,def:population-measurement}, a diversity measure $f:\Pops_{nd\ell} \rightarrow \R$ is a function of the mean population demographic vector: $f(\cP) = \psi(\bar{\vy})$ for some function $\psi: \simplex{\ell} \rightarrow \R$.
+  It remains to specify the properties that $\psi$ should have to capture an intuitive notion of diversity. 
+
+  Working in mathematical ecology, \cite{pielouMathematicalEcology1977} gives a proposed set of criteria. 
+  For $\ell \in \N$ let $[\ell] = \{1, 2, \ldots, \ell\}$. 
+  Let $\ve_{I} \in \simplex{\ell}$ be the vector with $1$ in the indices specified by the multiindex $I \subseteq [\ell]$ and $0$ elsewhere. 
+  \begin{enumerate}
+    \item \textbf{Maximized by uniform.} ``\emph{Diversity should be maximized when all groups are present in equal proportions.}'' 
+    In our setup, this means that $\frac{1}{\ell} \ve_{[\ell]} = \argmax_{\vy \in \simplex{\ell}} \psi(\vy)$. 
+    \item \textbf{Monotone under group addition.} ``\emph{In two populations in which all groups are equally represented, the population with the greatest number of groups will be more diverse.}'' 
+    Mathematically, if $I$ is a strict subset of $[\ell]$, then $\psi\paren{\ve_{I}/|I|} < \psi\paren{\ve_{[\ell]}/\ell}$.
+    \item \textbf{Additive under independent attributes.} ``\emph{In a multiple classification (two or more qualitative variates) where the classifications are independent, the total diversity should equal the sum of the respective diversities.}'' 
+    This statement can be formalized as follows, interpreting ``independent'' in the sense of probability distributions: suppose that, for a given population $\pop = (\cX, \mY, \mu) \in \Pops_{nd\ell}$, there exist two other populations $\pop_1 = (\cX, \mU \in \R^{n\times \ell_1}, \mu)$ and $\pop_2 = (\cX, \mV \in \R^{n\times \ell_2}, \mu)$ such that $\ell = \ell_1\ell_2$ and a bijection $\alpha: [\ell_1] \times [\ell_2] \rightarrow [\ell]$ such that $y_{ij} = u_{i\alpha_1(j)} v_{i\alpha_2(j)}$ for all $i \in [n]$ and $j \in [\ell]$. 
+    Then $f(\pop) = f(\pop_1) + f(\pop_2)$.
+  \end{enumerate}
+  We will soon find that properties (1) and (2) are satisfied by a broad range of functions $\psi$, while property (3) is more restrictive and essentially characterizes a single diversity measure. 
+
+
 \section*{Segregation}
 \section*{Spatial Scale}
 
 \section*{Extensions}
 
 
-\section*{Figures we want}
+\section*{Figures we still want}
 
 \begin{itemize}
-  \item Checkerboards for motivating the kinds of structures we want to distinguish between. 
-  \item Illustration of hierarchical units of regionalization on a map. 
-  \item Visualization of local information on the chessboard and / or on one or more real maps. 
-\end{itemize}
-
-\begin{itemize}
-  \item 
-  \item What properties to have? Pielou criteria \cite{pielouMathematicalEcology1977}, various axioms from \cite{reardonMeasuresMultigroupSegregation2002}, etc. 
+  \item Side-by-side maps showing local information and maybe a regionalization. 
+  \item Possibly: scatterplot comparing local information and mutual information. 
 \end{itemize}
 
 
-
-This document can serve as a template for your article. Here are a few things to keep in mind.  Articles should be understandable by 2nd year math grad students, and should be in the style of a good colloquium talk where the first $\frac{3}{4}$ is non-technical, and the last $\frac{1}{4}$  may be technical (but certainly does not have to be).Your article cannot have an abstract or an author bio.  All figures need to have captions.  You must adhere to the maximum length and number of references given in the SubmissionGuidlines file.
 
 
 
@@ -152,10 +165,6 @@ This document can serve as a template for your article. Here are a few things to
   \caption{
     The smoothing bandwidth is $\smoothingBandwidth{}$ pixels. The mean local information of the checkerboard pattern is $\meanTraceChecker{}$, while the mean local information of the segregated pattern is $\meanTraceSeg{}$.
     } \label{fig:checkerboard-smoothed}
-\end{figure}
-
-\begin{figure}
-  \caption{I think we probably want a figure to illustrate the idea of zooming in to measure local segregation in a small ball.} 
 \end{figure}
 
 \begin{figure}

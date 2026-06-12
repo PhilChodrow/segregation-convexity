@@ -26,7 +26,7 @@ demographics <- demographics |>
 
 all_geos <- list()
 
-smoothing_bandwidth <- 0.5
+smoothing_bandwidth <- 1
 
 
 # let's redo the RBF smoother so that it gives us the same kind of thing: a data frame with a GEOID and columns for each group. 
