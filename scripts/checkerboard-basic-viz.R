@@ -1,6 +1,6 @@
 library(sf)
 library(tidyverse)
-library(patchwork)
+
 
 source("scripts/style.R")
 

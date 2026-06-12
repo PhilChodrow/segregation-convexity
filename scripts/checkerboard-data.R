@@ -12,7 +12,7 @@ if (!dir.exists(checkerboard_dir)) {
 }
 
 # params
-num_blocks <- 8
+num_blocks <- 4
 cells_per_block <- 8
 total_cells_per_side <- num_blocks * cells_per_block
 
@@ -45,10 +45,10 @@ grid_sf <- grid_sf |>
 
 grid_sf <- sf::st_set_crs(grid_sf, 32618) # set the coordinate reference system to WGS 84 (EPSG:4326)
 
-write_sf(
-    grid_sf, paste0(checkerboard_dir, "/shapefile", sep = "/"), 
-    , driver = "ESRI Shapefile"
-)
+grid_sf |>
+    select(-x_idx, -y_idx) |>
+    write_sf(paste0(checkerboard_dir, "/shapefile", sep = "/"), driver = "ESRI Shapefile")
+
 
 # demographics
 grid_sf |>
@@ -58,7 +58,7 @@ grid_sf |>
         all_white = 0, 
         all_grey = 0.5,
         checker = as.integer((x_idx %/% cells_per_block + y_idx %/% cells_per_block) %% 2 == 0), 
-        seg = as.integer(x_idx <= cells_per_block * (num_blocks / 2))) |>
+        seg = as.integer(x_idx < cells_per_block * (num_blocks / 2))) |>
     pivot_longer(cols = c(all_white, all_grey, checker, seg), names_to = "type", values_to = "n_1") |>
     mutate(n_2 = 1 - n_1) |> 
     select(-x_idx, -y_idx) |>

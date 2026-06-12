@@ -2,7 +2,7 @@ rule all:
     input:
         "params/checkerboard_params.tex",
         "params/local-info-illustration.tex",
-        "fig/checkerboard-smoothed.png",
+        "fig/checkerboard-smoothed-and-trace.png",
         "fig/checkerboard.png",
         "main.tex"
     output: 
@@ -10,13 +10,12 @@ rule all:
     shell: 
         "latexmk -pdf main.tex"
 
-
 rule checkerboard_local_info: 
     input: 
         "throughput/checkerboard/shapefile",
         "throughput/checkerboard/demographics.csv"
     output: 
-        "fig/checkerboard-smoothed.png",
+        "fig/checkerboard-smoothed-and-trace.png",
         "params/local-info-illustration.tex"
     shell: 
         "Rscript scripts/checkerboard-local-info-viz.R"
