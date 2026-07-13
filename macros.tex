@@ -1,9 +1,21 @@
 % abbreviations in the segregation chapter
 
+\definecolor{lightgreen}{rgb}{0.678, 0.847, 0.678}
+\newcommand{\phil}[1]{\todo[color=lightgreen,bordercolor=lightgreen,inline]{PC: #1}}
+
+
 \theoremstyle{definition}
 \newtheorem{dfn}{Definition}
 
+\theoremstyle{plain}
+\newtheorem{thm}{Theorem}[section]
+
 \crefname{dfn}{Definition}{Definitions}
+\crefname{thm}{Theorem}{Theorems}
+
+\newtheorem{exercise}{Exercise}[section]
+
+
 
 
 \newcommand{\N}{\mathbb{N}}
@@ -41,3 +53,7 @@
 
 \newcommand{\Pops}{\mathcal{P}}
 \newcommand{\pop}{\mathcal{P}}
+\newcommand{\cS}{\mathcal{S}}
+\newcommand{\info}{I}
+
+\newcommand{\divergence}[3]{D_{#1}\paren{#2 \;\|\; #3}}

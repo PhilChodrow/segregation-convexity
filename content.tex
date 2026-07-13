@@ -1,0 +1,269 @@
+The study of quantitative measures for residential segregation extends far enough back that a review article in 1955 could express frustration and disappointment with the chaotic state of the methodology. 
+Commenting then on the measures extant at the time, Duncan and Duncan \cite{duncanMethodologicalAnalysisSegregation1955} wrote: 
+\begin{enumerate}
+  \item \emph{The proposed indexes of segregation have a number of hitherto unnoticed interrelationships which can be mathematically demonstrated.} 
+  \item \emph{Some of them have mathematical properties of which their proponents were unaware, and which lead to difficulties of interpretation.} 
+  \item \emph{As a consequence, the status of the empirical work already done with segregation indices is questionable, and their validity for further research is undermined.} 
+\end{enumerate}
+Over 70 years later, hints of this chaos remain. 
+This author is aware of two instances in the last ten years of a segregation measure being published as novel despite already existing in the literature under a different name. 
+
+This article is not a systematic review of the literature, but rather a guided tour through one particular perspective on the problem of measuring segregation. 
+This perspective begins with a general class of measures of diversity and segregation which 
+
+
+\subsection{}
+
+Broad motivation for the article
+
+\begin{itemize}
+  \item Folks in the math community are turning to quantitative measures of segregation \cites{duchin2023measuring,topaz2025diversity,hoogstraQuantitativeMetricsTrait2025}. 
+  \item There's actually a pretty interesting and rich literature in quantitative sociology on this set of topics \cite{reardonMeasuresIncomeSegregation,reardonMeasuresMultigroupSegregation2002}, going back all the way at least to \cite{simpsonMeasurementDiversity1949}.  
+  \item MAUP is a thing \cite{openshaw1984modifiable}, and we'd like measures that behave in predictable ways as we change analytical scale. 
+  \item If you start engaging with these ideas systematically and mathematically, then you come naturally to convexity and Bregman divergences, which are what I am here to sell you today. 
+\end{itemize}
+
+\Cref{fig:checkerboard} is a simple checkerboard pattern. What if we actually oriented the entire piece around the checkerboard\footnote{
+  The problem of constructing segregation measures that distinguish between panels (c) and (d) in \Cref{fig:checkerboard} is often called the ``checkerboard problem.''
+  }: 
+
+\section*{Preliminaries}
+
+
+  To make these ideas concrete, we formalize the idea of a \emph{population} and measurements which reflect the diversity or segregation of that population.  
+  Our framework for defining populations is intentionally discrete, in recognition of the fact that all Census-type data sets provide demographic information in discrete areal units such as counties, tracts, or blockgroups. 
+
+  \begin{dfn} \label{def:simplex}
+      For $\ell \in \N,$ the \emph{probability simplex} $\simplex{\ell}$ is the set 
+      \begin{align}
+          \simplex{\ell} = \braces{\vy \in \R^{\ell} : \sum_{j = 1}^{\ell} y_j = 1, y_j \geq 0 \text{ for all } j \in [\ell]}\;.
+      \end{align}
+      of probability vectors on $\ell$ elements.\footnote{
+        Although it is sometimes common to refer to $\simplex{\ell}$ as an $(\ell-1)$-simplex (this being its manifold dimension), we write $\simplex{\ell}$ to emphasize its role as the set of probability distributions over $\ell$ categories.
+        } 
+  \end{dfn}
+
+  \begin{dfn} \label{def:population}
+      A \emph{population} $\cP$ with $n$ locations in $d$ spatial dimensions and $\ell$ demographic categories is a triple $\cP = \paren{\cX, \mY, \mu}$, where: 
+      \begin{itemize}
+          \item $\cX$ is a finite metric space with $n$ elements labeled $x_i$, $i = 1, \ldots, n$. 
+          \item $\mY \in \R^{n \times \ell}$ is a row-stochastic matrix: for each row $i$, $\vy_i \in \simplex{\ell}$.
+          \item $\mu \in \simplex{n}$.   
+      \end{itemize}
+      We denote the set of all populations with $n$ locations, $d$ dimensions, and $\ell$ demographic categories as $\Pops_{nd\ell}$. 
+  \end{dfn}
+  In this definition, the matrix $\cX$ represents space: element $x_i$ of $\cX$ can be viewed as giving the location of the $i$th spatial subunit of the population. 
+  The matrix $\mY$ represents the demographic distribution of the population according to some attribute such as gender, race, or education level: the $i$th row $\vy_i$ of $\mY$ gives the proportion of individuals in each demographic category at location $i$.
+  Finally, the probability vector $\mu$ represents the population density across locations; the proportion of individuals living in location $i$ is $\mu_i$. 
+  The probability that a single individual, chosen uniformly at random from the population, lives in location $i$ and is in demographic category $j$ is $\mu_i y_{ij}$. 
+  The mean population vector $\bar{\vy} = \sum_{i = 1}^n \mu_i y_i$ has entries giving the marginal probabilities that an individual chosen uniformly at random belongs to each demographic category. 
+
+  \begin{dfn} \label{def:population-measurement}
+    A \emph{population measurement} is a function $f: \Pops_{nd\ell} \rightarrow \R$.\footnote{The function $\eta$ could reasonably described as a \emph{population measure}, which is an entirely disjoint concept from a population measurement. We will avoid the phrase ``population measure'' and emphasize ``measurement'' whenever possible.} 
+  \end{dfn}
+
+  An example of a population measurement is $f(\cP) = \sum_{i = 1}^n \mu_i^2$, which measures the degree to which the population is concentrated in space.  
+  For fixed $n$, the measure $f$ is maximized (with value $f(\cP) = 1$) when the entire population resides in a single location $x_i$ and minimized (with value $f(\cP) = \frac{1}{n}$) when the population is uniformly distributed across all locations.
+
+
+\section*{Diversity and Convexity}
+
+  Heuristically, we often say that a population is \emph{diverse} with respect to an attribute when it contains many categories of that attribute in roughly equal proportions.
+  Diversity is usually considered to be a property of a population as a whole, without regard for spatial or demographic subdivisions. 
+  In our formal structure from \Cref{def:population,def:population-measurement}, a diversity measure $f:\Pops_{nd\ell} \rightarrow \R$ is a function of the mean population demographic vector: $f(\cP) = \psi(\bar{\vy})$ for some function $\psi: \simplex{\ell} \rightarrow \R$.
+  It remains to specify the properties that $\psi$ should have to capture an intuitive notion of diversity. 
+
+  Working in mathematical ecology, Pielou \cite{pielouMathematicalEcology1977} gives a proposed set of criteria. 
+  For $\ell \in \N$, let $[\ell] = \{1, 2, \ldots, \ell\}$. 
+  Let $\ve_{I} \in \simplex{\ell}$ be the vector with $1$ in the indices specified by the multiindex $I \subseteq [\ell]$ and $0$ elsewhere. 
+  \begin{enumerate}
+    \item \textbf{Uniform maximizer.} ``\emph{Diversity should be maximized when all groups are present in equal proportions.}'' 
+    In our setup, this means that $\frac{1}{\ell} \ve_{[\ell]} = \argmax_{\vy \in \simplex{\ell}} \psi(\vy)$. 
+    \item \textbf{Monotone under group addition.} ``\emph{In two populations in which all groups are equally represented, the population with the greatest number of groups will be more diverse.}'' 
+    Mathematically, if $I$ is a strict subset of $[\ell]$, then $\psi\paren{\ve_{I}/|I|} < \psi\paren{\ve_{[\ell]}/\ell}$.
+    \item \textbf{Additive under independent attributes.} ``\emph{In a multiple classification (two or more qualitative variates) where the classifications are independent, the total diversity should equal the sum of the respective diversities.}'' 
+    This statement can be formalized as follows, interpreting ``independent'' in the sense of probability distributions: suppose that, for a given population $\pop = (\cX, \mY, \mu) \in \Pops_{nd\ell}$, there exist two other populations $\pop_1 = (\cX, \mU \in \R^{n\times \ell_1}, \mu)$ and $\pop_2 = (\cX, \mV \in \R^{n\times \ell_2}, \mu)$ such that $\ell = \ell_1\ell_2$ and a bijection $\alpha: [\ell_1] \times [\ell_2] \rightarrow [\ell]$ such that $y_{ij} = u_{i\alpha_1(j)} v_{i\alpha_2(j)}$ for all $i \in [n]$ and $j \in [\ell]$. 
+    Then $f(\pop) = f(\pop_1) + f(\pop_2)$.
+  \end{enumerate}
+  We will soon find that properties (1) and (2) are satisfied by a broad range of functions $\psi$, while property (3) is more restrictive and essentially characterizes a single diversity measure. 
+
+  Pielou's proposed axioms capture some reasonable intuitions, but they don't offer a recipe for constructing useful diversity functions $\psi$. 
+  A more constructive intuition is that \emph{diversity should increase on average when populations are mixed}. 
+  If $\vy$ and $\vy'$ are two population demographic vectors and $\lambda \in (0,1)$ is a mixing parameter, we can form a new demographic vector $\vy'' = \lambda \vy + (1-\lambda) \vy'$.
+  One mathematization of our proposed intuition is that, if $\vy \neq \vy'$ then 
+  \begin{align}
+    \psi(\vy'') > \lambda \psi(\vy) + (1-\lambda) \psi(\vy')\;. \label{eq:convexity}
+  \end{align}
+  Here, the lefthand side gives the diversity of the mixed population $\vy''$, while the righthand side gives the $\lambda$-weighted average diversity of the original populations $\vy$ and $\vy'$.
+  This intuition leads us directly to the topic of convexity.   
+  \begin{dfn}\label{def:convexity}
+    Set $S\in \R^d$ is a \emph{convex set} if for all $x, y \in S$ and $\lambda \in [0, 1]$, we have $\lambda x + (1-\lambda) y \in S$.
+    If $S$ is a convex set, then $f: S \rightarrow \R$ is a \emph{convex function} if for all $x, y \in S$ and $\lambda \in [0, 1]$, we have $f(\lambda x + (1-\lambda) y) \leq \lambda f(x) + (1-\lambda) f(y)$.
+    Function $f$ is \emph{strictly convex} if the above inequality is strict whenever $x \neq y$ and $\lambda \in (0, 1)$. 
+    Function $f$ is (strictly) concave if $-f$ is (strictly) convex.
+  \end{dfn}
+  The simplex $\simplex{\ell}$ is a convex set, and so the notion of convexity applies to functions defined on $\simplex{\ell}$.
+  \Cref{eq:convexity} is precisely the condition that $\psi$ is strictly concave.
+  We will abuse notation slightly and refer to a population measurement $f(\cP) = \psi(\bar{\vy})$ as \emph{concave} if $\psi$ is concave.
+  
+  \begin{thm}
+    If $\psi: \simplex{\ell} \rightarrow \R$ is strictly concave, then the population measurement $f(\cP) = \psi(\bar{\vy})$ satisfies the monotonicity under group addition property. 
+  \end{thm}
+  \begin{proof}
+    Monotonicity under group addition is a consequence of convexity and nonnegativity: if $\psi$ is concave, then for any $I \subseteq [\ell]$ and $\lambda = \frac{|I|}{\ell}$, we have
+    \begin{align*}
+      \psi\paren{\frac{1}{\ell} \ve_{[\ell]} } 
+      & = \psi\paren{\lambda \frac{1}{|I|} \ve_{I} + (1-\lambda) \frac{1}{\ell - |I|} \ve_{[\ell]\setminus I}} \\
+      & \geq \lambda \psi\paren{\frac{1}{|I|} \ve_{I}} + (1-\lambda) \psi\paren{\frac{1}{\ell - |I|} \ve_{[\ell]\setminus I}} \\
+      & \geq \psi\paren{\frac{1}{|I|} \ve_{I}} \;,
+    \end{align*}
+    where the first inequality is by convexity and the second is by nonnegativity. 
+  \end{proof}
+  \begin{dfn}
+    Function $f$ is \emph{symmetric} if for all $\vy \in \simplex{\ell}$ and all permutations $\sigma$ of $[\ell]$, we have $f(\vy) = f(\sigma(\vy))$, where $\sigma(\vy)$ is the vector obtained by permuting the entries of $\vy$ according to $\sigma$.
+  \end{dfn}
+  \begin{thm}
+    If $\psi: \simplex{\ell} \rightarrow \R$ is a nonnegative, symmetric, and strictly concave function, then the population measurement $f(\cP) = \psi(\bar{\vy})$ satisfies the uniform maximizer and monotonicity under group addition properties of Pielou's axioms.
+  \end{thm}
+  \begin{proof}
+      To demonstrate maximization under the uniform, for any vector $\vy \in \simplex{\ell}$,
+      \begin{align*}
+        \ve_{[\ell]}/\ell = \frac{1}{\abs{\cS}}\sum_{\sigma \in \cS} \sigma(\vy) \;,
+      \end{align*}
+      where $\cS$ is the set of all permutations of $[\ell]$.
+      It follows that 
+      \begin{align*}
+        \psi\paren{\frac{1}{\ell} \ve_{[\ell]}} 
+        & = \psi\paren{\frac{1}{\abs{\cS}}\sum_{\sigma \in \cS} \sigma(\vy)} \\
+        & < \frac{1}{\abs{\cS}}\sum_{\sigma \in \cS} \psi\paren{\sigma(\vy)} = \psi(\vy) \;,
+      \end{align*}
+      where the inequality is by an inductive application of strict concavity and the final equality is by symmetry.
+  \end{proof}
+
+  \begin{dfn}
+    A function $\psi: \simplex{\ell} \rightarrow \R$ is \emph{separable} if there exists a function $\phi: [0, 1] \rightarrow \R$ such that $\psi(\vy) = \sum_{j = 1}^{\ell} \phi(y_j)$ for all $\vy \in \simplex{\ell}$.
+  \end{dfn}
+  \begin{thm}
+    If a function $\psi: \simplex{\ell} \rightarrow \R$ is nonnegative, continuous\footnote{Concave functions are continuous on the interior of their domain, so this stipulation requires only that they are also continuous at the boundary.}, symmetric, strictly concave, separable,  and satisfies the additivity under independent attributes property, then\footnote{Throughout this article, we will use the notation $\log$ to denote the natural logarithm, as well as the standard convention that $0 \log 0 = 0$.}  
+    \begin{align}
+      \psi(\vy) = -c\sum_{j = 1}^{\ell} y_j \log y_j \;, \label{eq:shannon-entropy}
+    \end{align}
+    for some constant $c > 0$.
+  \end{thm}
+  A proof is given is given by Chakrabarti and Chakrabarty \cite{chakrabartiShannonEntropyAxiomatic2005}, where additivity under independent attributes corresponds to the authors' Axiom 4.
+
+  \Cref{eq:shannon-entropy} is the Shannon entropy, which is a widely used measure of diversity in ecology, sociology, and information theory. 
+  For a systematic treatment of entropy as a measure of diversity, see \cite{leinsterEntropyDiversityAxiomatic2021}. 
+  The function $\psi(\vy) = 1 - \norm{\vy}_2^2 = 1 - \sum_{j = 1}^{\ell} y_j^2$, the Simpson diversity index \cite{simpsonMeasurementDiversity1949}, is another popular measure of diversity which satisfies the uniform maximizer and monotonicity under group addition properties; it is separable and symmetric but does not satisfy additivity under independent attributes.
+  The Simpson index has an attractive physical interpretation: it is the probability that two individuals chosen uniformly at random from the population belong to different demographic categories.
+
+\section*{Segregation}
+
+Segregation is \phil{Need some notions from the sociology literature}
+One natural quantitative intuition is that a population is segregated when individual locations tend to be less diverse than the population as a whole. 
+
+\begin{dfn}
+  Given a concave diversity function $\psi: \simplex{\ell} \rightarrow \R$, the \emph{Jensen information} \cite{banerjeeOptimalityConditionalExpectation2005} of a population $\cP = (\cX, \mY, \mu) \in \Pops_{nd\ell}$ is
+  \begin{align}
+    \info_{\psi}(\cP) = \psi(\bar{\vy}) - \sum_{i = 1}^n \mu_i \psi(\vy_i) \;.  \label{eq:jensen-information}
+  \end{align}
+\end{dfn}
+Jensen's Inequality, a standard result in convex analysis, implies that $\info_{\psi}(\cP) \geq 0$ for all populations $\cP$ and concave functions $\psi$. 
+If $\psi$ is strictly concave, then $\info_{\psi}(\cP) = 0$ if and only if $\vy_i = \bar{\vy}$ for all $i \in [n]$, i.e. every location has the same demographic distribution as the population as a whole.
+
+\Cref{fig:checkerboard} panels (a)-(c) give some intuition on how the diversity function $\psi$ and the Jensen information $\info_{\psi}$ behave on a simple checkerboard pattern. \phil{place the measurements of entropy and mutual information in the titles for each panel.}
+
+Although the Jensen information \cref{eq:jensen-information} is nonnegative, individual terms of the form $\psi(\bar{\vy}) - \psi(\vy_i)$ can be negative. 
+This means that a given location's ``contribution to segregation'' cannot simply by measured by the difference $\psi(\bar{\vy}) - \psi(\vy_i)$. 
+It would instead be convenient for analytic purposes to be able to write the Jensen information as a sum of nonnegative contributions from each location: 
+\begin{align}
+  I_{\psi}(\cP) = \sum_{i = 1}^n \mu_i g(\vy_i, \bar{\vy}) \;, \label{eq:information-equivalence}
+\end{align}
+\phil{Move from concave functions to functions whose negatives are convex.}
+\begin{thm}[\cite{chodrowEquivalenceInformationsCharacterizes2025b}]
+  If $\phi: \simplex{\ell} \rightarrow \R$ is a strictly convex function which is differentiable on the relative interior of $\simplex{\ell}$ and $g$ is a function such that such that \cref{eq:information-equivalence} holds for any population $\cP \in \Pops_{nd\ell}$, then $g$ is the \emph{Bregman divergence} induced by $\phi$:
+  \begin{align}
+    g(\vy, \bar{\vy}) = \divergence{\phi}{\vy}{\bar{\vy}} = \phi(\vy) - \phi(\bar{\vy}) - \nabla \phi(\bar{\vy})^{\top} (\vy - \bar{\vy}) \;. \label{eq:bregman-divergence}
+  \end{align}
+\end{thm}
+Literally, the Bregman divergence is a measure of the difference between the value of $\phi$ at $\vy$ and the value of the linearization (first-order Taylor expansion) of $\phi$ around $\bar{\vy}$ evaluated at $\vy$.
+The Bregman divergence can be interpreted as a measure of dissimilarity of $\vy$ from $\bar{\vy}$. 
+It is always nonnegative and is zero if and only if $\vy = \bar{\vy}$.
+The Bregman divergence is not a metric, as it is not symmetric and does not satisfy the triangle inequality, although it does satisfy many other useful properties \cite{banerjeeClusteringBregmanDivergences2005}. 
+Examples of Bregman divergences include the squared Euclidean distance $g(\vy, \bar{\vy}) = \norm{\vy - \bar{\vy}}_2^2$ (corresponding to $\phi(x) = \frac{1}{2} \|x\|_2^2$) and the Kullback-Leibler divergence $g(\vy, \bar{\vy}) = \sum_{j = 1}^{\ell} y_j \log(y_j / \bar{y}_j)$ (corresponding to $\phi(x) = \sum_{j = 1}^{\ell} x_j \log x_j$).
+
+\phil{Locally quadratic, distance-like properties (foreshadowing for later)}
+
+
+\subsection{Useful Properties of Bregman Divergences}
+
+\begin{itemize}
+    \item Additive decomposability by region. 
+    \item Migrations and exchanges
+    \item Other? 
+\end{itemize}
+
+\section*{Spatializing the Jensen Information: Local Information}
+
+\section*{Extensions}
+
+\begin{itemize}
+  \item Side-by-side maps showing local information and maybe a regionalization. 
+  \item Possibly: scatterplot comparing local information and mutual information. 
+\end{itemize}
+
+
+
+
+
+
+\cite{chodrowEquivalenceInformationsCharacterizes2025b}
+\cite{chodrowStructureInformationSpatial2017}
+
+\cite{banerjeeClusteringBregmanDivergences2005}
+
+
+
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.5\textwidth]{fig/checkerboard.png}
+  \caption{
+    A simple checkerboard pattern. 
+    Each of the four panels is composed of \totalCellsPerSide{} cells. 
+    Panel (c) is further arranged into \numBlocks{} blocks of \cellsPerBlock{} cells each.
+    } \label{fig:checkerboard}
+\end{figure}
+
+
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.5\textwidth]{fig/checkerboard-smoothed-and-trace.png}
+  \caption{
+    The smoothing bandwidth is $\smoothingBandwidth{}$ pixels. The mean local information of the checkerboard pattern is $\meanTraceChecker{}$, while the mean local information of the segregated pattern is $\meanTraceSeg{}$.
+    } \label{fig:checkerboard-smoothed}
+\end{figure}
+
+\begin{figure*}
+  \centering
+  \includegraphics[width=1.0\textwidth]{fig/Detroit-local-info-overview.png}
+  \caption{
+    Test!!
+    } \label{fig:city-local-info}
+\end{figure*}
+
+
+%\bibliographystyle{foo}
+\bibliography{refs}
+
+\appendix 
+
+\section{Supplementary Proofs}
+
+
+\section{Supplementary Exercises}
+
+\begin{exercise}
+    Give a heuristic justification for the convention that $0 \log 0 = 0$ by proving that $\lim_{x \rightarrow 0^+} x \log x = 0$.
+\end{exercise}
