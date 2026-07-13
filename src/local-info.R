@@ -55,6 +55,10 @@ add_coords_to_adj <- function(adj, tracts, km = FALSE){
 
 spatial_rbf_smoother <- function(demographics, geo, sigma = 10) {
 	
+	demographic_column_names <- demographics |>
+		select(-GEOID) |>
+		colnames()
+
 	GEOID_order <- geo |>
 		arrange(GEOID) |>
 		pull(GEOID)
@@ -84,7 +88,7 @@ spatial_rbf_smoother <- function(demographics, geo, sigma = 10) {
 	smoothed_p_matrix <- weight_matrix %*% p_matrix
 
 	rownames(smoothed_p_matrix) <- GEOID_order
-	colnames(smoothed_p_matrix) <- paste0("n_", 1:ncol(smoothed_p_matrix))
+	colnames(smoothed_p_matrix) <- demographic_column_names
 	
 	new_demos <- (smoothed_p_matrix * totals) |>
 		as.data.frame() |>
@@ -149,6 +153,9 @@ compute_metric_tensor <- function(geo, demographics, sigma, hessian = DKL_) {
 		left_join(proportions, by = c("GEOID_1" = "GEOID")) |>
 		left_join(proportions, by = c("GEOID_2" = "GEOID"), suffix = c("_1", "_2"))
 
+	adj |>
+		filter(GEOID_1 == 261635735014)	
+
 	derivs <- add_coords_to_adj(adj, geo) |>
 		mutate(
 			x_diff = map2(coords_2, coords_1, ~.x - .y), 
@@ -168,11 +175,16 @@ compute_metric_tensor <- function(geo, demographics, sigma, hessian = DKL_) {
 		   P = reduce(.$p_diff, rbind), 
 		   w = reduce(.$weight, c)) |>
 		ungroup() |>
-		mutate(W = purrr::map(w, diag)) |>
+		mutate(size = map_dbl(w, length)) |>
+		mutate(W = map(w, ~diag(.x))) |>
+		# corrections for neighborhoods containing only one neighbor
+		mutate(W = ifelse(size == 1, map(w, ~matrix(.x)), W)) |>
+		mutate(X = ifelse(size == 1, map(X, ~matrix(.x, nrow = 1)), X)) |>
+		mutate(P = ifelse(size == 1, map(P, ~matrix(.x, nrow = 1)), P)) |>
 		select(GEOID_1, X, P, W) |>
 		mutate(D = pmap(list(X, P, W), do_regression)) |>
 		select(GEOID_1, D, X, P)
-
+		
 	hessians <- proportions |>
 		mutate(H = map(p, hessian))
 

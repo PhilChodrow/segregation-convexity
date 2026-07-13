@@ -1,14 +1,39 @@
+CITIES = ["Detroit", "Boston"]
+
 rule all: 
     input:
         "params/checkerboard_params.tex",
         "params/local-info-illustration.tex",
         "fig/checkerboard-smoothed-and-trace.png",
         "fig/checkerboard.png",
+        expand("throughput/geo/{city}.rds", city=CITIES),
+        expand("throughput/local-info/{city}.rds", city=CITIES),
         "main.tex"
     output: 
         "main.pdf"
     shell: 
         "latexmk -pdf main.tex"
+
+rule city_local_info:
+    input:
+        "throughput/geo/{city}.rds"
+    output:
+        "throughput/local-info/{city}.rds"
+    params: 
+        city="{city}"
+    shell:
+        "Rscript scripts/city-local-info.R {params.city}"
+
+rule grab_city_data:
+    input:
+        "assumptions/cities.csv"
+    output:
+        "throughput/geo/{city}.rds"
+    params: 
+        city="{city}"
+    shell:
+        "Rscript scripts/grab-city-data.R {params.city}"
+
 
 rule checkerboard_local_info: 
     input: 
