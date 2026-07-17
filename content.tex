@@ -106,39 +106,17 @@ Broad motivation for the article
   \Cref{eq:convexity} is precisely the condition that $\psi$ is strictly concave.
   We will abuse notation slightly and refer to a population measurement $f(\cP) = \psi(\bar{\vy})$ as \emph{concave} if $\psi$ is concave.
   
-  \begin{thm}
+  \begin{thm} \label{thm:monotone-under-group-addition}
     If $\psi: \simplex{\ell} \rightarrow \R$ is strictly concave, then the population measurement $f(\cP) = \psi(\bar{\vy})$ satisfies the monotonicity under group addition property. 
   \end{thm}
-  \begin{proof}
-    Monotonicity under group addition is a consequence of convexity and nonnegativity: if $\psi$ is concave, then for any $I \subseteq [\ell]$ and $\lambda = \frac{|I|}{\ell}$, we have
-    \begin{align*}
-      \psi\paren{\frac{1}{\ell} \ve_{[\ell]} } 
-      & = \psi\paren{\lambda \frac{1}{|I|} \ve_{I} + (1-\lambda) \frac{1}{\ell - |I|} \ve_{[\ell]\setminus I}} \\
-      & \geq \lambda \psi\paren{\frac{1}{|I|} \ve_{I}} + (1-\lambda) \psi\paren{\frac{1}{\ell - |I|} \ve_{[\ell]\setminus I}} \\
-      & \geq \psi\paren{\frac{1}{|I|} \ve_{I}} \;,
-    \end{align*}
-    where the first inequality is by convexity and the second is by nonnegativity. 
-  \end{proof}
+  
   \begin{dfn}
     Function $f$ is \emph{symmetric} if for all $\vy \in \simplex{\ell}$ and all permutations $\sigma$ of $[\ell]$, we have $f(\vy) = f(\sigma(\vy))$, where $\sigma(\vy)$ is the vector obtained by permuting the entries of $\vy$ according to $\sigma$.
   \end{dfn}
-  \begin{thm}
+  \begin{thm}\label{thm:diversity-axioms-1}
     If $\psi: \simplex{\ell} \rightarrow \R$ is a nonnegative, symmetric, and strictly concave function, then the population measurement $f(\cP) = \psi(\bar{\vy})$ satisfies the uniform maximizer and monotonicity under group addition properties of Pielou's axioms.
   \end{thm}
-  \begin{proof}
-      To demonstrate maximization under the uniform, for any vector $\vy \in \simplex{\ell}$,
-      \begin{align*}
-        \ve_{[\ell]}/\ell = \frac{1}{\abs{\cS}}\sum_{\sigma \in \cS} \sigma(\vy) \;,
-      \end{align*}
-      where $\cS$ is the set of all permutations of $[\ell]$.
-      It follows that 
-      \begin{align*}
-        \psi\paren{\frac{1}{\ell} \ve_{[\ell]}} 
-        & = \psi\paren{\frac{1}{\abs{\cS}}\sum_{\sigma \in \cS} \sigma(\vy)} \\
-        & < \frac{1}{\abs{\cS}}\sum_{\sigma \in \cS} \psi\paren{\sigma(\vy)} = \psi(\vy) \;,
-      \end{align*}
-      where the inequality is by an inductive application of strict concavity and the final equality is by symmetry.
-  \end{proof}
+  
 
   \begin{dfn}
     A function $\psi: \simplex{\ell} \rightarrow \R$ is \emph{separable} if there exists a function $\phi: [0, 1] \rightarrow \R$ such that $\psi(\vy) = \sum_{j = 1}^{\ell} \phi(y_j)$ for all $\vy \in \simplex{\ell}$.
@@ -194,23 +172,122 @@ Examples of Bregman divergences include the squared Euclidean distance $g(\vy, \
 
 \phil{Locally quadratic, distance-like properties (foreshadowing for later)}
 
+\subsection{Properties of the Jensen Information for Segregation Measurement}
 
-\subsection{Useful Properties of Bregman Divergences}
+In an influential article, Reardon and Firebaugh \cite{reardonMeasuresMultigroupSegregation2002} propose a set of desirable criteria for multigroup segregation measures, and assess a number of existing measures against these criteria with proofs and counterexamples. 
+Of the six measures evaluated by the authors, exactly one of these is a Jensen information: the Shannon mutual information corresponding to $\psi(\vy) = -\sum_{j = 1}^{\ell} y_j \log y_j$.\footnote{In the segregation measurement setting the mutual information is sometimes referred to as the \emph{Theil index} or the \emph{information theory index}.}
+The authors write ``We conclude that the [Shannon mutual information] is the most conceptually and mathematically satisfactory index...'' due to the fact that the mutual information is the only measure to satisfy all of the criteria deemed clearly desirable by the authors. 
+It turns out this isn't a coincidence: many desirable intuitions about segregation come ``for free'' from convexity. 
 
-\begin{itemize}
-    \item Additive decomposability by region. 
-    \item Migrations and exchanges
-    \item Other? 
-\end{itemize}
+Some of the Reardon and Firebaugh criteria are trivially satisfied by any Jensen information; for example, their \emph{size invariance} criterion follows immediately from our construction of $I_{\psi}$ as a function of \emph{proportions} of populations distributed across groups and in space, rather than absolute counts.
+Here we'll highlight two nontrivial properties, and consider a third when we discuss the role of space in the next section. 
+
+
+
+
+\begin{dfn}
+  A \emph{migration} of a group $a$ from location $i$ to location $j$ is a map $\mig{a}{i}{j}{\epsilon}: \Pops_{nd\ell} \rightarrow \Pops_{nd\ell}$ which takes a population $\cP = (\cX, \mY, \mu)$ and returns a new population $\cP' = (\cX, \mY', \mu')$ such that 
+  \begin{align*}
+    \vmu'  &= \vmu + \epsilon (\ve_j - \ve_i), \\ 
+    \vy_i' &= \frac{\mu_i}{\mu_i'}\paren{\vy_i - \lambda_i \tilde{\ve}_a}, \\
+    \vy_j' &= \frac{\mu_j}{\mu_j'}\paren{\vy_j + \lambda_j \tilde{\ve}_a}, \\
+    \vy_k' &= \vy_k \text{ for all } k \notin \{i, j\} \;.
+  \end{align*}
+  Here, $\ve_i \in \R^{n}$ is the $i$-th standard basis vector in the tangent space to $\simplex{n}$, $\tilde{\ve}_a \in \R^{\ell}$ is the $a$-th standard basis vector in the tangent space to $\simplex{\ell}$, and $\lambda_i = \frac{\epsilon}{\mu_i}$ is the fraction of the population at location $i$ which is being moved.
+  In this definition, it is required that $\epsilon \leq \mu_iy_{ia}$.
+\end{dfn}
+\begin{dfn}
+  An \emph{exchange} of groups $a$ and $b$ between locations $i$ and $j$ is a composition of two transfers: 
+  \[
+    \exc{a}{b}{i}{j}{\epsilon} = \mig{a}{i}{j}{\epsilon} \circ \mig{b}{j}{i}{\epsilon}.
+  \]
+  For this exchange to be defined, it is required that $\epsilon \leq \min(\mu_i y_{ia}, \mu_j y_{jb})$.
+\end{dfn}
+If $\pop' = \exc{a}{b}{i}{j}{\epsilon}(\pop)$, then $\vmu' = \vmu$ and $\vy'_k = \vy_k$ except in the rows 
+\begin{align}
+  \vy'_i &= \vy_i + \lambda_i (\tilde{\ve}_b - \tilde{\ve}_a), \\
+  \vy'_j &= \vy_j + \lambda_j (\tilde{\ve}_a - \tilde{\ve}_b) \;. 
+\end{align}
+
+\begin{dfn}
+  A segregation measurement $S$ satisfies the \emph{exchanges property of Reardon and Firebaugh} \cite{reardonMeasuresMultigroupSegregation2002} if whenever $y_{i a} < y_{j a}$ and $y_{i b} > y_{j b}$, we have $S(\exc{a}{b}{i}{j}{\epsilon}(\cP)) < S(\cP)$ for all $\epsilon$ sufficiently small. 
+\end{dfn}
+
+\begin{thm} \label{thm:exchanges}
+  If $\psi$ is separable\footnote{It is possible to weaken the separability requirement slightly; it is sufficient for $\psi$ to have coordinatewise monotone gradients, for which it is in turn sufficient that the Hessian $\hess{\phi}$ be strictly diagonally dominant.} and strictly concave, then the Jensen information $I_{\psi}$ satisfies the exchanges property of Reardon and Firebaugh.\footnote{Reardon and Firebaugh \cite{reardonMeasuresMultigroupSegregation2002} also propose a \emph{transfers property}, a stronger form of the exchanges property, and assert that the Shannon mutual information satisfies this property. This author is unable to follow the proof and has performed computational experiments suggesting the transfers property does not indeed hold for the Shannon mutual information.}
+\end{thm}
+
+
+
+
+
+
 
 \section*{Spatializing the Jensen Information: Local Information}
 
+  The \emph{modifiable areal unit problem} (MAUP) is a longstanding challenge in spatial statistics and quantative sociology.
+  As Openshaw  \cite{openshaw1984modifiable} writes of common areal delimiters like administrative borders,  
+  \begin{quote}
+    The definition of these geographical objects is arbitrary and (in theory) modifiable at choice...there are no rules for areal aggregation, no standards, and no international conventions to guide the spatial aggregation process. Quite simply, the areal units (zonal objects) used in many geographical studies are arbitrary, modifiable, and subject to the whims and fancies of whoever is doing, or did, the aggregating. 
+  \end{quote}
+  \Cref{fig:checkerboard} panel (c) offers a stark illustration of the MAUP. 
+  The checkerboard pattern is composed of \totalCellsPerSide{} cells, which are further arranged into \numBlocks{} blocks of \cellsPerBlock{} cells each. 
+  At the pictured scale, considerable spatial segregation is visible. 
+  If, however, we instead aggregated the checkerboard into four mega-blocks of dimensions  $(2\cdot \cellsPerBlock) \times (2\cdot\cellsPerBlock)$ cells each, then the resulting population would appear fully integrated, indistinguishable from panel (b). 
+  A desirable property of a segregation measure is that it should behave in a predictable fashion was the spatial scale of analysis is changed. 
+
+  \begin{dfn}[Spatial Aggregation]
+    Let $n' < n$ and let $\pi: [n] \rightarrow [n']$ be a surjective map.
+    A \emph{spatial aggregation} of a population $\cP = (\cX, \mY, \mu) \in \Pops_{nd\ell}$ by $\pi$ is a new population $\cP' = (\cX', \mY', \mu') \in \Pops_{n'd'\ell}$ such that 
+    \begin{align*}
+      \mu'_j &= \sum_{i \in \pi^{-1}(j)} \mu_i, \\
+      \vy'_j &= \frac{1}{\mu'_j} \sum_{i \in \pi^{-1}(j)} \mu_i \vy_i \\ 
+      \mX &\in \R^{n' \times d}\;.
+    \end{align*}
+    The definition of $\mX'$ is left intentionally left flexible; one possible choice is to set $x'_j = \frac{1}{\mu'_j} \sum_{i \in \pi^{-1}(j)} \mu_i x_i$, the $\mu$-weighted centroid of the locations in the $j$th aggregated unit.
+  \end{dfn}
+
+  \begin{dfn}[Conditional Jensen Information]
+    Let $\cP'$ be a spatial aggregation of $\cP$ by $\pi$.
+    The \emph{conditional Jensen information} of $\cP$ given $\cP'$ is 
+    \begin{align}
+      I_{\psi}(\cP \mid \cP') = \sum_{j = 1}^{n'} \mu_j' \underbrace{\paren{\phi(\vy_j') - \frac{1}{\mu_j'}\sum_{i \in \pi^{-1}(j)} \mu_i \phi(\vy_i)}}_{I_\psi(\cP_j)}   \;, \label{eq:conditional-jensen-information}
+    \end{align}
+    where $\cP_j$ is the subpopulation of $\cP$ corresponding to the $j$th aggregated unit.
+    The conditional Jensen information is the mean Jensen information of the subpopulations defined by the aggregated units, weighted by the population of each aggregated unit.
+  \end{dfn}
+  It follows that $I_{\psi}(\cP \mid \cP') \geq 0$ for all populations $\cP$ and spatial aggregations $\cP'$, with equality if and only if the demographic distribution is uniform within each aggregated unit.
+  A direct calculation shows that 
+  \begin{align}
+    I_\psi(\cP) = I_\psi(\cP') + I_\psi(\cP \mid \cP') \;. \label{eq:information-decomposition}
+  \end{align}
+  \Cref{eq:information-decomposition} is a form of decomposition into ``between aggregated unit'' information (first term) and ``within aggregated unit'' information (second term).
+  Since both terms are nonnegative, it follows that aggregation cannot increase the Jensen information. 
+  
+  \subsection{Multiscale Segregation Measurement}
+  It provides a useful guide for describing the scale of segregation within a population at different levels of spatial aggregation. 
+  For example, 
+  \phil{Put in a city here with blockgroup, tract, and maybe ZIP, neighborhood, or county-level aggregation and show how the decomposition works.}
+
+  \subsection{Regionalization}
+  \phil{Also bring in an example of generating a boundary via spatial aggregation.} 
+
+  \subsection{Spatial Smoothing Kernels}
+
+  \subsection{Local Information}
+
+
+
+
+
+
+
+
+
 \section*{Extensions}
 
-\begin{itemize}
-  \item Side-by-side maps showing local information and maybe a regionalization. 
-  \item Possibly: scatterplot comparing local information and mutual information. 
-\end{itemize}
+  Ordinal measures
+
 
 
 
@@ -260,6 +337,60 @@ Examples of Bregman divergences include the squared Euclidean distance $g(\vy, \
 \appendix 
 
 \section{Supplementary Proofs}
+
+\begin{proof}[Proof of \Cref{thm:monotone-under-group-addition}]
+    Monotonicity under group addition is a consequence of convexity and nonnegativity: if $\psi$ is concave, then for any $I \subseteq [\ell]$ and $\lambda = \frac{|I|}{\ell}$, we have
+    \begin{align*}
+      \psi\paren{\frac{1}{\ell} \ve_{[\ell]} } 
+      & = \psi\paren{\lambda \frac{1}{|I|} \ve_{I} + (1-\lambda) \frac{1}{\ell - |I|} \ve_{[\ell]\setminus I}} \\
+      & \geq \lambda \psi\paren{\frac{1}{|I|} \ve_{I}} + (1-\lambda) \psi\paren{\frac{1}{\ell - |I|} \ve_{[\ell]\setminus I}} \\
+      & \geq \psi\paren{\frac{1}{|I|} \ve_{I}} \;,
+    \end{align*}
+    where the first inequality is by convexity and the second is by nonnegativity. 
+  \end{proof}
+
+\begin{proof}[Proof of \Cref{thm:diversity-axioms-1}]
+      To demonstrate maximization under the uniform, for any vector $\vy \in \simplex{\ell}$,
+      \begin{align*}
+        \ve_{[\ell]}/\ell = \frac{1}{\abs{\cS}}\sum_{\sigma \in \cS} \sigma(\vy) \;,
+      \end{align*}
+      where $\cS$ is the set of all permutations of $[\ell]$.
+      It follows that 
+      \begin{align*}
+        \psi\paren{\frac{1}{\ell} \ve_{[\ell]}} 
+        & = \psi\paren{\frac{1}{\abs{\cS}}\sum_{\sigma \in \cS} \sigma(\vy)} \\
+        & < \frac{1}{\abs{\cS}}\sum_{\sigma \in \cS} \psi\paren{\sigma(\vy)} = \psi(\vy) \;,
+      \end{align*}
+      where the inequality is by an inductive application of strict concavity and the final equality is by symmetry.
+  \end{proof}
+
+
+\begin{proof}[Proof of \Cref{thm:exchanges}]
+  The proof is by direct calculation. Let $\cP' = \exc{a}{b}{i}{j}{\epsilon}(\cP)$, and let $\vy_i'$ and $\vy_j'$ be the demographic vectors at locations $i$ and $j$ in $\cP'$. 
+  Since the global demographic vector $\bar{\vy}$ is unchanged by the exchange, we have
+  \begin{align*}
+    I_{\psi}(\cP) - I_{\psi}(\cP') &= \sum_{i = 1}^n \brackets{\mu_i \psi(\vy_i) - \mu_i' \psi(\vy_i')} \\ 
+    &= \mu_i\brackets{ \psi(\vy_i) - \psi(\vy_i')} + \mu_j\brackets{ \psi(\vy_j)  - \psi(\vy_j')} \\ 
+    &= \mu_i \nabla \psi(\vy_i)^{\top} (\vy_i - \vy_i') \\ 
+    & + \mu_j \nabla \psi(\vy_j)^{\top} (\vy_j - \vy_j') \\ 
+    &+ o(\norm{\vy_i - \vy_i'}) + o(\norm{\vy_j - \vy_j'})\;. 
+  \end{align*}
+  since $\vy_k = \vy_k'$ for all $k \notin \{i, j\}$ and $\mu_k = \mu_k'$ for all $k$.
+  Using now that $\vy_i - \vy_i' = \lambda_i (\tilde{\ve}_a - \tilde{\ve}_b)$ and $\vy_j - \vy_j' = \lambda_j (\tilde{\ve}_b - \tilde{\ve}_a)$ and ignoring the higher-order terms, we have 
+  \begin{align*}
+    I_{\psi}(\cP) - I_{\psi}(\cP') &\simeq \mu_i \lambda_i \nabla \psi(\vy_i)^{\top} (\tilde{\ve}_a - \tilde{\ve}_b) + \mu_j \lambda_j \nabla \psi(\vy_j)^{\top} (\tilde{\ve}_b - \tilde{\ve}_a)\;. 
+  \end{align*}
+  By the separability assumption, we have $\nabla \psi(\vy) = (\phi'(y_1), \ldots, \phi'(y_{\ell}))^{\top}$, and so 
+  \begin{align*}
+    I_{\psi}(\cP) - I_{\psi}(\cP') &\simeq \mu_i \lambda_i (\phi'(y_{ia}) - \phi'(y_{ib})) + \mu_j \lambda_j (\phi'(y_{jb}) - \phi'(y_{ja})) \\ 
+    &= \epsilon (\phi'(y_{ia}) - \phi'(y_{ib}) + \phi'(y_{jb}) - \phi'(y_{ja})) \\ 
+    &= \epsilon (\phi'(y_{ia}) - \phi'(y_{ja}) + \phi'(y_{jb}) - \phi'(y_{ib})) \\ 
+    > 0\;.
+  \end{align*}
+  The last line follows from the assumptions that $y_{ia} < y_{ja}$ and $y_{ib} > y_{jb}$, and the fact that, if $\phi$ is strictly convex, then $\phi'$ is strictly increasing, and so $\phi'(y_{ia}) - \phi'(y_{ja}) > 0$ and $\phi'(y_{jb}) - \phi'(y_{ib}) > 0$.
+  Choosing $\epsilon*$ sufficiently small to justify the linear approximation completes the proof. 
+\end{proof}
+
 
 
 \section{Supplementary Exercises}
