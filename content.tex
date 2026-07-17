@@ -330,6 +330,17 @@ If $\pop' = \exc{a}{b}{i}{j}{\epsilon}(\pop)$, then $\vmu' = \vmu$ and $\vy'_k =
     } \label{fig:city-local-info}
 \end{figure*}
 
+\begin{figure}
+  \centering
+  \includegraphics[width=0.5\textwidth]{fig/aggregation-viz.png}
+  \caption{
+    (Top): Heatmap showing the proportion of Black residents in \aggCity{}, delimited by nested areal units. 
+    Thickest boundaries correspond to county subdivisions, thinner boundaries to Census tracts, and thinest boundaries to Census block groups.
+    (Bottom): Behavior of the Shannon mutual information between Black and non-Black residents across geographic levels. 
+    If $\cP$ is the population at the level of blockgroups (far left), the conditional Jensen information $I_\psi(\cP \mid \cP')$ is the difference between the given value of the information and the blockgroup value. 
+    } \label{fig:aggregation-viz}
+\end{figure}
+
 
 %\bibliographystyle{foo}
 \bibliography{refs}
