@@ -46,7 +46,6 @@ grid_sf <- grid_sf |>
 grid_sf <- sf::st_set_crs(grid_sf, 32618) # set the coordinate reference system to WGS 84 (EPSG:4326)
 
 grid_sf |>
-    select(-x_idx, -y_idx) |>
     write_sf(paste0(checkerboard_dir, "/shapefile", sep = "/"), driver = "ESRI Shapefile")
 
 

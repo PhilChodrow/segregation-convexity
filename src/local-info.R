@@ -3,13 +3,14 @@
 
 library(tidyverse)
 library(sf)
+source("src/constructors.R")
 
 compute_centroid_df <- function(tracts, km = FALSE, ...){
 
 	centroids <- st_centroid(tracts) %>%
 		mutate(x = map_dbl(geometry, ~.[1]),
 			   y = map_dbl(geometry, ~.[2])) %>%
-		tbl_df() %>%
+		tibble() %>%
 		select(GEOID, x, y) 
 
 	if(km){
@@ -95,7 +96,6 @@ spatial_rbf_smoother <- function(demographics, geo, sigma = 10) {
 		rownames_to_column("GEOID") |>
 		as_tibble() 
 
-		
 	return(new_demos)
 }
 

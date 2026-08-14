@@ -18,11 +18,20 @@ font_theme <- theme(
 darkgrey <- "#1d1d1d"
 
 
+palette <- c(
+  "White" = "#ED6A5A",
+  "Black" = "#5b8781", 
+  "Asian" = "#4ECDC4", 
+  "Hispanic" = "#d8d154", 
+  "Other" = "#37505C"
+)
+
+
 
 checkerboard_config <- list(
                         scale_fill_continuous(
                               low = 'white', 
-                              high = darkgrey, 
+                              high = palette["Other"], 
                               breaks = c(0, .5, 1),
                               labels = scales::percent, 
                               limits = c(0, 1)),

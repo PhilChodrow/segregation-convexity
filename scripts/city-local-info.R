@@ -1,7 +1,6 @@
 library(tidyverse)
 library(sf)
-library(patchwork)
-library(ggmagnify)
+
 source("src/local-info.R")
 source("scripts/style.R")
 

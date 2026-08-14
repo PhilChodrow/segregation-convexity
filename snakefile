@@ -1,4 +1,4 @@
-CITIES = ["Detroit", "Boston"]
+CITIES = ["Detroit", "Boston", "Atlanta", "Chicago", "Milwaukee"]
 
 rule all: 
     input:
