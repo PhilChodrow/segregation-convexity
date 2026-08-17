@@ -18,7 +18,7 @@ information_loss <- function(n, m, M) {
 }
 
 
-hclust_sf <- function(geo){
+hclust_sf <- function(geo, verbose = T){
 
 	demographic_lookup <- geo |>
 		mutate(id = 1:n()) |>
@@ -55,7 +55,9 @@ hclust_sf <- function(geo){
 	cluster_stage <- 1
 
 	for (i in 1:(n-1)) { 
-		print(paste("Iteration:", i, "Length of adjacency:", nrow(adj)))
+		if(verbose){
+			print(paste("Iteration:", i, "Length of adjacency:", nrow(adj)))
+		}
 		# choose merge to perform
 		new_cluster_name <- n+i
 		ix <- which.min(adj$info_loss)

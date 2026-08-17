@@ -24,7 +24,7 @@ make_dots <- function(geo, people_per_dot){
 }
 
 
-hclust_map <- function(geo, h, k, gg){
+hclust_map <- function(geo, h, k, gg, size_factor = 1){
     
     all <- st_union(geo)
 
@@ -42,7 +42,7 @@ hclust_map <- function(geo, h, k, gg){
 
         size <- rev(h$height)[j-1]
 
-        gg <- gg + geom_sf(data = bd, alpha = 1, color = darkgrey, size = 10^(2*size))
+        gg <- gg + geom_sf(data = bd, alpha = 1, color = darkgrey, size = 10^(2*size)*size_factor)
     }
     gg
 }

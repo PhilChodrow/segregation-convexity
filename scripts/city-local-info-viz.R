@@ -6,11 +6,13 @@ args <- commandArgs(trailingOnly=TRUE)
 cities <- args[1:length(args)]
 
 
-people_per_dot <- 1000
-max_j <- 1500
+people_per_dot <- 100
+max_j <- NA
 
 
 plot_list <- list()
+
+cities <- c("Milwaukee")
 
 for(j in 1:length(cities)){
     
@@ -25,9 +27,9 @@ for(j in 1:length(cities)){
         font_theme + 
         theme_void() + 
         scale_fill_viridis_c(option = "inferno", limits = c(0, max_j)) +
-        labs(title = "Local Information") + 
-        guides(fill = guide_colorbar(title.position = 'top', title.hjust = 0.5, title = "J(x)")) +
-        font_theme
+        guides(fill = guide_colorbar(title.hjust = 0.5, title = "J(x)")) +
+        font_theme +
+        theme(legend.position = "bottom")
 
     
     
@@ -37,8 +39,8 @@ for(j in 1:length(cities)){
         theme_void() + 
         geom_sf(data = dots, aes(color = variable), size = 0.5) + 
         scale_color_manual(values = palette) + 
-        guides(color = guide_legend(override.aes = list(size = 4))) + 
-        theme(legend.title = element_blank()) + 
+        guides(color = guide_legend(override.aes = list(size = 4), nrow = 2)) + 
+        theme(legend.title = element_blank(), legend.position = "bottom") + 
         font_theme
 
     if(j > 1){
@@ -52,9 +54,9 @@ for(j in 1:length(cities)){
     plot_list[[2*j]] <- local_info_viz
 }
 
-p <- patchwork::wrap_plots(plot_list, nrow = 2)
+p <- patchwork::wrap_plots(plot_list, ncol = 2) & theme(plot.margin=unit(c(0,0,0,0),"mm"))
 
-ggsave("fig/local-info.png", p, width = 8, height = 6, bg = "white")
+ggsave("fig/local-info.png", p, width = 4.5, height = 5, bg = "white")
 
 
 

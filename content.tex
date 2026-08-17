@@ -251,8 +251,17 @@ Let $\tilde{\ve}_j \in \R^{\ell}$ denote a standard basis vector in $\R^{\ell}$.
   \end{itemize}
   These intuitions are all entangled, but lead to different directions in terms of measurement. 
 
-  \subsection{A Perturbative View: Spatial Smoothing}
-  
+  \subsection{A Perturbative View: Spatial Smoothing} \label{sec:smoothing}
+
+    \begin{figure}
+      \centering 
+      \includegraphics[width=0.5\textwidth]{fig/smoother_curves.png}
+      \caption{
+        Illustration of spatial profile curves for segregation under Gaussian Radial Basis (RBF) smoothing as the bandwidth is varied. 
+        Cities display spatially ``coarser'' segregation when the value of the Jensen information remains close to its maximum value even as the smoothing bandwidth is increased. 
+      }
+    \end{figure}
+
     One approach to spatialization, now standard in the quantitative sociology literature \cite{reardon3MeasuresSpatial2004}, is to preprocess the population data by applying a spatial smoothing kernel. 
     To construct a spatialized measure of segregation that can address the checkerboard problem, we simply replace the original population $\cP = (\cX, \mY, \mu)$ with a smoothed population $\cP' = (\cX, \mY', \mu)$, where $\mY'$ is obtained by applying a smoothing kernel to the rows of $\mY$: for each location $i$, 
     \begin{align*}
@@ -265,6 +274,16 @@ Let $\tilde{\ve}_j \in \R^{\ell}$ denote a standard basis vector in $\R^{\ell}$.
     
 
   \subsection{A Scale-Based View: Spatial Information Decomposition}
+
+
+    \begin{figure*}
+      \centering 
+      \includegraphics[width=\textwidth]{fig/aggregation-viz.png}
+      \caption{
+        Learned major boundaries (heavy black lines) and information loss associated to them for each of three sample cities. 
+        In each map, dots represent 1,000 individuals of the specified demographic category.
+      }
+    \end{figure*}
 
     Another response to the MAUP is to consider the question of how a segregation measure should change as we modify the areal units under study. 
     We cannot change the areal units arbitrarily, but we can \emph{aggregate} them into larger units. 
@@ -325,51 +344,108 @@ Let $\tilde{\ve}_j \in \R^{\ell}$ denote a standard basis vector in $\R^{\ell}$.
 
   \subsection{A Boundary-Based View: Local Information}
   
+    A third approach to spatializing segregation measures follows the intuition that the checkerboard pattern of \Cref {fig:checkerboard}(c) has more \emph{boundaries} or \emph{transitions} between demographically contrasting regions than the monolithic pattern of \Cref{fig:checkerboard}(d).
+    In this setting, it is convenient to to model the observed demographic distribution via a differentiable function $\Upsilon: \cR \rightarrow \simplex{\ell}$, where $\cR \subset \R^d$ represents continuous geographic space and $\vy = \Upsilon(\vx)$ gives the demographic distribution at location $\vx \in \cR$.
+    This modeling assumption is arguably unrealistic given the presence of sharp boundaries in real-world settled environments, but can be enforced through the application of a differentiable smoothing kernel to the demographic data as described in \Cref{sec:smoothing}.
+    Under this set of assumptions, the tendency of the demographic distribution to change with space is given by the Jacobian of $\Upsilon$, denoted $\jacobian{\Upsilon}(\vx) \in \R^{\ell \times d}$.
+    One could in principle describe the ``boundariness'' of a point $\vx \in \relint{\cR}$ via a norm of the Jacobian such as the Frobenius norm: $b(\vx) = \norm{\jacobian{\Upsilon}(\vx)}_F^2 = \sum_{i=1}^{\ell} \sum_{j=1}^d (\partial \Upsilon_i / \partial x_j)^2$.
+    An aggregate measure of boundariness over the entire region $\cR$ is then given by the integral $B(\cR) = \int_{\cR} b(\vx) d\vx$.
+    This straightforward approach has an important limitation: it is insensitive to the choice of diversity function $\phi$ and Jensen information $I_\phi$ used in analysis. 
 
+    We can obtain a generalization of this approach by considering the behavior of the Jensen information $I_\phi$ within a small neighborhood about a point $\vx \in \relint{\cR}$. 
+    As illustrated in \Cref{fig:checkerboard-smoothed}, a neighborhood of a point in the interior of a monolothic region will appear homogeneous and therefore have a ``local'' Jensen information near 0, while a point near a boundary between contrasting regions will appear heterogeneous and therefore have a higher value of the local information. 
+    To make these intuitions precise, we define a localized version of the Jensen information for the continuous setting. 
+    For the remainder of this section, we define a continuous Jensen information as 
+    \begin{align}
+      I_\phi(\Upsilon, \cR) = \int_{\cR} \paren{\phi(\Upsilon(\vx)) - \bar{\vy}(\cR)} d\mu(\vx) \;,
+    \end{align}
+    where $\bar{\vy}(\cR) = \int_{\cR} \Upsilon(\vx) d\mu(\vx)$ is the mean demographic distribution over the region $\cR$.
+    \begin{dfn}
+      Let $\Upsilon: \cR \rightarrow \simplex{\ell}$ be a differentiable function representing the demographic distribution over a region $\cR \subset \R^d$, and let $\phi: \simplex{\ell} \rightarrow \R$ be a strictly convex function. 
+      The \emph{local information} of $\Upsilon$ at a point $\vx \in \relint{\cR}$ is 
+      \begin{align}
+        j_\phi(\Upsilon, \vx) = \lim_{\epsilon \rightarrow 0} \frac{I_\phi(\Upsilon, B_\epsilon(\vx))}{\epsilon^2}\;,  \label{eq:local-info-def}
+      \end{align}
+      where $B_\epsilon(\vx) = \{\vy \in \cR : \norm{\vy - \vx}_2 < \epsilon\}$ is the open ball of radius $\epsilon$ centered at $\vx$.
+    \end{dfn}
+    We can either calculate the local information at many points for use in visualization, or integrate the local information over the entire region to obtain an aggregate spatialized measure, the \emph{mean local information}: 
+    \begin{align}
+      J_\phi(\Upsilon, \cR) = \int_{\cR} j_\phi(\Upsilon, \vx) \;d\mu(\vx) \;.  \label{eq:mean-local-info}
+    \end{align}
 
-  \subsection{Multiscale Segregation Measurement}
-  It provides a useful guide for describing the scale of segregation within a population at different levels of spatial aggregation. 
-  For example, 
-  \phil{Put in a city here with blockgroup, tract, and maybe ZIP, neighborhood, or county-level aggregation and show how the decomposition works.}
+    To do this, however, we must know that the limit in \cref{eq:local-info-def} exists and must be able to approximate it in a computationally tractable way.
+    \begin{thm}[\cite{chodrowStructureInformationSpatial2017}] \label{thm:local-info}
+      Fix $\vx \in \cR$ and let $\vy = \Upsilon(\vx)$. 
+      The limit in \cref{eq:local-info-def} exists and its value is 
+      \begin{align}
+        j_\phi(\Upsilon, \vx) = \frac{1}{8} \trace\paren{\jacobian{\Upsilon}(\vx)^{\top} \hess{\phi}(\vy)  \jacobian{\Upsilon}(\vx)} \;.  \label{eq:local-info}
+      \end{align}
+    \end{thm}
+    The proof \cite{chodrowStructureInformationSpatial2017} relies on the local quadratic property of Bregman divergences \cref{eq:local-quadratic}. 
+
+    In the common case that $\phi$ is separable, this expression reduces to 
+    \begin{align}
+      j_\phi(\Upsilon, \vx) = \frac{1}{8} \sum_{j = 1}^{\ell}\sum_{i = 1}^d \frac{\partial^2 \phi}{\partial y_j^2} \paren{\frac{\partial \Upsilon_j}{\partial x_i}}^2 \;.  \label{eq:local-info-separable}
+    \end{align}
+    This expression can be viewed as a weighted Frobenius norm with weights given by the entries of the Hessian of the diversity function $\phi$.
+    The local information therefore captures the dependence of a spatial measure on \emph{both} the spatial distribution of the population $\Upsilon$ and the choice of diversity function $\phi$.
+    To compute the local information in practice, we must approximate the spatial derivatives of $\Upsilon$. 
+    This author previously performed this task via smoothing followed by local least-squares approximation \cite{chodrowStructureInformationSpatial2017}, but other estimation methods may prove more effective in practice.
+    
+
+    
+
 
   \begin{figure}
-    \includegraphics[width=0.5\textwidth]{fig/hclust-viz.png}
-    \caption{Some caption.}
-  \end{figure}
-
-  \begin{figure}
-    \includegraphics[width=0.5\textwidth]{fig/local-info.png}
-    \caption{Another caption.}
+    \includegraphics[width=0.45\textwidth]{fig/local-info.png}
+    \caption{Local information in Milwaukee, Wisconsin. A smoothing kernel of bandwidth \citySmootherBandwidth{} km was applied to the original population data, and the local information was computed at each pixel using \cref{eq:local-info-separable}}.
+    \phil{Likely the $J(x)$ in this figure is computed with some kind of distance measure that represents degrees lat/lon rather than km. Sample code to rectify this is in \texttt{geometry.R} in the old \texttt{spatialcomplexity} repo.}
   \end{figure}
 
 
 
-  \subsection{Regionalization}
-  \phil{Also bring in an example of generating a boundary via spatial aggregation.} 
-
-  \subsection{Spatial Smoothing Kernels}
-
-  \subsection{Local Information}
-
-  \begin{dfn} \label{def:local-information}
-    The local information!
-  \end{dfn}
-
-  \begin{thm}\label{thm:local-information}
-    blah blah blah    
-  \end{thm}
 
 
 
+\section*{Extensions to Ordinal Segregation Measures}
+
+  One of the aims of this article has been to abstract attention away from specific measures of diversity and segregation and towards the properties and methods that we can obtain using only minimal additional assumptions. 
+  The payoff is that, to apply the theory and methods described, one need only choose a diversity function $\phi$ and check that it is strictly convex (and, in some cases, separable). 
+  Consider, for example, the demographics of \emph{income} and income segregation. 
+  In this setting, we might care less about \emph{diversity} with respect to income categories\footnote{Does the existence of billionaires in a population contribute to a valuable sense of ``income diversity?''} and more about (approximate) \emph{equality}. 
+  There are at least two approaches which fit naturally into the framework developed above. 
+
+  In one, we define the diversity function $\phi$ in terms of the cumulative distribution function of wealth. 
+  Let $p(w)$ give the proportion of individuals in spatial unit $i$ with wealth $w$, which we assume to be an integer. 
+  Define the vector giving the probability mass function $\vp = (p(1), p(2), \ldots,p_{w_\mathrm{max}})^\top \in \R^{w_\mathrm{max}}$, as well as the vector $\vc = (p(1), p(1) + p(2), \sum_{i = 1}^{w_\mathrm{max}}p(i))^\top$. 
+  We then have $\vc = \mS \vp$, where $\mS$ is the lower-triangular matrix whose lower triangle consists of ones. 
+  We let $\phi(\vp) = \norm{\vc}_2^2 = \norm{\mS\vc}_2^2$. 
+  Since $\phi$ is the composition of a full-rank linear map and a strictly convex function, $\phi$ is itself strictly convex. 
+  The corresponding Bregman divergence is the $\ell_2$ distance between CDFs, 
+  $\divergence{\phi}{\vp}{\bar{\vp}} = \norm{\vc - \bar{\vc}}^2_2$. 
+  In this formulation, $\phi$ is nonseparable. 
+
+
+  An alternative is to change the role of \emph{people} from units of population to ``categories'' themselves. 
+  A population displaying perfect equality is one in which a given unit of wealth has equal chance of belonging to any given person; that is, in which the distribution of wealth is uniform over all such ``categories.'' 
+  The Shannon entropy of the distribution of wealth over individuals then provides a measure of equality; it is maximized at complete equality and minimized when a single individual possesses all available wealth.\footnote{This approach is similar to that of Theil \cite{theil1967economics}}.  
+  The resulting measure is separable and the analysis tools described in the previous sections apply directly. 
+  A limitation of this approach, however, is that since populations (and therefore numbers of ``categories'') differ, direct comparison of segregation levels between urban areas may pose interpretive challenges. 
+
+  
+
+
+  
 
 
 
 
 
 
-\section*{Extensions}
+\section*{How Many Measurements?}
 
-  Ordinal measures
+
+
 
 
 
@@ -396,24 +472,6 @@ Let $\tilde{\ve}_j \in \R^{\ell}$ denote a standard basis vector in $\R^{\ell}$.
     } \label{fig:checkerboard-smoothed}
 \end{figure}
 
-\begin{figure*}
-  \centering
-  \includegraphics[width=1.0\textwidth]{fig/Detroit-local-info-overview.png}
-  \caption{
-    Test!!
-    } \label{fig:city-local-info}
-\end{figure*}
-
-\begin{figure}
-  \centering
-  \includegraphics[width=0.5\textwidth]{fig/aggregation-viz.png}
-  \caption{
-    (Top): Heatmap showing the proportion of Black residents in \aggCity{}, delimited by nested areal units. 
-    Thickest boundaries correspond to county subdivisions, thinner boundaries to Census tracts, and thinest boundaries to Census block groups.
-    (Bottom): Behavior of the Shannon mutual information between Black and non-Black residents across geographic levels. 
-    If $\cP$ is the population at the level of blockgroups (far left), the conditional Jensen information $I_\psi(\cP \mid \cP')$ is the difference between the given value of the information and the blockgroup value. 
-    } \label{fig:aggregation-viz}
-\end{figure}
 
 
 %\bibliographystyle{foo}
