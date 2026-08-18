@@ -22,25 +22,26 @@ for(j in 1:length(cities)){
         pivot_wider(names_from = variable, values_from = estimate)
 
     local_info_viz <- geo_info |>
+        mutate(local_info = 1/(8*pi) * (trace)) |>
         ggplot() + 
-        geom_sf(aes(fill = trace), size = 0.02) +
+        geom_sf(aes(fill = local_info), size = 0.02) +
         font_theme + 
         theme_void() + 
-        scale_fill_viridis_c(option = "inferno", limits = c(0, max_j)) +
-        guides(fill = guide_colorbar(title.hjust = 0.5, title = "J(x)")) +
+        scale_fill_viridis_c(option = "inferno", limits = c(0, 0.02), breaks = c(0, 0.01, 0.02)) +
+        guides(fill = guide_colorbar(title = "Local\ninformation\n(nats/km²)"), title.position = "top") +
         font_theme +
-        theme(legend.position = "bottom")
+        theme(legend.position = "bottom", plot.margin = unit(c(0,0,0,0), "mm")) 
+        # + 
+        # guides(fill = guide_colorbar(breaks = seq(0, max_j, length.out = 3), title.position = "top", title.hjust = 0.5)) 
 
-    
-    
     dots <- make_dots(geo, people_per_dot)
     dot_viz <- ggplot() + 
-        geom_sf(data = geo, fill = "#eee2e2", color = "#eee2e2") + 
+        geom_sf(data = geo, size = 0.1, fill = map_fill, color = map_color) + 
         theme_void() + 
-        geom_sf(data = dots, aes(color = variable), size = 0.5) + 
+        geom_sf(data = dots, aes(color = variable), size = 0.2) + 
         scale_color_manual(values = palette) + 
         guides(color = guide_legend(override.aes = list(size = 4), nrow = 2)) + 
-        theme(legend.title = element_blank(), legend.position = "bottom") + 
+        theme(legend.title = element_blank(), legend.position = "bottom", plot.margin = unit(c(0,0,0,0), "mm")) + 
         font_theme
 
     if(j > 1){
@@ -62,42 +63,3 @@ ggsave("fig/local-info.png", p, width = 4.5, height = 5, bg = "white")
 
 
 
-
-
-# 
-
-# # just for the demographics
-# 
-
-# geo <- geo |>
-#     filter(variable %in% c("White", "Black", "Hispanic")) |>
-#     group_by(GEOID) |>
-#     mutate(p = estimate / sum(estimate)) |>
-#     ungroup() |>
-#     select(-estimate)
-
-
-# demographic_viz <- function(geo, variable_name, color) {
-#     geo |>
-#         filter(variable == variable_name) |>
-#         ggplot() + 
-#         geom_sf(aes(fill = p), size = 0.02) +
-#         font_theme + 
-#         theme_void() + 
-#         scale_fill_gradient(low = "white", high = color, limits = c(0, 1), na.value = "white") +
-#         labs(title = paste("Proportion", variable_name)) + 
-#         guides(fill = "none")
-# }
-
-
-
-
-
-# r <- demographic_viz(geo, "White", "#ED6A5A") + 
-#      demographic_viz(geo, "Black", "#d8d154") + 
-#      demographic_viz(geo, "Hispanic", "#5b8781") + 
-#      local_info_viz +
-#     plot_layout(guides = "collect", nrow = 1) 
-
-
-# ggsave(paste0("fig/", city, "-local-info-overview.png"), r, width = 12, height = 3, bg = "white")

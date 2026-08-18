@@ -51,10 +51,8 @@ We close with some discussion about extending this framework in the direction of
 
 \section{Preliminaries} \label{sec:preliminaries}
 
-
-  To make these ideas concrete, we formalize the idea of a \emph{population} and measurements which reflect the diversity or segregation of that population.  
-  Our framework for defining populations is intentionally discrete, in recognition of the fact that all Census-type data sets provide demographic information in discrete areal units such as counties, tracts, or blockgroups. 
-
+  We first define abstract notions of ``populations'' and ``population measurements.''
+  Our framework is intentionally discrete, in recognition of the fact that all Census-type data sets provide demographic information in discrete areal units such as counties, tracts, or blockgroups. 
   \begin{dfn} \label{def:simplex}
       For $\ell \in \N,$ the \emph{probability simplex} $\simplex{\ell}$ is the set 
       \begin{align*}
@@ -78,9 +76,9 @@ We close with some discussion about extending this framework in the direction of
   The matrix $\mY$ represents the demographic distribution of the population according to some attribute such as gender, race, or education level: the $i$th row $\vy_i$ of $\mY$ gives the proportion of individuals in each demographic category at location $i$.
   Finally, the probability vector $\mu$ represents the population density across locations; the proportion of individuals living in location $i$ is $\mu_i$. 
   The probability that a single individual, chosen uniformly at random from the population, lives in location $i$ and is in demographic category $j$ is $\mu_i y_{ij}$. 
-  The mean population vector $\bar{\vy} = \sum_{i = 1}^n \mu_i \vy_i$ has entries giving the marginal probabilities that an individual chosen uniformly at random belongs to each demographic category. 
+  The mean population vector $\bar{\vy} = \sum_{i = 1}^n \mu_i \vy_i$ has entries giving the marginal probabilities that an individual chosen uniformly at random from the entire population belongs to each demographic category. 
   \begin{dfn} \label{def:population-measurement}
-    A \emph{population measurement} is a function $f: \Pops_{nd\ell} \rightarrow \R$.\footnote{The population density $\mu$ could reasonably described as a \emph{population measure}, which is an entirely disjoint concept from a population measurement. We will avoid the phrase ``population measure'' and emphasize ``measurement'' whenever possible.} 
+    A \emph{population measurement} is a function $f: \Pops_{nd\ell} \rightarrow \R$.
   \end{dfn}
   We consider the problems of quantifying diversity, segregation, and spatial segregation as the problems of constructing population measurements which match intuition and satisfy desirable properties. 
   
@@ -88,17 +86,18 @@ We close with some discussion about extending this framework in the direction of
 
   Heuristically, we often say that a population is \emph{diverse} with respect to an attribute when it contains many categories of that attribute in roughly equal proportions.
   Diversity is usually considered to be a property of a population as a whole, without regard for spatial or demographic subdivisions. 
-  In our formal structure from \Cref{def:population,def:population-measurement}, a diversity measure $f:\Pops_{nd\ell} \rightarrow \R$ is a function of the mean population demographic vector: $f(\cP) = \psi(\bar{\vy})$ for some function $\psi: \simplex{\ell} \rightarrow \R$.
-  It remains to specify the properties that $\psi$ should have to capture an intuitive notion of diversity. 
+  Thus, a diversity measure $f:\Pops_{nd\ell} \rightarrow \R$ is a function of the mean population demographic vector: $f(\cP) = \psi(\bar{\vy})$ for some function $\psi: \simplex{\ell} \rightarrow \R$.
+  What properties should this function have in order to capture an intuitive notion of diversity?
+
 
   Working in mathematical ecology, Pielou \cite{pielouMathematicalEcology1977} gives a proposed set of criteria. 
   For $\ell \in \N$, let $[\ell] = \{1, 2, \ldots, \ell\}$. 
-  Let $\ve_{I} \in \simplex{\ell}$ be the vector with $1$ in the indices specified by the multiindex $I \subseteq [\ell]$ and $0$ elsewhere. 
+  Let $\ve_{I} \in \simplex{\ell}$ be the vector with $1$ in the indices specified by the multi-index $I \subseteq [\ell]$ and $0$ elsewhere. 
   \begin{enumerate}
     \item \textbf{Uniform maximizer.} ``\emph{Diversity should be maximized when all groups are present in equal proportions.}'' 
-    In our setup, this means that $\frac{1}{\ell} \ve_{[\ell]} = \argmax_{\vy \in \simplex{\ell}} \psi(\vy)$. 
+    Formally, $\frac{1}{\ell} \ve_{[\ell]} = \argmax_{\vy \in \simplex{\ell}} \psi(\vy)$. 
     \item \textbf{Monotone under group addition.} ``\emph{In two populations in which all groups are equally represented, the population with the greatest number of groups will be more diverse.}'' 
-    Mathematically, if $I\subset [\ell]$, then $\psi\paren{\ve_{I}/|I|} < \psi\paren{\ve_{[\ell]}/\ell}$.
+    Formally, if $I\subset [\ell]$, then $\psi\paren{\ve_{I}/|I|} < \psi\paren{\ve_{[\ell]}/\ell}$.
     \item \textbf{Additive under independent attributes.} ``\emph{In a multiple classification (two or more qualitative variates) where the classifications are independent, the total diversity should equal the sum of the respective diversities.}'' 
     This statement can be formalized as follows, interpreting ``independent'' in the sense of probability distributions: suppose that, for a given population $\pop = (\cX, \mY, \mu) \in \Pops_{nd\ell}$, there exist two other populations $\pop_1 = (\cX, \mU \in \R^{n\times \ell_1}, \mu)$ and $\pop_2 = (\cX, \mV \in \R^{n\times \ell_2}, \mu)$ such that $\ell = \ell_1\ell_2$ and a bijection $\alpha: [\ell_1] \times [\ell_2] \rightarrow [\ell]$ such that $y_{ij} = u_{i\alpha_1(j)} v_{i\alpha_2(j)}$ for all $i \in [n]$ and $j \in [\ell]$. 
     Then $f(\pop) = f(\pop_1) + f(\pop_2)$.
@@ -123,14 +122,37 @@ We close with some discussion about extending this framework in the direction of
     Function $\psi$ is (\emph{strictly}) \emph{concave} if $\phi = -\psi$ is (strictly) convex.
   \end{dfn}
   The simplex $\simplex{\ell}$ is a convex set, and so the notion of convexity applies to functions defined on $\simplex{\ell}$.
-  We will abuse notation slightly and refer to a population measurement $f(\cP) = -\phi(\bar{\vy})$ as (\emph{strictly}) \emph{concave} if $\phi$ is (strictly) convex.
+  We will abuse notation slightly and refer to a population measurement $f(\cP) = -\phi(\bar{\vy})$ as (\emph{strictly}) \emph{concave} if $\phi$ is (strictly) convex.\footnote{Following convention, we will emphasize convexity of $\phi$ rather than concavity of $-\phi$.}
+
+  \begin{example}[Diversity Measurements]
+    The \emph{Shannon entropy} is given by the choice $\phi(\vy) = \sum_{j = 1}^{\ell} y_j \log y_j$, while the \emph{Simpson index} is given by $\phi(\vy) = \sum_{j = 1}^{\ell} y_j^2 - 1$.
+  \end{example}
+
+  \begin{example}
+    For each $w \in 0,\ldots,w_\mathrm{max}$, define a demographic category as ``possessing exactly $w$ units of wealth.'' 
+    Then, entry $y_{iw}$ gives the proportion of individuals in location $i$ possessing wealth $w$.
+    Let $\mC$ be the strictly lower triangular matrix of ones: $\mC_{ij} = 1$ if $i > j$ and $\mC_{ij} = 0$ otherwise. 
+    Then $\mC \vy_i$ gives the cumulative distribution function of wealth at location $i$. 
+    The function $\phi(\vy) = \norm{\mC \vy}_2^2$ is strictly convex, and so $f(\cP) = -\norm{\mC \bar{\vy}}_2^2$ is a concave population measurement.
+    This population measurement expresses a value on wealth equality; 
+  \end{example}
+  \phil{Figure out how to think about when this is maximized if we are going to use it in any way.}
+
+
+  \begin{figure}
+    \centering
+    \includegraphics[width=0.5\textwidth]{fig/simplex-entropy.png}
+    \caption{
+      Isocontours of Shannon entropy on the simplex $\simplex{3}$.
+      One property of convex functions is that each complete isocontour encloses a convex subset of the simplex. 
+    }
+  \end{figure}
 
   
   
   
   \begin{thm} \label{thm:monotone-under-group-addition}
     If $\phi: \simplex{\ell} \rightarrow \R$ is strictly convex, then the population measurement $f(\cP) = -\phi(\bar{\vy})$ satisfies the monotonicity under group addition property. 
-    \phil{Proof has a nonnegativity requirement that shouldn't be there.}
   \end{thm}
   
   \begin{dfn}
@@ -193,6 +215,16 @@ The Bregman divergence can be interpreted as a measure of dissimilarity of $\vy$
 It is always nonnegative and is zero if and only if $\vy = \bar{\vy}$.
 The Bregman divergence is not a metric, as it is not symmetric and does not satisfy the triangle inequality, although it does satisfy many other useful properties \cite{banerjeeClusteringBregmanDivergences2005}. 
 Examples of Bregman divergences include the squared Euclidean distance $g(\vy, \bar{\vy}) = \norm{\vy - \bar{\vy}}_2^2$ (corresponding to $\phi(\vy) = \frac{1}{2} \|\vy\|_2^2$) and the Kullback-Leibler divergence $g(\vy, \bar{\vy}) = \sum_{j = 1}^{\ell} y_j \log(y_j / \bar{y}_j)$ (corresponding to $\phi(\vy) = \sum_{j = 1}^{\ell} y_j \log y_j$).
+
+ \begin{figure}
+    \centering
+    \includegraphics[width=0.5\textwidth]{fig/simplex-information.png}
+    \caption{
+      Illustration of \Cref{eq:information-equivalence}. 
+      Points $\vy_i$, $i = 1,\ldots, 5$ are sized according to their weight $\mu_i$ and are located in the simplex $\simplex{3}$ according to their demographic distribution.
+      The Jensen information $I_\phi(\cP)$ is the weighted mean of the Bregman divergences $\divergence{\phi}{\vy_i}{\bar{\vy}}$ from each point to the mean $\bar{\vy}$.
+    }
+  \end{figure}
 
 A property of Bregman divergences which will be useful later on is that they are \emph{locally} quadratic, in the sense that for any $\vy \in \interior{\simplex{\ell}}$ and $\vdelta$ in the tangent space to $\simplex{\ell}$ at $\vy$, we have
 \begin{align}
@@ -378,14 +410,14 @@ Let $\tilde{\ve}_j \in \R^{\ell}$ denote a standard basis vector in $\R^{\ell}$.
       Fix $\vx \in \cR$ and let $\vy = \Upsilon(\vx)$. 
       The limit in \cref{eq:local-info-def} exists and its value is 
       \begin{align}
-        j_\phi(\Upsilon, \vx) = \frac{1}{8} \trace\paren{\jacobian{\Upsilon}(\vx)^{\top} \hess{\phi}(\vy)  \jacobian{\Upsilon}(\vx)} \;.  \label{eq:local-info}
+        j_\phi(\Upsilon, \vx) = \frac{1}{8\pi} \trace\paren{\jacobian{\Upsilon}(\vx)^{\top} \hess{\phi}(\vy)  \jacobian{\Upsilon}(\vx)} \;.  \label{eq:local-info}
       \end{align}
     \end{thm}
     The proof \cite{chodrowStructureInformationSpatial2017} relies on the local quadratic property of Bregman divergences \cref{eq:local-quadratic}. 
 
     In the common case that $\phi$ is separable, this expression reduces to 
     \begin{align}
-      j_\phi(\Upsilon, \vx) = \frac{1}{8} \sum_{j = 1}^{\ell}\sum_{i = 1}^d \frac{\partial^2 \phi}{\partial y_j^2} \paren{\frac{\partial \Upsilon_j}{\partial x_i}}^2 \;.  \label{eq:local-info-separable}
+      j_\phi(\Upsilon, \vx) = \frac{1}{8\pi} \sum_{j = 1}^{\ell}\sum_{i = 1}^d \frac{\partial^2 \phi}{\partial y_j^2} \paren{\frac{\partial \Upsilon_j}{\partial x_i}}^2 \;.  \label{eq:local-info-separable}
     \end{align}
     This expression can be viewed as a weighted Frobenius norm with weights given by the entries of the Hessian of the diversity function $\phi$.
     The local information therefore captures the dependence of a spatial measure on \emph{both} the spatial distribution of the population $\Upsilon$ and the choice of diversity function $\phi$.
@@ -398,8 +430,7 @@ Let $\tilde{\ve}_j \in \R^{\ell}$ denote a standard basis vector in $\R^{\ell}$.
 
   \begin{figure}
     \includegraphics[width=0.45\textwidth]{fig/local-info.png}
-    \caption{Local information in Milwaukee, Wisconsin. A smoothing kernel of bandwidth \citySmootherBandwidth{} km was applied to the original population data, and the local information was computed at each pixel using \cref{eq:local-info-separable}}.
-    \phil{Likely the $J(x)$ in this figure is computed with some kind of distance measure that represents degrees lat/lon rather than km. Sample code to rectify this is in \texttt{geometry.R} in the old \texttt{spatialcomplexity} repo.}
+    \caption{Local information in Milwaukee, Wisconsin. A smoothing kernel of bandwidth \citySmootherBandwidth{} km was applied to the original population data, and the local information was computed at each pixel using \cref{eq:local-info-separable}.}
   \end{figure}
 
 
@@ -453,24 +484,15 @@ Let $\tilde{\ve}_j \in \R^{\ell}$ denote a standard basis vector in $\R^{\ell}$.
 
 
 
-\cite{chodrowEquivalenceInformationsCharacterizes2025b}
-\cite{chodrowStructureInformationSpatial2017}
+% \cite{chodrowEquivalenceInformationsCharacterizes2025b}
+% \cite{chodrowStructureInformationSpatial2017}
 
-\cite{banerjeeClusteringBregmanDivergences2005}
-
-
+% \cite{banerjeeClusteringBregmanDivergences2005}
 
 
 
 
 
-\begin{figure}
-  \centering
-  \includegraphics[width=0.5\textwidth]{fig/checkerboard-smoothed-and-trace.png}
-  \caption{
-    The smoothing bandwidth is $\smoothingBandwidth{}$ pixels. The mean local information of the checkerboard pattern is $\meanTraceChecker{}$, while the mean local information of the segregated pattern is $\meanTraceSeg{}$.
-    } \label{fig:checkerboard-smoothed}
-\end{figure}
 
 
 
@@ -482,15 +504,21 @@ Let $\tilde{\ve}_j \in \R^{\ell}$ denote a standard basis vector in $\R^{\ell}$.
 \section{Supplementary Proofs}
 
 \begin{proof}[Proof of \Cref{thm:monotone-under-group-addition}]
-    \phil{This shouldn't require nonnegativity}
-    Monotonicity under group addition is a consequence of convexity and nonnegativity: if $\psi$ is concave, then for any $I \subseteq [\ell]$ and $\lambda = \frac{|I|}{\ell}$, we have
+    Let $\phi$ be strictly convex. 
+    We'll first assume that $\phi$ is nonnegative. 
+    Then, for any $I \subset [\ell]$ and $\lambda = \frac{|I|}{\ell}$, we have
     \begin{align*}
-      \psi\paren{\frac{1}{\ell} \ve_{[\ell]} } 
-      & = \psi\paren{\lambda \frac{1}{|I|} \ve_{I} + (1-\lambda) \frac{1}{\ell - |I|} \ve_{[\ell]\setminus I}} \\
-      & \geq \lambda \psi\paren{\frac{1}{|I|} \ve_{I}} + (1-\lambda) \psi\paren{\frac{1}{\ell - |I|} \ve_{[\ell]\setminus I}} \\
-      & \geq \psi\paren{\frac{1}{|I|} \ve_{I}} \;,
+      \phi\paren{\frac{1}{\ell} \ve_{[\ell]} } 
+      & = \phi\paren{\lambda \frac{1}{|I|} \ve_{I} + (1-\lambda) \frac{1}{\ell - |I|} \ve_{[\ell]\setminus I}} \\
+      & < \lambda \phi\paren{\frac{1}{|I|} \ve_{I}} + (1-\lambda) \phi\paren{\frac{1}{\ell - |I|} \ve_{[\ell]\setminus I}} \\
+      & \leq \phi\paren{\frac{1}{|I|} \ve_{I}} \;,
     \end{align*}
     where the first inequality is by convexity and the second is by nonnegativity. 
+
+    Now, relax the requirement that $\phi$ is nonnegative. 
+    Since the simplex $\simplex{\ell}$ is compact (closed and bounded) and $\phi$ is continuous, $\phi$ attains a minimum on $\simplex{\ell}$, which we denote $\phi_{\min} = \min_{\vy \in \simplex{\ell}} \phi(\vy)$.
+    Then, let $\phi'(\vy) = \phi(\vy) - \phi_{\min}$, which is nonnegative and convex. 
+    The calculation above now goes through replacing $\phi$ with $\phi'$, proving that $\phi'\paren{\frac{1}{\ell} \ve_{[\ell]}} \leq \phi'\paren{\frac{1}{|I|} \ve_{I}}$  and therefore that $\phi\paren{\frac{1}{\ell} \ve_{[\ell]}} \leq \phi\paren{\frac{1}{|I|} \ve_{I}}$.
   \end{proof}
 
 \begin{proof}[Proof of \Cref{thm:diversity-axioms-1}]
@@ -534,6 +562,19 @@ Let $\tilde{\ve}_j \in \R^{\ell}$ denote a standard basis vector in $\R^{\ell}$.
   The last line follows from the assumptions that $y_{ia} < y_{ja}$ and $y_{ib} > y_{jb}$, and the fact that, if $\phi$ is strictly convex, then $\phi'$ is strictly increasing, and so $\phi'(y_{ia}) - \phi'(y_{ja}) > 0$ and $\phi'(y_{jb}) - \phi'(y_{ib}) > 0$.
   Choosing $\epsilon*$ sufficiently small to justify the linear approximation completes the proof. 
 \end{proof}
+
+
+\section{Supplementary Figures}
+
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.5\textwidth]{fig/checkerboard-smoothed-and-trace.png}
+  \caption{
+    The smoothing bandwidth is $\smoothingBandwidth{}$ pixels. The mean local information of the checkerboard pattern is $\meanTraceChecker{}$, while the mean local information of the segregated pattern is $\meanTraceSeg{}$.
+    } \label{fig:checkerboard-smoothed}
+\end{figure}
+
 
 
 

@@ -7,14 +7,14 @@ source("src/constructors.R")
 
 compute_centroid_df <- function(tracts, km = FALSE, ...){
 
-	centroids <- st_centroid(tracts) %>%
+	centroids <- st_centroid(tracts) |>
 		mutate(x = map_dbl(geometry, ~.[1]),
-			   y = map_dbl(geometry, ~.[2])) %>%
-		tibble() %>%
+			   y = map_dbl(geometry, ~.[2])) |>
+		tibble() |>
 		select(GEOID, x, y) 
 
 	if(km){
-		centroids <- centroids %>%
+		centroids <- centroids |>
 			mutate(x = x * cos(y / 360) * 111,
 				   y = y * 111)
 	}
@@ -29,23 +29,23 @@ id_lookup <- function(tracts, key_col = 'GEOID'){
 make_adjacency <- function(tracts){
 	lookup  <- id_lookup(tracts)
 	adj_mat <- st_relate(tracts, pattern = '****T****', sparse = TRUE) # as sparse list
-	1:length(adj_mat) %>%
+	1:length(adj_mat) |>
 		map(~data_frame(from = as.character(.),
-						to = as.character(adj_mat[[.]]))) %>%
-		reduce(rbind) %>%
-		left_join(lookup, by = c('from' = 'row')) %>%
-		left_join(lookup, by = c('to' = 'row'), suffix = c('_1', '_2')) %>%
+						to = as.character(adj_mat[[.]]))) |>
+		reduce(rbind) |>
+		left_join(lookup, by = c('from' = 'row')) |>
+		left_join(lookup, by = c('to' = 'row'), suffix = c('_1', '_2')) |>
 		select(-from, -to)
 }
 
 add_coords_to_adj <- function(adj, tracts, km = FALSE){
 
 	coords <- compute_centroid_df(tracts, km)
-	new_adj <- adj %>%
-		left_join(coords, by = c('GEOID_1' = 'GEOID')) %>%
+	new_adj <- adj |>
+		left_join(coords, by = c('GEOID_1' = 'GEOID')) |>
 		left_join(coords, by = c('GEOID_2' = 'GEOID'), suffix = c('_1', '_2'))
 
-	new_adj <- new_adj %>%
+	new_adj <- new_adj |>
 		mutate(coords_1 = pmap(list(x_1, y_1), c),
 			   coords_2 = pmap(list(x_2, y_2), c)) |>
 		select(-x_1, -y_1, -x_2, -y_2)
@@ -67,11 +67,11 @@ spatial_rbf_smoother <- function(demographics, geo, sigma = 10) {
 	dist_matrix <- geo |>
 		arrange(GEOID) |>
 		st_centroid() |>
-		st_distance() |>
+		st_distance() |> # by default in units of meters
 		as.matrix() |>
 		clean_units() 
 
-	weight_matrix <- exp(-dist_matrix*dist_matrix / (2 * sigma^2))
+	weight_matrix <- exp(-dist_matrix/sigma * dist_matrix/sigma / 2)
 	weight_matrix <- weight_matrix / rowSums(weight_matrix)
 
 	totals <- demographics |>
@@ -153,10 +153,7 @@ compute_metric_tensor <- function(geo, demographics, sigma, hessian = DKL_) {
 		left_join(proportions, by = c("GEOID_1" = "GEOID")) |>
 		left_join(proportions, by = c("GEOID_2" = "GEOID"), suffix = c("_1", "_2"))
 
-	adj |>
-		filter(GEOID_1 == 261635735014)	
-
-	derivs <- add_coords_to_adj(adj, geo) |>
+	derivs <- add_coords_to_adj(adj, geo, km = TRUE) |>
 		mutate(
 			x_diff = map2(coords_2, coords_1, ~.x - .y), 
 			p_diff = map2(p_2, p_1, ~.x - .y)

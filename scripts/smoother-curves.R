@@ -9,7 +9,7 @@ cities <- args[1:length(args)]
 
 SIGMAS <- seq(1, 5001, 500)
 
-cities <- c("Detroit", "Boston")
+cities <- c("Atlanta", "Detroit", "Washington DC")
 
 DF <- tibble()
 
@@ -49,6 +49,7 @@ for(j in 1:length(cities)){
 }
 
 r <- DF |>
+    mutate(sigma = sigma / 1000) |>
     ggplot() + 
     aes(x = sigma, y = MI, linetype = city) + 
     geom_line(color = darkgrey) + 
@@ -56,9 +57,10 @@ r <- DF |>
     theme_minimal() + 
     font_theme + 
     theme(axis.line = element_line(color = darkgrey), legend.position = c(0.8, 0.7)) + 
-    xlab("Kernel bandwidth (m)") + 
+    xlab("Kernel bandwidth (km)") + 
     ylab("Shannon mutual information (nats)") + 
-    guides(linetype = guide_legend(title = element_blank()))
+    guides(linetype = guide_legend(title = element_blank())) + 
+    scale_y_continuous(limits = c(0, NA))
 
 
 ggsave("fig/smoother_curves.png", width = 4, height = 3.2)

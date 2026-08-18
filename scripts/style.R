@@ -52,7 +52,8 @@ checkerboard_theme <- theme(
 
 
 
-
+map_fill <- "#eee2e2"
+map_color <- "#eee2e2"
 
 
 plot_theme <- theme_minimal() +
