@@ -98,53 +98,66 @@ We close with some discussion about extending this framework in the direction of
     Formally, $\frac{1}{\ell} \ve_{[\ell]} = \argmax_{\vy \in \simplex{\ell}} \psi(\vy)$. 
     \item \textbf{Monotone under group addition.} ``\emph{In two populations in which all groups are equally represented, the population with the greatest number of groups will be more diverse.}'' 
     Formally, if $I\subset [\ell]$, then $\psi\paren{\ve_{I}/|I|} < \psi\paren{\ve_{[\ell]}/\ell}$.
-    \item \textbf{Additive under independent attributes.} ``\emph{In a multiple classification (two or more qualitative variates) where the classifications are independent, the total diversity should equal the sum of the respective diversities.}'' 
-    This statement can be formalized as follows, interpreting ``independent'' in the sense of probability distributions: suppose that, for a given population $\pop = (\cX, \mY, \mu) \in \Pops_{nd\ell}$, there exist two other populations $\pop_1 = (\cX, \mU \in \R^{n\times \ell_1}, \mu)$ and $\pop_2 = (\cX, \mV \in \R^{n\times \ell_2}, \mu)$ such that $\ell = \ell_1\ell_2$ and a bijection $\alpha: [\ell_1] \times [\ell_2] \rightarrow [\ell]$ such that $y_{ij} = u_{i\alpha_1(j)} v_{i\alpha_2(j)}$ for all $i \in [n]$ and $j \in [\ell]$. 
-    Then $f(\pop) = f(\pop_1) + f(\pop_2)$.
   \end{enumerate}
-  We will soon find that properties (1) and (2) are satisfied by a broad range of functions $\psi$, while property (3) is more restrictive and essentially characterizes a single diversity measure. 
+  We will soon find that properties (1) and (2) are satisfied by a broad range of functions $\psi$. 
+  Pielou also offers a third axiom, which is more restrictive and essentially characterizes a single diversity measure; we discuss it in \Cref{sec:pielou-third-axiom}.
 
   Pielou's proposed axioms capture important intuitions, but they don't offer a recipe for constructing useful diversity functions $\psi$. 
   A hint is offered by the group addition property; we can think of a population uniformly distributed across $\ell$ demographic categories as a weighted mixture of two populations, one with $\abs{I}$ categories and another with $\ell - \abs{I}$ categories.
   One candidate generalization of the group addition property is therefore that \emph{diversity should increase on average when populations are mixed}. 
   To formalize, let $\vy_1$ and $\vy_2$ be two population demographic vectors and let $\lambda \in (0,1)$ be a mixture weight (expressing, for example, the relative population sizes). 
   Mixing the populations  we can form a new demographic vector $\vy = \lambda \vy_1 + (1-\lambda) \vy_2$.
-  One mathematization of our proposed intuition is that, if $\vy_1 \neq \vy_2$ then 
+  Our mixing intuition suggests that if $\vy_1 \neq \vy_2$ then 
   \begin{align}
     \psi(\vy) > \lambda \psi(\vy_1) + (1-\lambda) \psi(\vy_2)\;. \label{eq:concave}
   \end{align}
   Here, the lefthand side gives the diversity of the mixed population $\vy$, while the righthand side gives the $\lambda$-weighted average diversity of the original populations $\vy_1$ and $\vy_2$.
-  \Cref{eq:concave} expresses the definition of a \emph{strictly concave} function: 
   \begin{dfn}\label{def:convexity}
     Set $S\in \R^d$ is a \emph{convex set} if for all $\vy_1, \vy_2 \in S$ and $\lambda \in [0, 1]$, we have $\lambda \vy_1 + (1-\lambda) \vy_2 \in S$.
     If $S$ is a convex set, then $\phi: S \rightarrow \R$ is a \emph{convex function} if for all $\vy_1, \vy_2 \in S$ and $\lambda \in [0, 1]$, we have $\phi(\lambda \vy_1 + (1-\lambda) \vy_2) \leq \lambda \phi(\vy_1) + (1-\lambda) \phi(\vy_2)$.
     Function $\phi$ is \emph{strictly convex} if the above inequality is strict whenever $\vy_1 \neq \vy_2$ and $\lambda \in (0, 1)$. 
     Function $\psi$ is (\emph{strictly}) \emph{concave} if $\phi = -\psi$ is (strictly) convex.
   \end{dfn}
+  Throughout the remainder of this article, we state without proof the convexity of certain functions as well as general properties of convex functions. 
+  I recommend \cite{boydConvexOptimization2023} for a thorough treatment and proofs. 
+
   The simplex $\simplex{\ell}$ is a convex set, and so the notion of convexity applies to functions defined on $\simplex{\ell}$.
   We will abuse notation slightly and refer to a population measurement $f(\cP) = -\phi(\bar{\vy})$ as (\emph{strictly}) \emph{concave} if $\phi$ is (strictly) convex.\footnote{Following convention, we will emphasize convexity of $\phi$ rather than concavity of $-\phi$.}
+  \Cref{eq:concave} says that $\psi$ should be a strictly concave function. 
 
-  \begin{example}[Diversity Measurements]
-    The \emph{Shannon entropy} is given by the choice $\phi(\vy) = \sum_{j = 1}^{\ell} y_j \log y_j$, while the \emph{Simpson index} is given by $\phi(\vy) = \sum_{j = 1}^{\ell} y_j^2 - 1$.
+  \begin{example}[Shannon Entropy]
+    If $\phi_H(\vy) = \sum_{j = 1}^\ell y_j \log y_j$, the resulting diversity measurement $\psi_H = -\phi_H$ is the \emph{Shannon entropy}, which is widely used in ecology, sociology, and information theory. 
   \end{example}
 
-  \begin{example}
+  \begin{example}[Simpson Index]
+    If $\phi_S(\vy) = \sum_{j = 1}^\ell y_j^2 - 1$, the resulting diversity measurement $\psi_S = -\phi_S$ is the \emph{Simpson index}, which is widely used in ecology and sociology.
+    The Simpson index has an attractive physical interpretation: it is the probability that two individuals chosen uniformly at random from the population belong to different demographic categories.
+  \end{example}
+
+  \begin{example}[A Bespoke Economic Equality Measurement]\label{example:equality}
     For each $w \in 0,\ldots,w_\mathrm{max}$, define a demographic category as ``possessing exactly $w$ units of wealth.'' 
     Then, entry $y_{iw}$ gives the proportion of individuals in location $i$ possessing wealth $w$.
-    Let $\mC$ be the strictly lower triangular matrix of ones: $\mC_{ij} = 1$ if $i > j$ and $\mC_{ij} = 0$ otherwise. 
+    Let $\mC$ be the  lower triangular matrix of ones: $\mC_{ij} = 1$ if $i \geq j$ and $\mC_{ij} = 0$ otherwise. 
     Then $\mC \vy_i$ gives the cumulative distribution function of wealth at location $i$. 
-    The function $\phi(\vy) = \norm{\mC \vy}_2^2$ is strictly convex, and so $f(\cP) = -\norm{\mC \bar{\vy}}_2^2$ is a concave population measurement.
-    This population measurement expresses a value on wealth equality; 
+    Fix a target mean wealth $w \in \N$. 
+    The function $\phi_{\mathrm{eq}}(\vy) = \norm{\mC (\vy - \ve_w)}_2^2$ is strictly convex, and so $f(\cP) = -\norm{\mC (\bar{\vy} - \ve_w)}_2^2$ is a concave population measurement.
+    This population measurement expresses a value on wealth equality; it is maximized when $\bar{\vy} = \ve_w$, i.e. when all individuals in the population possess exactly $w$ units of wealth.
   \end{example}
-  \phil{Figure out how to think about when this is maximized if we are going to use it in any way.}
 
+  \begin{remark}
+    By definition, the economic equality measure of \Cref{example:equality} depends on the choice of target mean wealth $w$.
+    As we will see later (\Cref{eq:information-equivalence}), segregation measures based on this diversity measure are independent of $w$. 
+  \end{remark}
 
   \begin{figure}
     \centering
-    \includegraphics[width=0.5\textwidth]{fig/simplex-entropy.png}
+    \includegraphics[width=0.24\textwidth]{fig/simplex-entropy.png}
+    \includegraphics[width=0.24\textwidth]{fig/simplex-cumulative.png}
+
     \caption{
-      Isocontours of Shannon entropy on the simplex $\simplex{3}$.
-      One property of convex functions is that each complete isocontour encloses a convex subset of the simplex. 
+      (Left): Isocontours of the Shannon entropy on the simplex $\simplex{3}$.
+      (Right): Isocontours of the economic equality measurement function from \Cref{example:equality} with possible wealth values $w \in \{1, 2, 3\}$ and mean wealth $\bar{w} = 2$. 
+      The subset of $\simplex{3}$ corresponding to distributions with mean wealth $\bar{w} = 2$ is given by the dashed line. 
     }
   \end{figure}
 
@@ -152,36 +165,35 @@ We close with some discussion about extending this framework in the direction of
   
   
   \begin{thm} \label{thm:monotone-under-group-addition}
-    If $\phi: \simplex{\ell} \rightarrow \R$ is strictly convex, then the population measurement $f(\cP) = -\phi(\bar{\vy})$ satisfies the monotonicity under group addition property. 
+    If $\phi: \simplex{\ell} \rightarrow \R$ is strictly convex, then the population measurement $f(\cP) = -\phi(\bar{\vy})$ satisfies Pielou's monotonicity under group addition property. 
   \end{thm}
   
   \begin{dfn}
-    Function $f$ is \emph{symmetric} if for all $\vy \in \simplex{\ell}$ and all permutations $\sigma$ of $[\ell]$, we have $f(\vy) = f(\sigma(\vy))$, where $\sigma(\vy)$ is the vector obtained by permuting the entries of $\vy$ according to $\sigma$.
+    Function $\phi$ is \emph{symmetric} if for all $\vy \in \simplex{\ell}$ and all permutations $\sigma$ of $[\ell]$, we have $\phi(\vy) = \phi(\sigma(\vy))$, where $\sigma(\vy)$ is the vector obtained by permuting the entries of $\vy$ according to $\sigma$.
+    Function $\phi: \simplex{\ell} \rightarrow \R$ is \emph{separable} if there exists a function $g: [0, 1] \rightarrow \R$ such that $\phi(\vy) = \sum_{j = 1}^{\ell} g(y_j)$ for all $\vy \in \simplex{\ell}$.
   \end{dfn}
-  \begin{thm}\label{thm:diversity-axioms-1}
-    If $\phi: \simplex{\ell} \rightarrow \R$ is strictly convex and symmetric, then the population measurement $f(\cP) = -\phi(\bar{\vy})$ satisfies the uniform maximizer property.
-  \end{thm}
-  
-  Pielou's third axiom, additivity under independent attributes, is more restrictive. 
-  Under relatively mild additional assumptions, only the Shannon entropy satisfies it: 
-  \begin{dfn}
-    A function $\phi: \simplex{\ell} \rightarrow \R$ is \emph{separable} if there exists a function $g: [0, 1] \rightarrow \R$ such that $\phi(\vy) = \sum_{j = 1}^{\ell} g(y_j)$ for all $\vy \in \simplex{\ell}$.
-  \end{dfn}
-  \begin{thm}
-    If a function $\phi: \simplex{\ell} \rightarrow \R$ is strictly convex, nonnegative, continuous\footnote{Convex functions are continuous on the interior of their domain, so this stipulation requires only that they are also continuous at the boundary.}, symmetric, separable,  and satisfies the additivity under independent attributes property, then\footnote{Throughout this article, we will use the notation $\log$ to denote the natural logarithm, as well as the standard convention that $0 \log 0 = 0$.}  
-    \begin{align}
-      \phi(\vy) = -c\sum_{j = 1}^{\ell} y_j \log y_j \;, \label{eq:shannon-entropy}
-    \end{align}
-    for some constant $c > 0$.
-  \end{thm}
-  A proof is given is given by Chakrabarti and Chakrabarty \cite{chakrabartiShannonEntropyAxiomatic2005}, where additivity under independent attributes corresponds to the authors' Axiom 4.
 
-  \Cref{eq:shannon-entropy} is the Shannon entropy, which is a widely used measure of diversity in ecology, sociology, and information theory. 
-  For a systematic treatment of entropy as a measure of diversity, see \cite{leinsterEntropyDiversityAxiomatic2021}. 
-  The function $f(\vy) = 1 - \norm{\vy}_2^2 = 1 - \sum_{j = 1}^{\ell} y_j^2$, the Simpson diversity index \cite{simpsonMeasurementDiversity1949}, is another popular measure of diversity. 
-  It is readily seen that $-f$ is strictly convex, that $f$ is separable, and that $f$ is nonnegative its domain. 
-  From our results we conclude that the Simpson index satisfies the uniform maximizer and monotonicity under group addition properties, but does not satisfy additivity under independent attributes.
-  The Simpson index has an attractive physical interpretation: it is the probability that two individuals chosen uniformly at random from the population belong to different demographic categories.
+  \begin{remark}
+      Separability implies symmetry, but the converse is not true.
+      Both the Shannon entropy $\psi_{H}$ and the Simpson index $\psi_{S}$ are separable (and therefore symmetric), while the economic equality measure $\psi_{\mathrm{eq}}$ is neither.
+  \end{remark}
+
+  
+  
+
+  \begin{thm}\label{thm:diversity-axioms-1}
+    If $\phi: \simplex{\ell} \rightarrow \R$ is strictly convex and symmetric, then the population measurement $f(\cP) = -\phi(\bar{\vy})$ satisfies Pielou's uniform maximizer property.
+  \end{thm}
+
+  \begin{remark}
+    The Shannon and Simpson diversity measures are both strictly convex and symmetric, and therefore satisfy both properties. 
+    The equality measure of \Cref{example:equality} is strictly convex but not symmetric, and therefore satisfies the monotonicity under group addition property but not the uniform maximizer property.
+  \end{remark}
+  
+
+  
+
+  
 
 \section{Segregation and Information} \label{sec:segregation}
 
@@ -197,24 +209,27 @@ This suggests a simple quantitative segregation measure: the difference between 
 Jensen's Inequality, a standard result in convex analysis, implies that $\info_{\phi}(\cP) \geq 0$ for all populations $\cP$ and convex functions $\phi$. 
 If $\phi$ is strictly convex, then $\info_{\phi}(\cP) = 0$ if and only if $\vy_i = \bar{\vy}$ for all $i \in [n]$, i.e. every location has the same demographic distribution as the population as a whole.
 
-There is an equivalent, alternative expression for the Jensen information. 
 Although the Jensen information \cref{eq:jensen-information} is nonnegative, individual terms of the form $\phi(\vy_i) - \phi(\bar{\vy}) $ can be negative. 
-This means that a given location's ``contribution to segregation'' cannot simply be measured from the terms in \cref{eq:jensen-information}.
-It would instead be convenient for analytic purposes to be able to write the Jensen information as a sum of nonnegative contributions from each location: 
+This means that a given location's ``contribution to segregation'' cannot simply be interpretably measured from the terms in \cref{eq:jensen-information}.
+It would instead be convenient for analytic purposes to write the Jensen information as a sum of nonnegative contributions from each location: 
 \begin{align}
   I_{\phi}(\cP) = \sum_{i = 1}^n \mu_i g(\vy_i, \bar{\vy}) \;, \label{eq:information-equivalence}
 \end{align}
-\begin{thm}[\cite{chodrowEquivalenceInformationsCharacterizes2025b}]
-  If $\phi: \simplex{\ell} \rightarrow \R$ is a strictly convex function which is differentiable on the relative interior of $\simplex{\ell}$ and $g$ is a function such that such that \cref{eq:information-equivalence} holds for any population $\cP \in \Pops_{nd\ell}$, then $g$ is the \emph{Bregman divergence} induced by $\phi$:
+\begin{thm}
+  Let $\phi: \simplex{\ell} \rightarrow \R$ be a strictly convex function which is differentiable on $\relint{\simplex{\ell}}$. 
+  Then, \cref{eq:information-equivalence} holds for some function $g:\relint{\simplex{\ell}} \times \simplex{\ell} \rightarrow \R$ and for any population $\cP \in \Pops_{nd\ell}$ if and only if $g$ is the \emph{Bregman divergence} induced by $\phi$: 
   \begin{align}
     g(\vy, \bar{\vy}) = \divergence{\phi}{\vy}{\bar{\vy}} = \phi(\vy) - \phi(\bar{\vy}) - \nabla \phi(\bar{\vy})^{\top} (\vy - \bar{\vy}) \;. \label{eq:bregman-divergence}
   \end{align}
 \end{thm}
+The ``if'' direction of this theorem is a standard result by direct calculation, while the ``only if'' direction was recently proved by the present author \cite{chodrowEquivalenceInformationsCharacterizes2025b}. 
 The Bregman divergence is a measure of the difference between the value of $\phi$ at $\vy$ and the value of the linearization (first-order Taylor expansion) of $\phi$ around $\bar{\vy}$ evaluated at $\vy$.
-The Bregman divergence can be interpreted as a measure of dissimilarity of $\vy$ from $\bar{\vy}$. 
+The Bregman divergence can be interpreted as a measure of dissimilarity of $\vy$ from $\bar{\vy}$.  
 It is always nonnegative and is zero if and only if $\vy = \bar{\vy}$.
 The Bregman divergence is not a metric, as it is not symmetric and does not satisfy the triangle inequality, although it does satisfy many other useful properties \cite{banerjeeClusteringBregmanDivergences2005}. 
 Examples of Bregman divergences include the squared Euclidean distance $g(\vy, \bar{\vy}) = \norm{\vy - \bar{\vy}}_2^2$ (corresponding to $\phi(\vy) = \frac{1}{2} \|\vy\|_2^2$) and the Kullback-Leibler divergence $g(\vy, \bar{\vy}) = \sum_{j = 1}^{\ell} y_j \log(y_j / \bar{y}_j)$ (corresponding to $\phi(\vy) = \sum_{j = 1}^{\ell} y_j \log y_j$).
+A geometric view of \Cref{eq:information-equivalence} is given in \Cref{fig:simplex-information}.  
+
 
  \begin{figure}
     \centering
@@ -223,7 +238,8 @@ Examples of Bregman divergences include the squared Euclidean distance $g(\vy, \
       Illustration of \Cref{eq:information-equivalence}. 
       Points $\vy_i$, $i = 1,\ldots, 5$ are sized according to their weight $\mu_i$ and are located in the simplex $\simplex{3}$ according to their demographic distribution.
       The Jensen information $I_\phi(\cP)$ is the weighted mean of the Bregman divergences $\divergence{\phi}{\vy_i}{\bar{\vy}}$ from each point to the mean $\bar{\vy}$.
-    }
+      The visual intuition relies on the viewing the Bregman divergence as ``distance-like,'' though it should be remembered that it is not a metric. 
+    }\label{fig:simplex-information}
   \end{figure}
 
 A property of Bregman divergences which will be useful later on is that they are \emph{locally} quadratic, in the sense that for any $\vy \in \interior{\simplex{\ell}}$ and $\vdelta$ in the tangent space to $\simplex{\ell}$ at $\vy$, we have
@@ -234,14 +250,13 @@ where $\hess{\phi}(\vy)$ is the Hessian of $\phi$ at $\vy$ and $o(\norm{\vdelta}
 Importantly, since $\phi$ is strictly convex, the Hessian $\hess{\phi}(\vy)$ is positive definite for all $\vy \in \interior{\simplex{\ell}}$, and so the leading term in the expansion is a positive definite quadratic form.
 This in turn provides another sense in which Bregman divergences are distance-like, behaving locally like squared Mahalanobis distances with respect to the Hessian of $\phi$.
 
-\subsection{Properties of the Jensen Information} \label{sec:segregation-properties}
+\subsection{Properties of the Jensen Information as a Segregation Measure} \label{sec:segregation-properties}
 
 In an influential article, Reardon and Firebaugh \cite{reardonMeasuresMultigroupSegregation2002} propose a set of desirable criteria for multigroup segregation measures, and assess a number of existing measures against these criteria with proofs and counterexamples. 
 \footnote{In the segregation measurement setting the mutual information is sometimes referred to as the \emph{Theil index} or the \emph{information theory index}.}
-Of the six measures evaluated by the authors, exactly one of these is a Jensen information: the Shannon mutual information $I(\cP) = \sum_{i = 1}^n \mu_i \sum_{j = 1}^{\ell} y_{ij} \log(y_{ij} / \bar{y}_j)$. 
-This mutual information corresponds to the diversity function $\phi(\vy) = \sum_{j = 1}^{\ell} y_j \log y_j$, the negative Shannon entropy, and the Bregman divergence $d(\vy, \bar{\vy}) = \sum_{j = 1}^{\ell} y_j \log(y_j / \bar{y}_j)$, the Kullback-Leibler divergence.
-
-Reardon and Firebaugh ``...conclude that the [Shannon mutual information] is the most conceptually and mathematically satisfactory index...'' due to the fact that the mutual information is the only measure to satisfy all of the criteria deemed clearly desirable by the authors. 
+Of the six measures evaluated by the authors, exactly two of these are Jensen informations, corresponding to scaled versions of the Shannon entropy $\psi_H$ and the Simpson index $\psi_S$.
+These two measurements come out on top in terms of satisfying the various criteria proposed by the authors.
+In particular, Reardon and Firebaugh ``...conclude that the [Shannon mutual information] is the most conceptually and mathematically satisfactory index...''. 
 It turns out this isn't a coincidence: many desirable intuitions about segregation come ``for free'' from convexity. 
 
 Some of the Reardon and Firebaugh criteria are trivially satisfied by any Jensen information; for example, their \emph{size invariance} criterion expresses simply the desire that $f$ be a function only of the joint population \emph{distribution} and not absolute population counts. 
@@ -263,8 +278,11 @@ Let $\tilde{\ve}_j \in \R^{\ell}$ denote a standard basis vector in $\R^{\ell}$.
 \end{dfn}
 
 \begin{thm} \label{thm:exchanges}
-  If $\phi$ is separable\footnote{It is possible to weaken the separability requirement slightly; it is sufficient for $\phi$ to have coordinatewise monotone gradients, for which it is in turn sufficient that the Hessian $\hess{\phi}$ be strictly diagonally dominant.} and strictly concave, then the Jensen information $I_{\phi}$ satisfies the exchanges property of Reardon and Firebaugh.\footnote{Reardon and Firebaugh \cite{reardonMeasuresMultigroupSegregation2002} also propose a \emph{transfers property}, a stronger form of the exchanges property, and assert that the Shannon mutual information satisfies this property. This author is unable to follow the proof and has performed computational experiments suggesting the transfers property does not indeed hold for the Shannon mutual information.}
+  If $\phi$ is separable\footnote{It is possible to weaken the separability requirement slightly; it is sufficient for $\phi$ to have coordinatewise monotone gradients, for which it is in turn sufficient that the Hessian $\hess{\phi}$ be strictly diagonally dominant.} and strictly convex, then the Jensen information $I_{\phi}$ satisfies the exchanges property of Reardon and Firebaugh.\footnote{Reardon and Firebaugh \cite{reardonMeasuresMultigroupSegregation2002} also propose a \emph{transfers property}, a stronger form of the exchanges property, and assert that the Shannon mutual information satisfies this property. This author is unable to follow the proof and has performed computational experiments suggesting the transfers property does not indeed hold for the Shannon mutual information.}
 \end{thm}
+
+The two Jensen informations in Reardon and Firebaugh's study are also the only two segregation measures to satisfy what they call ``additive organizational decomposability,'' which expresses predictable behavior at multiple levels of spatial aggregation. 
+This property is expressed by \cref{eq:information-decomposition} in \Cref{sec:decomposition}. 
 
 
 
@@ -302,10 +320,10 @@ Let $\tilde{\ve}_j \in \R^{\ell}$ denote a standard basis vector in $\R^{\ell}$.
     where $k: \R^d \times \R^d \rightarrow [0, \infty)$ is a smoothing kernel and $Z_i = \sum_{j = 1}^n k(\vx_i, \vx_j)$ is a normalization constant.
     Possible choices of the smoothing kernel $k$ include parametric kernels such as the Gaussian radial basis function $k(\vx_i, \vx_j) = \exp \paren{-\norm{\vx_i - \vx_j}_2^2 / 2\sigma^2}$, or data driven kernels based on road network distance or commute time between locations \cite{robertoSpatialProximityConnectivity2018}. 
     After applying the smoothing kernel, any Jensen information may be used to measure segregation in the smoothed population $\cP'$. 
-    In their theoretical analysis of spatialized segregation measures, Reardon and O'Sullivan \cite{reardon3MeasuresSpatial2004} find that the spatialized Shannon information, again the only Jensen information amongst their considered measures, is the only measure to satisfy all of their proposed criteria for spatialized segregation measures, largely by inheriting the favorable properties the general class of Jensen informations. 
+    In their theoretical analysis of spatialized segregation measures, Reardon and O'Sullivan \cite{reardon3MeasuresSpatial2004} find that spatialized measures corresponding to Shannon and Simpson informations, again the only Jensen informations amongst their considered measures,  satisfy the most of their proposed criteria for spatialized segregation measures, largely by inheriting the favorable properties the general class of Jensen informations. 
     
 
-  \subsection{A Scale-Based View: Spatial Information Decomposition}
+  \subsection{A Scale-Based View: Spatial Information Decomposition} \label{sec:decomposition}
 
 
     \begin{figure*}
@@ -367,7 +385,7 @@ Let $\tilde{\ve}_j \in \R^{\ell}$ denote a standard basis vector in $\R^{\ell}$.
   Second and more fundamentally, the choice of aggregation $\pi$ is \emph{itself} arbitrary, often based on nested adminstrative boundaries such as Census block groups, tracts, and counties.
   One approach to obtaining non-arbitrary aggregations is to seek aggregations which which maximize the first, between-unit segregation term in \cref{eq:information-decomposition} while minimizing the second. 
   The task of forming such spatial aggregations is often called \emph{regionalization}; \cite{kirkleySpatialRegionalizationBased2022} offers a helpful overview as well as a novel method. 
-  One approach, suggested by the present author, is simply to iteratively combine adjacent areal units which least decrease the between-unit segregation term in \cref{eq:information-decomposition}.
+  One approach, suggested by the present author, is simply to greedily combine adjacent areal units which least decrease the between-unit segregation term in \cref{eq:information-decomposition} \cite{chodrowStructureInformationSpatial2017}.
   The resulting hierarchical clustering algorithm has the interpretive benefit that boundaries between aggregated areal units can be assigned information content associated with their contribution to the between-unit segregation term in \cref{eq:information-decomposition}. 
   \Cref{fig:aggregation-viz} shows an example of this approach applied to \aggCity{}, in comparison to traditional administrative boundaries.
 
@@ -500,6 +518,32 @@ Let $\tilde{\ve}_j \in \R^{\ell}$ denote a standard basis vector in $\R^{\ell}$.
 \bibliography{refs}
 
 \appendix 
+
+\section{Supplementary Material}
+
+\subsection{Pielou's Third Diversity Axiom} \label{sec:pielou-third-axiom}
+
+The last of Pielou's three axioms relates to the behavior of a diversity measure when multiple, independent demographic attributes are considered simultaneously.
+
+\textbf{Additive under independent attributes.} ``\emph{In a multiple classification (two or more qualitative variates) where the classifications are independent, the total diversity should equal the sum of the respective diversities.}'' 
+This statement can be formalized as follows, interpreting ``independent'' in the sense of probability distributions: suppose that, for a given population $\pop = (\cX, \mY, \mu) \in \Pops_{nd\ell}$, there exist two other populations $\pop_1 = (\cX, \mU \in \R^{n\times \ell_1}, \mu)$ and $\pop_2 = (\cX, \mV \in \R^{n\times \ell_2}, \mu)$ such that $\ell = \ell_1\ell_2$ and a bijection $\alpha: [\ell_1] \times [\ell_2] \rightarrow [\ell]$ such that $y_{ij} = u_{i\alpha_1(j)} v_{i\alpha_2(j)}$ for all $i \in [n]$ and $j \in [\ell]$. 
+Then $f(\pop) = f(\pop_1) + f(\pop_2)$.
+
+This axiom, in combination with the other two and under the mild assumption of separability and continuity , is sufficient to uniquely characterize the Shannon entropy: 
+\begin{thm}
+    If a function $\psi: \simplex{\ell} \rightarrow \R$ is strictly concave, continuous\footnote{Convex functions are continuous on the interior of their domain, so this stipulation requires only that they are also continuous at the boundary.}, separable,  and satisfies the additivity under independent attributes property, then\footnote{Throughout this article, we will use the notation $\log$ to denote the natural logarithm, as well as the standard convention that $0 \log 0 = 0$.}  
+    \begin{align}
+      \psi(\vy) = -c\sum_{j = 1}^{\ell} y_j \log y_j \;, \label{eq:shannon-entropy}
+    \end{align}
+    for some constant $c > 0$.
+\end{thm}
+A proof is given is given by Chakrabarti and Chakrabarty \cite{chakrabartiShannonEntropyAxiomatic2005}, where additivity under independent attributes corresponds to the authors' Axiom 4.\footnote{The authors' statement of their result also hypothesizes nonnegativity of $\phi$, but this hypothesis is not required by their proof.}
+
+
+
+
+
+
 
 \section{Supplementary Proofs}
 
