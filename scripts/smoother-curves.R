@@ -5,17 +5,22 @@ source("src/maps.R")
 source("src/utils.R")
 source("src/local-info.R")
 args <- commandArgs(trailingOnly=TRUE)
+
 cities <- args[1:length(args)]
+
 
 SIGMAS <- seq(1, 5001, 500)
 
-cities <- c("Atlanta", "Detroit", "Washington DC")
+# cities <- c("Atlanta", "Detroit", "Washington DC")
 
 DF <- tibble()
 
 for(j in 1:length(cities)){
     city <- cities[j]
     geo <- geo <- readRDS(paste0("throughput/geo/", city, ".rds"))
+
+    # better name
+    city <-  gsub("_", " ", city)
 
     geo <- geo |>
     group_by(GEOID) |>
@@ -63,4 +68,4 @@ r <- DF |>
     scale_y_continuous(limits = c(0, NA))
 
 
-ggsave("fig/smoother_curves.png", width = 4, height = 3.2)
+ggsave("fig/smoother-curves.png", width = 4, height = 3.2)

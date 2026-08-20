@@ -7,6 +7,7 @@ source("scripts/style.R")
 
 args <- commandArgs(trailingOnly=TRUE)
 city <- args[1]
+city <- gsub("_", " ", city)
 
 geo <- readRDS(paste0("throughput/geo/", city, ".rds"))
 

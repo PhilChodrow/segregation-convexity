@@ -23,7 +23,7 @@ tex_macros <- paste0("\\newcommand{\\numBlocks}{", num_blocks, "}\n",
                     "\\newcommand{\\totalCellsPerSide}{", total_cells_per_side, "}\n")
 
 
-cat(tex_macros, file = "params/checkerboard_params.tex")
+cat(tex_macros, file = "params/checkerboard-params.tex")
 
 
 # shapefile

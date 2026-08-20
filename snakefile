@@ -1,18 +1,60 @@
-CITIES = ["Detroit", "Boston", "Atlanta", "Chicago", "Milwaukee"]
+ALL_CITIES = ["Detroit",  "Atlanta",  "Milwaukee", "Washington_DC"]
 
 rule all: 
     input:
-        "params/checkerboard_params.tex",
+        "main.pdf"
+
+rule paper: 
+    input:
+        "params/checkerboard-params.tex",
         "params/local-info-illustration.tex",
         "fig/checkerboard-smoothed-and-trace.png",
         "fig/checkerboard.png",
-        expand("throughput/geo/{city}.rds", city=CITIES),
-        expand("throughput/local-info/{city}.rds", city=CITIES),
-        "main.tex"
+        "fig/simplex-entropy.png", 
+        "fig/simplex-cumulative.png", 
+        "fig/simplex-jensen-info.png",
+        "fig/smoother-curves.png",
+        "fig/aggregation-viz.png",
+        "fig/local-info.png",
+        "main.tex",
+        "macros.tex",
+        "content.tex",
+        "refs.bib",
     output: 
         "main.pdf"
     shell: 
         "latexmk -pdf main.tex"
+
+# SPATIAL KERNEL SMOOTHING FIGURE
+EXAMPLE_CITIES = ["Atlanta", "Detroit", "Washington_DC"]
+rule smoother_fig: 
+    input: 
+        expand("throughput/geo/{city}.rds", city=EXAMPLE_CITIES)
+    output: 
+        "fig/smoother-curves.png"
+    shell: 
+        "Rscript scripts/smoother-curves.R {EXAMPLE_CITIES}"
+
+rule aggregation_fig: 
+    input: 
+        expand("throughput/geo/{city}.rds", city=EXAMPLE_CITIES)
+    output: 
+        "fig/aggregation-viz.png"
+    shell: 
+        "Rscript scripts/hclust-viz.R {EXAMPLE_CITIES}"
+
+LOCAL_INFO_CITY = "Milwaukee"
+rule local_info_fig: 
+    input: 
+        "throughput/local-info/{city}.rds".format(city=LOCAL_INFO_CITY)
+    output: 
+        "fig/local-info.png"
+    shell: 
+        "Rscript scripts/city-local-info-viz.R {LOCAL_INFO_CITY}"
+
+
+
+
 
 rule city_local_info:
     input:
@@ -45,6 +87,15 @@ rule checkerboard_local_info:
     shell: 
         "Rscript scripts/checkerboard-local-info-viz.R"
 
+
+# various simplex diagrams
+rule simplex: 
+    input: 
+    output: 
+        "fig/{fig}.png"
+    shell: 
+        "Rscript scripts/{wildcards.fig}.R"
+
 rule checkerboard_viz: 
     input: 
         "throughput/checkerboard/shapefile", 
@@ -52,19 +103,18 @@ rule checkerboard_viz:
     output: 
         "fig/checkerboard.png"
     shell: 
-        "Rscript scripts/checkerboard-basic-viz.R"
-
+        "Rscript scripts/checkerboard-viz.R"
 
 rule checkerboard_data:        
     output:
         directory("throughput/checkerboard/shapefile"),
         "throughput/checkerboard/demographics.csv", 
-        "params/checkerboard_params.tex"
+        "params/checkerboard-params.tex"
     shell:
         "Rscript scripts/checkerboard-data.R"
 
 rule clean: 
     shell: 
         """
-        rm -rf throughput fig main.pdf main.log main.aux main.out main.fls main.fdb_latexmk main.bbl main.bcf main.blg main.run.xml main.xdv params
+        rm -rf throughput fig params && rm *.pdf *.log *.aux *.out *.fls *.fdb_latexmk *.bbl *.bcf *.blg *.run.xml *.xdv *.tdo *.synctex.gz *.dvi
         """

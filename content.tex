@@ -233,7 +233,7 @@ A geometric view of \Cref{eq:information-equivalence} is given in \Cref{fig:simp
 
  \begin{figure}
     \centering
-    \includegraphics[width=0.5\textwidth]{fig/simplex-information.png}
+    \includegraphics[width=0.5\textwidth]{fig/simplex-jensen-info.png}
     \caption{
       Illustration of \Cref{eq:information-equivalence}. 
       Points $\vy_i$, $i = 1,\ldots, 5$ are sized according to their weight $\mu_i$ and are located in the simplex $\simplex{3}$ according to their demographic distribution.
@@ -305,7 +305,7 @@ This property is expressed by \cref{eq:information-decomposition} in \Cref{sec:d
 
     \begin{figure}
       \centering 
-      \includegraphics[width=0.5\textwidth]{fig/smoother_curves.png}
+      \includegraphics[width=0.5\textwidth]{fig/smoother-curves.png}
       \caption{
         Illustration of spatial profile curves for segregation under Gaussian Radial Basis (RBF) smoothing as the bandwidth is varied. 
         Cities display spatially ``coarser'' segregation when the value of the Jensen information remains close to its maximum value even as the smoothing bandwidth is increased. 
@@ -380,6 +380,7 @@ This property is expressed by \cref{eq:information-decomposition} in \Cref{sec:d
   \Cref{eq:information-decomposition} is a form of decomposition into ``between aggregated unit'' information (first term) and ``within aggregated unit'' information (second term).
   Since both terms are nonnegative, it follows that aggregation cannot increase the Jensen information. 
 
+
   Spatial information aggregation is not itself a complete ``solution'' to MAUP. 
   First, we remain at the mercy of the highest-resolution data available. 
   Second and more fundamentally, the choice of aggregation $\pi$ is \emph{itself} arbitrary, often based on nested adminstrative boundaries such as Census block groups, tracts, and counties.
@@ -387,7 +388,7 @@ This property is expressed by \cref{eq:information-decomposition} in \Cref{sec:d
   The task of forming such spatial aggregations is often called \emph{regionalization}; \cite{kirkleySpatialRegionalizationBased2022} offers a helpful overview as well as a novel method. 
   One approach, suggested by the present author, is simply to greedily combine adjacent areal units which least decrease the between-unit segregation term in \cref{eq:information-decomposition} \cite{chodrowStructureInformationSpatial2017}.
   The resulting hierarchical clustering algorithm has the interpretive benefit that boundaries between aggregated areal units can be assigned information content associated with their contribution to the between-unit segregation term in \cref{eq:information-decomposition}. 
-  \Cref{fig:aggregation-viz} shows an example of this approach applied to \aggCity{}, in comparison to traditional administrative boundaries.
+  
 
   
 

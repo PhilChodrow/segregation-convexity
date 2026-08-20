@@ -1,12 +1,14 @@
-library(tidycensus, quietly = TRUE)
-library(tidyverse, quietly = TRUE)
-library(tigris, quietly = TRUE)
-library(sf, quietly = TRUE)
+library(tidyverse, quietly = TRUE, verbose = FALSE)
+library(tidycensus, quietly = TRUE, verbose = FALSE)
+library(tigris, quietly = TRUE, verbose = FALSE)
+library(sf, quietly = TRUE, verbose = FALSE)
 
 args <- commandArgs(trailingOnly=TRUE)
 city_to_retrieve <- args[1]
 
-cities <- read_csv("assumptions/cities.csv") 
+
+cities <- read_csv("assumptions/cities.csv") |>
+    mutate(name = gsub(" ", "_", name)) 
 
 race_variable_name_map <- c(
           "Estimate!!Total:!!Not Hispanic or Latino:!!White alone" = "White","Estimate!!Total:!!Not Hispanic or Latino:!!Black or African American alone" = "Black", 

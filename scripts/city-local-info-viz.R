@@ -13,6 +13,7 @@ max_j <- NA
 plot_list <- list()
 
 cities <- c("Milwaukee")
+cities <- gsub("_", " ", cities)
 
 for(j in 1:length(cities)){
     
