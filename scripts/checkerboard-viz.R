@@ -38,9 +38,10 @@ r <- ggplot(geo) +
     checkerboard_config +
     checkerboard_theme +
     font_theme +
-    guides(fill = guide_colorbar(title.position = 'top', title.hjust = 0.5)) + 
-    labs(fill = 'Density of Group A') + 
+    guides(fill = guide_colorbar(title.position = 'top', title.vjust = 2)) + 
+    labs(fill = 'Density of\nGroup A\n') + 
     font_theme + 
-    geom_sf(data = rect, fill = NA, color = darkgrey, size = 1) 
+    # geom_sf(data = rect, fill = NA, color = darkgrey, size = 1) +
+    theme(legend.position = "right")
 
-ggsave("fig/checkerboard.png", r, width = 9, height = 3.5, dpi = 300,   bg = "#FFFFFF")
+ggsave("fig/checkerboard.png", r, width = 9, height = 2.3, dpi = 300,   bg = "#FFFFFF")

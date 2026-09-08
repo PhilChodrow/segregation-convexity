@@ -1,18 +1,22 @@
 We consider the problem of \emph{segregation measurement}. 
 Colloquially, a population of individuals is segregated with repect to a given trait if individuals with different values of that trait tend to be separated from one another by geography, policy, or other social forces.
 The segregation measurement problem is to construct compact, quantitative descriptions of the extent and structure of segregation in a given population. 
-The purpose of such a measurement is often comparative--we aim to say that one population (say, a city) is more segregated, or differently segregated, than another. 
-We'll focus here on the problem of \emph{spatial} segregation, in which individuals are assumed to be located space (often at their place of residence) and we seek to understand how the strongly the spatial distribution of individuals reflects their demographic traits.
+In the quantitative sociology literature, a prototypical segregation measurement is an ``index:'' a single number intended to describe the extent and structure of segregation in a population.
+The purpose of such an index is often comparative--we aim to say that one population (say, a city) is more segregated, or differently segregated, than another. 
+My focus here will be on the common case of \emph{spatial} segregation, in which individuals are assumed to be located in space (often at their place of residence) and we seek to understand how the strongly space separates individuals with different demographic traits. 
 
-\Cref{fig:checkerboard} provides a classical illustration, as well as a few of its complexities. 
-In each of the four panels, individuals with demographic possible demographic traits $A$ or $B$ are arranged into a synthetic ``city.''
-Panel (a) describes such a city in which only members of group $B$ are present; intuitively such a city cannot display spatial sorting between groups because there is only one group present. 
-Our first intuitive insight is then that \emph{diversity is necessary for segregation}. 
-Panel (b) shows that diversity, however, is not sufficient; if each group is represented uniformly across the map, then there is also no spatial segregation. 
-Panels (c) and (d) do display spatial segregation, with each individual location containing a uniform population of either 100\% $A$ or 100\% $B$.
-Since each panel contains the same number of locations dominated by each group, any measure of segregation which ``forgets'' the spatial structure of the population will assign the same value to both panels; such a measure may be considered \emph{aspatial}. 
-The problem of constructing \emph{spatial} measures (which successfully distinguish between panels (c) and (d) in intuitive ways) has often been called the ``checkerboard problem'' in the quantitative sociology literature \cite{reardon3MeasuresSpatial2004}. 
-To summarize, a \emph{diversity} measure can distinguish panels (a) and (b); an aspatial \emph{segregation} measure can distinguish both from panel (c), and a \emph{spatial} segregation measure can distinguish (d) from (c).
+The study of quantitative measures for spatial segregation extends far enough back that a review article in 1955 could already express frustration and disappointment with the chaotic state of the methodology. 
+Commenting then on the measures extant at the time, Duncan and Duncan \cite{duncanMethodologicalAnalysisSegregation1955} wrote: 
+\begin{enumerate}
+  \item \emph{The proposed indexes of segregation have a number of hitherto unnoticed interrelationships which can be mathematically demonstrated.} 
+  \item \emph{Some of them have mathematical properties of which their proponents were unaware, and which lead to difficulties of interpretation.} 
+  \item \emph{As a consequence, the status of the empirical work already done with segregation indices is questionable, and their validity for further research is undermined.} 
+\end{enumerate}
+Since that time, there have been efforts within quantitative sociology to impose a more unified mathematical structure on segregation measures, especially in the work of Sean Reardon and collaborators \cite{reardonMeasuresMultigroupSegregation2002, reardonMeasuresIncomeSegregation,reardon3MeasuresSpatial2004}.
+Somewhat distinctly from the sociological literature, there has been some recent attention on segregation measurement in the mathematics community \cite{duchin2023measuring,topaz2025diversity,hoogstraQuantitativeMetricsTrait2025}. 
+These works, though interesting and important in their own right, tend to be somewhat disconnected from recent progress within the sociology community. 
+Despite the recent scholarly attention paid to segregation measurement, hints of the intellectual chaos described by Duncan and Duncan remain.
+On the theme of ``hitherto unnoticed interrelationships,'' I am aware of two instances within the last ten years of a diversity or segregation measure being presented as novel despite already existing in the literature under a different name.  
 
 \begin{figure*}
   \centering
@@ -24,150 +28,149 @@ To summarize, a \emph{diversity} measure can distinguish panels (a) and (b); an 
     } \label{fig:checkerboard}
 \end{figure*}
 
+In this article, I present a mathematical perspective on segregation measurement conversant with formal work in the quantitative sociology literature. 
+I argue that sticking close to this literature not only enriches opportunities for conversation between mathematicians and social scientists but also provides a fertile ground for interesting, accessible mathematics and data analysis.
+This article is not a review and does not offer a comprehensive survey of sociological or mathematical work on segregation measurement; rather, it is an opinionated tour of one path through this constellation of topics. 
+I proceed as follows. 
+\Cref{sec:preliminaries} offers some motivation for the complexities of the problem of measuring diversity and segregation, and establishes notation. 
+In \Cref{sec:diversity-convexity} I discuss measurement of diversity and argue that standard motivations lead us naturally to the class of convex functions defined on the probability simplex.
+This leads us to a formulation of segregation in \Cref{sec:segregation} as a \emph{Jensen information}: a comparison between global and average local diversity. 
+We formalize several properties from the quantative sociology literature and show that the Jensen information satisfies these properties, thereby unifying and generalizing several existing results. 
+We then move on to consider three methods of conducting spatial analysis using the Jensen information: spatial smoothing, spatial information decomposition, and local Jensen information. 
+We close with some discussion about extending this framework in the direction of ordinal segregation measures, as well as some open methodological challenges.  
+
+\section{Motivation and Preliminaries} \label{sec:preliminaries}
+
+
+\Cref{fig:checkerboard} provides a classical illustration of the problems of measuring diversity and segregation. 
+In each of the four panels, individuals with demographic possible demographic traits $A$ or $B$ are arranged into a synthetic ``city.''
+Panel (a) describes such a city in which only members of group $B$ are present; intuitively such a city cannot display spatial sorting between groups because there is only one group present. 
+Our first intuitive insight is then that \emph{diversity is necessary for segregation}. 
+Panel (b) shows that diversity, however, is not sufficient; if each group is represented uniformly across the map, then there is also no spatial segregation. 
+Panels (c) and (d) do display spatial segregation, with each individual location within the grid containing a uniform population of either 100\% $A$ or 100\% $B$.
+Panels (c) and (d) have exactly the same number of locations dominated by the same groups, which implies that any measure of segregation which depends only on cross-tabulations of locations and demographics will assign the same value of segregation to both panels. 
+Such a measure may be called \emph{aspatial}. 
+The problem of constructing \emph{spatial} measures, which successfully distinguish between between panels (c) and (d) in intuitive ways has often been called the ``checkerboard problem'' in the quantitative sociology literature \cite{reardon3MeasuresSpatial2004}. 
+Summarizing, a \emph{diversity} measure can distinguish panels (a) and (b); an aspatial \emph{segregation} measure can distinguish both from panel (c), and a \emph{spatial} segregation measure can distinguish panel (d) from panel (c).
 
 Any spatial measure which does successfully distinguish (c) and (d), however, is also subject to the \emph{modifiable areal unit problem (MAUP)} \cite{openshaw1984modifiable}: the method of aggregating continuous geographic space into discrete areal units (e.g. counties, tracts, blockgroups, or neighborhoods) is often arbitrary and can have a strong effect on the resulting segregation measurement.
-By way of illustration, if in panel (c) the resolution of our measurement was coarsened to the scale of 16$\times$16 blocks, illustrated by the dark box, then we would be unable to distinguish (c) from (b). 
+By way of illustration, if in panel (c) the resolution of our measurement was coarsened to the scale of four 16$\times$16 blocks,then we would be unable to distinguish (c) from (b). 
 
-The study of quantitative measures for spatial segregation extends far enough back that a review article in 1955 could already express frustration and disappointment with the chaotic state of the methodology. 
-Commenting then on the measures extant at the time, Duncan and Duncan \cite{duncanMethodologicalAnalysisSegregation1955} wrote: 
-\begin{enumerate}
-  \item \emph{The proposed indexes of segregation have a number of hitherto unnoticed interrelationships which can be mathematically demonstrated.} 
-  \item \emph{Some of them have mathematical properties of which their proponents were unaware, and which lead to difficulties of interpretation.} 
-  \item \emph{As a consequence, the status of the empirical work already done with segregation indices is questionable, and their validity for further research is undermined.} 
-\end{enumerate}
-Since that time, there have been efforts within quantitative sociology to impose a more unified mathematical structure on segregation measures, especially in the work of Sean Reardon and collaborators \cite{reardonMeasuresMultigroupSegregation2002, reardonMeasuresIncomeSegregation,,reardon3MeasuresSpatial2004}.
-Still, over 70 years later, hints of the chaos described by Duncan and Duncan remain.
-This author is aware of two instances within the last ten years of a diversity or segregation measure being published as novel despite already existing in the literature under a different name. 
-Somewhat distinctly from the sociological literature, there has been some recent attention on segregation measurement in the mathematics community \cite{duchin2023measuring,topaz2025diversity,hoogstraQuantitativeMetricsTrait2025}. 
-These works, though interesting and important in their own right, tend to be somewhat disconnected from recent progress within the sociology community. 
+To approach these issues systematically, let us establish notation. 
+We first define abstract notions of ``populations'' and ``population measurements.''
+Our framework is intentionally discrete, in recognition of the fact that all Census-type data sets provide demographic information in discrete areal units such as counties, tracts, or blockgroups. 
+\begin{dfn} \label{def:simplex}
+    For $\ell \in \N,$ the \emph{probability simplex} $\simplex{\ell}$ is the set 
+    \begin{align*}
+        \simplex{\ell} \eqdef \braces{\vy \in \R^{\ell} : \sum_{j = 1}^{\ell} y_j = 1, y_j \geq 0 \text{ for all } j \in [\ell]}\;.
+    \end{align*}
+    of probability vectors on $\ell$ elements.\footnote{
+      Although it is sometimes common to refer to $\simplex{\ell}$ as an $(\ell-1)$-simplex (this being its manifold dimension), we write $\simplex{\ell}$ to emphasize its role as the set of probability distributions over $\ell$ categories.
+      } 
+\end{dfn}
+For $\ell \in \N$, let $[\ell] = \{1, 2, \ldots, \ell\}$. 
+Let $\ve_{I} \in \simplex{\ell}$ be the vector with $1$ in the indices specified by the multi-index $I \subseteq [\ell]$ and $0$ elsewhere. 
+Let $\relint{\simplex{\ell}}$ be the relative interior of $\simplex{\ell}$; if $\vy \in \relint{\simplex{\ell}}$, every entry of $\vy$ is strictly positive. 
 
-In this article, I argue that beginning with some of the systematic work in quantitative sociology not only enriches opportunities for conversation between mathematicians and social scientists but also provides a rich ground for interesting, accessible mathematics and data analysis. 
-I do not attempt to offer a thorough review of prior work on segregation measurement, but rather offer my particular perspective and the sources which have informed it.
-After establishing notation, we begin with a discussion of diversity measures, arguing that standard proposed axioms for these measures lead naturally to the class of convex functions defined on the probability simplex. 
-Comparing global and average local diversities leads directly to a segregation measure interpretable as a measure of the information content that the spatial location carries about demographic information. 
-We give several proofs showing that this general information measure satisfies many of the desirable properties of segregation measures proposed in the quantitative sociology literature. 
-We then demonstrate two ways to ``spatialize'' this information, one using conditional information decomposition and another using the locally quadratic structure of Bregman divergences to construct a local measure of the spatial scale of segregation. 
-We close with some discussion about extending this framework in the direction of ordinal segregation measures, as well as some open mathematical challenges.  
 
-\section{Preliminaries} \label{sec:preliminaries}
+\begin{dfn} \label{def:population}
+    A \emph{population} $\pop$ with $n$ locations in $d$ spatial dimensions and $\ell$ demographic categories is a triple $\pop = \paren{\mX, \mY, \mu}$, where: 
+    \begin{itemize}
+      \item $\mX \in \R^{n\times d}$ is a matrix of spatial coordinates with rows $\vx_i$, $i = 1, \ldots, n$. In all our examples $n = 2$, though nothing in our results below formally depends on this. \footnote{$\mX$ can be replaced by a discrete metric space $(\cX, d)$ where $d$ describes measurement of distance between locations; under this replacement all the remaining results in this work hold except for \Cref{dfn:local-info,thm:local-info}.} 
+      \item $\mY \in \R^{n \times \ell}$ is a row-stochastic matrix: for each row $i$, $\vy_i \in \simplex{\ell}$.
+      \item $\mu \in \simplex{n}$.   
+    \end{itemize}
+    We denote the set of all populations with $n$ locations, $d$ dimensions, and $\ell$ demographic categories as $\Pops_{nd\ell}$. 
+\end{dfn}
+In this definition, the matrix $\mX$ represents space: element $\vx_i$ of $\mX$ can be viewed as giving the location of the $i$th spatial subunit of the population. 
+The matrix $\mY$ represents the demographic distribution of the population according to some attribute such as gender, race, or education level: the $i$th row $\vy_i$ of $\mY$ gives the proportion of individuals in each demographic category at location $i$.
+Finally, the probability vector $\mu$ represents the population density across locations; the proportion of individuals living in location $i$ is $\mu_i$. 
+The empirical probability that a single individual, chosen uniformly at random from the population, lives in location $i$ and is in demographic category $j$ is $\mu_i y_{ij}$. 
+The mean population vector $\bar{\vy} = \sum_{i = 1}^n \mu_i \vy_i$ has entries giving the marginal probabilities that an individual chosen uniformly at random from the entire population belongs to each demographic category. 
+\begin{dfn} \label{def:population-measurement}
+  A \emph{population measurement} is a function $f: \Pops_{nd\ell} \rightarrow \R$.
+\end{dfn}
+We consider the problems of quantifying diversity and segregation and segregation as the problems of constructing population measurements which match intuition and satisfy desirable properties. 
 
-  We first define abstract notions of ``populations'' and ``population measurements.''
-  Our framework is intentionally discrete, in recognition of the fact that all Census-type data sets provide demographic information in discrete areal units such as counties, tracts, or blockgroups. 
-  \begin{dfn} \label{def:simplex}
-      For $\ell \in \N,$ the \emph{probability simplex} $\simplex{\ell}$ is the set 
-      \begin{align*}
-          \simplex{\ell} = \braces{\vy \in \R^{\ell} : \sum_{j = 1}^{\ell} y_j = 1, y_j \geq 0 \text{ for all } j \in [\ell]}\;.
-      \end{align*}
-      of probability vectors on $\ell$ elements.\footnote{
-        Although it is sometimes common to refer to $\simplex{\ell}$ as an $(\ell-1)$-simplex (this being its manifold dimension), we write $\simplex{\ell}$ to emphasize its role as the set of probability distributions over $\ell$ categories.
-        } 
-  \end{dfn}
-
-  \begin{dfn} \label{def:population}
-      A \emph{population} $\cP$ with $n$ locations in $d$ spatial dimensions and $\ell$ demographic categories is a triple $\cP = \paren{\mX, \mY, \mu}$, where: 
-      \begin{itemize}
-        \item $\mX \in \R^{n\times d}$ is a matrix with rows $\vx_i$, $i = 1, \ldots, n$.\footnote{$\mX$ can be replaced by a discrete metric space $(\cX, d)$ where $d$ describes measurement of distance between locations; under this replacement all the remaining results in this work hold except for \Cref{def:local-information,thm:local-information}.} 
-        \item $\mY \in \R^{n \times \ell}$ is a row-stochastic matrix: for each row $i$, $\vy_i \in \simplex{\ell}$.
-        \item $\mu \in \simplex{n}$.   
-      \end{itemize}
-      We denote the set of all populations with $n$ locations, $d$ dimensions, and $\ell$ demographic categories as $\Pops_{nd\ell}$. 
-  \end{dfn}
-  In this definition, the matrix $\mX$ represents space: element $\vx_i$ of $\mX$ can be viewed as giving the location of the $i$th spatial subunit of the population. 
-  The matrix $\mY$ represents the demographic distribution of the population according to some attribute such as gender, race, or education level: the $i$th row $\vy_i$ of $\mY$ gives the proportion of individuals in each demographic category at location $i$.
-  Finally, the probability vector $\mu$ represents the population density across locations; the proportion of individuals living in location $i$ is $\mu_i$. 
-  The probability that a single individual, chosen uniformly at random from the population, lives in location $i$ and is in demographic category $j$ is $\mu_i y_{ij}$. 
-  The mean population vector $\bar{\vy} = \sum_{i = 1}^n \mu_i \vy_i$ has entries giving the marginal probabilities that an individual chosen uniformly at random from the entire population belongs to each demographic category. 
-  \begin{dfn} \label{def:population-measurement}
-    A \emph{population measurement} is a function $f: \Pops_{nd\ell} \rightarrow \R$.
-  \end{dfn}
-  We consider the problems of quantifying diversity, segregation, and spatial segregation as the problems of constructing population measurements which match intuition and satisfy desirable properties. 
-  
 \section{Diversity and Convexity} \label{sec:diversity-convexity}
 
-  Heuristically, we often say that a population is \emph{diverse} with respect to an attribute when it contains many categories of that attribute in roughly equal proportions.
-  Diversity is usually considered to be a property of a population as a whole, without regard for spatial or demographic subdivisions. 
-  Thus, a diversity measure $f:\Pops_{nd\ell} \rightarrow \R$ is a function of the mean population demographic vector: $f(\cP) = \psi(\bar{\vy})$ for some function $\psi: \simplex{\ell} \rightarrow \R$.
-  What properties should this function have in order to capture an intuitive notion of diversity?
+Heuristically, we often say that a population is \emph{diverse} with respect to an attribute when it contains many categories of that attribute in roughly equal or equitable proportions.
+Diversity is usually considered to be a property of a population as a whole, without regard for spatial or demographic subdivisions. 
+Thus, a diversity measure $f:\Pops_{nd\ell} \rightarrow \R$ is a function of the mean population demographic vector: $f(\pop) = \psi(\bar{\vy})$ for some function $\psi: \simplex{\ell} \rightarrow \R$.
+Working in mathematical ecology, Pielou \cite{pielouMathematicalEcology1977} gives a proposed set of criteria for diversity measurements: 
+\begin{enumerate}
+  \item \textbf{Uniform maximizer.} ``\emph{Diversity should be maximized when all groups are present in equal proportions.}'' 
+  Formally, $\frac{1}{\ell} \ve_{[\ell]} = \argmax_{\vy \in \simplex{\ell}} \psi(\vy)$. 
+  \item \textbf{Monotone under group addition.} ``\emph{In two populations in which all groups are equally represented, the population with the greatest number of groups will be more diverse.}'' 
+  Formally, if $I\subset [\ell]$, then $\psi\paren{\ve_{I}/|I|} < \psi\paren{\ve_{[\ell]}/\ell}$.\footnote{Pielou also offers a third axiom, which is more restrictive and essentially characterizes a single diversity measure; we discuss it in \Cref{sec:pielou-third-axiom}.} 
+\end{enumerate}
+Pielou's proposed axioms capture important intuitions, but they don't offer a recipe for constructing useful diversity functions $\psi$. 
+A hint is offered by the group addition property; we can think of a population uniformly distributed across $\ell$ demographic categories as a weighted mixture of two populations, one with $\abs{I}$ categories and another with $\ell - \abs{I}$ categories.
+One candidate generalization of the group addition property is therefore that \emph{diversity should increase on average when populations are mixed}. 
+To formalize, let $\vy_1, \vy_2 \in \simplex{\ell}$ be two population demographic vectors and let $\lambda \in (0,1)$ be a mixture weight (expressing, for example, the relative population sizes). 
+Mixing the populations forms the new demographic vector $\vy = \lambda \vy_1 + (1-\lambda) \vy_2$.
+Our mixing intuition suggests that if $\vy_1 \neq \vy_2$, then 
+\begin{align}
+  \psi(\vy) > \lambda \psi(\vy_1) + (1-\lambda) \psi(\vy_2)\;. \label{eq:concave}
+\end{align}
+Here, the lefthand side gives the diversity of the mixed population $\vy$, while the righthand side gives the $\lambda$-weighted average diversity of the original populations $\vy_1$ and $\vy_2$.
+\begin{dfn}\label{def:convexity}
+  Set $S\in \R^d$ is a \emph{convex set} if for all $\vy_1, \vy_2 \in S$ and $\lambda \in [0, 1]$, we have $\lambda \vy_1 + (1-\lambda) \vy_2 \in S$.
+  If $S$ is a convex set, then $\phi: S \rightarrow \R$ is a \emph{convex function} if for all $\vy_1, \vy_2 \in S$ and $\lambda \in [0, 1]$, we have $\phi(\lambda \vy_1 + (1-\lambda) \vy_2) \leq \lambda \phi(\vy_1) + (1-\lambda) \phi(\vy_2)$.
+  Function $\phi$ is \emph{strictly convex} if the above inequality is strict whenever $\vy_1 \neq \vy_2$ and $\lambda \in (0, 1)$. 
+  Function $\psi$ is (\emph{strictly}) \emph{concave} if $\phi = -\psi$ is (strictly) convex.\footnote{
+    Throughout the remainder of this article, we state without proof the convexity of certain functions as well as general properties of convex functions. 
+    I recommend \cite{boydConvexOptimization2023} for a thorough treatment and proofs.}
+\end{dfn}
+The simplex $\simplex{\ell}$ is a convex set, and so the notion of convexity applies to functions defined on $\simplex{\ell}$.
+We will abuse notation slightly and refer to a population measurement $f(\pop) = -\phi(\bar{\vy})$ as (\emph{strictly}) \emph{concave} if $\phi$ is (strictly) convex.\footnote{Following convention, we will emphasize convexity of $\phi$ rather than concavity of $-\phi$.}
+Thus, our intuition expressed by \cref{eq:concave} is that a population diversity measurement should be strictly concave. 
 
+\begin{example}[Shannon Entropy] \label{example:shannon}
+  If $\phi_H(\vy) = \sum_{j = 1}^\ell y_j \log y_j$, the resulting diversity measurement $\psi_H = -\phi_H$ is the \emph{Shannon entropy}, which is widely used in ecology, sociology, and information theory. 
+\end{example}
 
-  Working in mathematical ecology, Pielou \cite{pielouMathematicalEcology1977} gives a proposed set of criteria. 
-  For $\ell \in \N$, let $[\ell] = \{1, 2, \ldots, \ell\}$. 
-  Let $\ve_{I} \in \simplex{\ell}$ be the vector with $1$ in the indices specified by the multi-index $I \subseteq [\ell]$ and $0$ elsewhere. 
-  \begin{enumerate}
-    \item \textbf{Uniform maximizer.} ``\emph{Diversity should be maximized when all groups are present in equal proportions.}'' 
-    Formally, $\frac{1}{\ell} \ve_{[\ell]} = \argmax_{\vy \in \simplex{\ell}} \psi(\vy)$. 
-    \item \textbf{Monotone under group addition.} ``\emph{In two populations in which all groups are equally represented, the population with the greatest number of groups will be more diverse.}'' 
-    Formally, if $I\subset [\ell]$, then $\psi\paren{\ve_{I}/|I|} < \psi\paren{\ve_{[\ell]}/\ell}$.
-  \end{enumerate}
-  We will soon find that properties (1) and (2) are satisfied by a broad range of functions $\psi$. 
-  Pielou also offers a third axiom, which is more restrictive and essentially characterizes a single diversity measure; we discuss it in \Cref{sec:pielou-third-axiom}.
+\begin{example}[Simpson Index]
+  If $\phi_S(\vy) = \sum_{j = 1}^\ell y_j^2 - 1$, the resulting diversity measurement $\psi_S = -\phi_S$ is the \emph{Simpson index}, which is widely used in ecology and sociology.
+  The Simpson index has an attractive physical interpretation: it is the probability that two individuals chosen uniformly at random from the population belong to different demographic categories.
+\end{example}
 
-  Pielou's proposed axioms capture important intuitions, but they don't offer a recipe for constructing useful diversity functions $\psi$. 
-  A hint is offered by the group addition property; we can think of a population uniformly distributed across $\ell$ demographic categories as a weighted mixture of two populations, one with $\abs{I}$ categories and another with $\ell - \abs{I}$ categories.
-  One candidate generalization of the group addition property is therefore that \emph{diversity should increase on average when populations are mixed}. 
-  To formalize, let $\vy_1$ and $\vy_2$ be two population demographic vectors and let $\lambda \in (0,1)$ be a mixture weight (expressing, for example, the relative population sizes). 
-  Mixing the populations  we can form a new demographic vector $\vy = \lambda \vy_1 + (1-\lambda) \vy_2$.
-  Our mixing intuition suggests that if $\vy_1 \neq \vy_2$ then 
-  \begin{align}
-    \psi(\vy) > \lambda \psi(\vy_1) + (1-\lambda) \psi(\vy_2)\;. \label{eq:concave}
-  \end{align}
-  Here, the lefthand side gives the diversity of the mixed population $\vy$, while the righthand side gives the $\lambda$-weighted average diversity of the original populations $\vy_1$ and $\vy_2$.
-  \begin{dfn}\label{def:convexity}
-    Set $S\in \R^d$ is a \emph{convex set} if for all $\vy_1, \vy_2 \in S$ and $\lambda \in [0, 1]$, we have $\lambda \vy_1 + (1-\lambda) \vy_2 \in S$.
-    If $S$ is a convex set, then $\phi: S \rightarrow \R$ is a \emph{convex function} if for all $\vy_1, \vy_2 \in S$ and $\lambda \in [0, 1]$, we have $\phi(\lambda \vy_1 + (1-\lambda) \vy_2) \leq \lambda \phi(\vy_1) + (1-\lambda) \phi(\vy_2)$.
-    Function $\phi$ is \emph{strictly convex} if the above inequality is strict whenever $\vy_1 \neq \vy_2$ and $\lambda \in (0, 1)$. 
-    Function $\psi$ is (\emph{strictly}) \emph{concave} if $\phi = -\psi$ is (strictly) convex.
-  \end{dfn}
-  Throughout the remainder of this article, we state without proof the convexity of certain functions as well as general properties of convex functions. 
-  I recommend \cite{boydConvexOptimization2023} for a thorough treatment and proofs. 
+\begin{example}[A Bespoke Economic Equality Measurement]\label{example:equality}
+  For each $w \in 0,\ldots,w_\mathrm{max}$, define a demographic category as ``possessing exactly $w$ units of wealth.'' 
+  Then, entry $y_{iw}$ gives the proportion of individuals in location $i$ possessing wealth $w$.
+  Let $\mC$ be the  lower triangular matrix of ones: $\mC_{ij} = 1$ if $i \geq j$ and $\mC_{ij} = 0$ otherwise. 
+  Then $\mC \vy_i$ gives the cumulative distribution function of wealth at location $i$. 
+  Fix a target mean wealth $\bar{w} \in \N$. 
+  The function $\phi_{\mathrm{eq}}(\vy) = \norm{\mC (\vy - \ve_{\bar{w}})}_2^2$ is strictly convex, and so $f(\pop) = -\norm{\mC (\bar{\vy} - \ve_{\bar{w}})}_2^2$ is a concave population measurement.
+  This population measurement expresses a value on wealth equality; it is maximized when $\bar{\vy} = \ve_{\bar{w}}$, i.e. when all individuals in the population possess exactly $\bar{w}$ units of wealth.
+\end{example}
 
-  The simplex $\simplex{\ell}$ is a convex set, and so the notion of convexity applies to functions defined on $\simplex{\ell}$.
-  We will abuse notation slightly and refer to a population measurement $f(\cP) = -\phi(\bar{\vy})$ as (\emph{strictly}) \emph{concave} if $\phi$ is (strictly) convex.\footnote{Following convention, we will emphasize convexity of $\phi$ rather than concavity of $-\phi$.}
-  \Cref{eq:concave} says that $\psi$ should be a strictly concave function. 
+\begin{remark}
+  By definition, the economic equality measure of \Cref{example:equality} depends on the choice of target mean wealth $\bar{w}$.
+  As we will see later (\Cref{eq:information-equivalence}), segregation measures based on this diversity measure are independent of $\bar{w}$. 
+\end{remark}
 
-  \begin{example}[Shannon Entropy]
-    If $\phi_H(\vy) = \sum_{j = 1}^\ell y_j \log y_j$, the resulting diversity measurement $\psi_H = -\phi_H$ is the \emph{Shannon entropy}, which is widely used in ecology, sociology, and information theory. 
-  \end{example}
+\begin{thm} \label{thm:monotone-under-group-addition}
+  If $\phi: \simplex{\ell} \rightarrow \R$ is strictly convex, then the population measurement $f(\pop) = -\phi(\bar{\vy})$ satisfies Pielou's monotonicity under group addition property. 
+\end{thm}
 
-  \begin{example}[Simpson Index]
-    If $\phi_S(\vy) = \sum_{j = 1}^\ell y_j^2 - 1$, the resulting diversity measurement $\psi_S = -\phi_S$ is the \emph{Simpson index}, which is widely used in ecology and sociology.
-    The Simpson index has an attractive physical interpretation: it is the probability that two individuals chosen uniformly at random from the population belong to different demographic categories.
-  \end{example}
-
-  \begin{example}[A Bespoke Economic Equality Measurement]\label{example:equality}
-    For each $w \in 0,\ldots,w_\mathrm{max}$, define a demographic category as ``possessing exactly $w$ units of wealth.'' 
-    Then, entry $y_{iw}$ gives the proportion of individuals in location $i$ possessing wealth $w$.
-    Let $\mC$ be the  lower triangular matrix of ones: $\mC_{ij} = 1$ if $i \geq j$ and $\mC_{ij} = 0$ otherwise. 
-    Then $\mC \vy_i$ gives the cumulative distribution function of wealth at location $i$. 
-    Fix a target mean wealth $w \in \N$. 
-    The function $\phi_{\mathrm{eq}}(\vy) = \norm{\mC (\vy - \ve_w)}_2^2$ is strictly convex, and so $f(\cP) = -\norm{\mC (\bar{\vy} - \ve_w)}_2^2$ is a concave population measurement.
-    This population measurement expresses a value on wealth equality; it is maximized when $\bar{\vy} = \ve_w$, i.e. when all individuals in the population possess exactly $w$ units of wealth.
-  \end{example}
-
-  \begin{remark}
-    By definition, the economic equality measure of \Cref{example:equality} depends on the choice of target mean wealth $w$.
-    As we will see later (\Cref{eq:information-equivalence}), segregation measures based on this diversity measure are independent of $w$. 
-  \end{remark}
-
-  \begin{figure}
-    \centering
-    \includegraphics[width=0.24\textwidth]{fig/simplex-entropy.png}
-    \includegraphics[width=0.24\textwidth]{fig/simplex-cumulative.png}
-
-    \caption{
-      (Left): Isocontours of the Shannon entropy on the simplex $\simplex{3}$.
-      (Right): Isocontours of the economic equality measurement function from \Cref{example:equality} with possible wealth values $w \in \{1, 2, 3\}$ and mean wealth $\bar{w} = 2$. 
-      The subset of $\simplex{3}$ corresponding to distributions with mean wealth $\bar{w} = 2$ is given by the dashed line. 
-    }
+\begin{figure}
+  \centering
+  \includegraphics[width=0.24\textwidth]{fig/simplex-entropy.png}
+  \includegraphics[width=0.24\textwidth]{fig/simplex-cumulative.png}
+  
+  \caption{
+    (Left): Isocontours of the Shannon entropy on the simplex $\simplex{3}$.
+    (Right): Isocontours of the economic equality measurement function from \Cref{example:equality} with possible wealth values $w \in \{1, 2, 3\}$ and mean wealth $\bar{w} = 2$. 
+    The subset of $\simplex{3}$ corresponding to distributions with mean wealth $\bar{w} = 2$ is given by the dashed line. 
+    } \label{fig:isocontours}
   \end{figure}
+  
+  \Cref{fig:isocontours} shows the isocontours of the Shannon entropy (\cref{example:shannon}) and the economic equality measure (\cref{example:equality}) on the simplex $\simplex{3}$. 
+  \Cref{thm:monotone-under-group-addition}, both diversity measures satisfy monotonicity under group addition. 
+  However, we observe visually that only the Shannon entropy also satisfies the uniform maximizer property. 
+  One way to ensure the uniform maximizer property is to require that the diversity measure by symmetric. 
 
-  
-  
-  
-  \begin{thm} \label{thm:monotone-under-group-addition}
-    If $\phi: \simplex{\ell} \rightarrow \R$ is strictly convex, then the population measurement $f(\cP) = -\phi(\bar{\vy})$ satisfies Pielou's monotonicity under group addition property. 
-  \end{thm}
-  
   \begin{dfn}
     Function $\phi$ is \emph{symmetric} if for all $\vy \in \simplex{\ell}$ and all permutations $\sigma$ of $[\ell]$, we have $\phi(\vy) = \phi(\sigma(\vy))$, where $\sigma(\vy)$ is the vector obtained by permuting the entries of $\vy$ according to $\sigma$.
     Function $\phi: \simplex{\ell} \rightarrow \R$ is \emph{separable} if there exists a function $g: [0, 1] \rightarrow \R$ such that $\phi(\vy) = \sum_{j = 1}^{\ell} g(y_j)$ for all $\vy \in \simplex{\ell}$.
@@ -182,7 +185,7 @@ We close with some discussion about extending this framework in the direction of
   
 
   \begin{thm}\label{thm:diversity-axioms-1}
-    If $\phi: \simplex{\ell} \rightarrow \R$ is strictly convex and symmetric, then the population measurement $f(\cP) = -\phi(\bar{\vy})$ satisfies Pielou's uniform maximizer property.
+    If $\phi: \simplex{\ell} \rightarrow \R$ is strictly convex and symmetric, then the population measurement $f(\pop) = -\phi(\bar{\vy})$ satisfies Pielou's uniform maximizer property.
   \end{thm}
 
   \begin{remark}
@@ -201,28 +204,28 @@ We close with some discussion about extending this framework in the direction of
 Examining panels (b-d) of \Cref{fig:checkerboard}, we see that in panel (b) each location is exactly as diverse as the population as a whole ($\phi(\vy_i) = \phi(\vy)$ for each $i$), while in panels (c) and (d) each location is less diverse than the population as a whole.
 This suggests a simple quantitative segregation measure: the difference between global and mean local diversities. 
 \begin{dfn}
-  Given a concave diversity function $f = -\phi$,  the \emph{Jensen information} \cite{banerjeeOptimalityConditionalExpectation2005} of a population $\cP = (\cX, \mY, \mu) \in \Pops_{nd\ell}$ is
+  Given a concave diversity function $f = -\phi$,  the \emph{Jensen information} \cite{banerjeeOptimalityConditionalExpectation2005} of a population $\pop = (\cX, \mY, \mu) \in \Pops_{nd\ell}$ is
   \begin{align}
-    \info_{\phi}(\cP) = f(\bar{\vy}) - \sum_{i = 1}^n \mu_i f(\vy_i) = \sum_{i = 1}^n \mu_i \brackets{\phi(\vy_i) - \phi(\bar{\vy})} \;.  \label{eq:jensen-information}
+    \info_{\phi}(\pop) \eqdef f(\bar{\vy}) - \sum_{i = 1}^n \mu_i f(\vy_i) = \sum_{i = 1}^n \mu_i \brackets{\phi(\vy_i) - \phi(\bar{\vy})} \;.  \label{eq:jensen-information}
   \end{align}
 \end{dfn}
-Jensen's Inequality, a standard result in convex analysis, implies that $\info_{\phi}(\cP) \geq 0$ for all populations $\cP$ and convex functions $\phi$. 
-If $\phi$ is strictly convex, then $\info_{\phi}(\cP) = 0$ if and only if $\vy_i = \bar{\vy}$ for all $i \in [n]$, i.e. every location has the same demographic distribution as the population as a whole.
+Jensen's Inequality, a standard result in convex analysis, implies that $\info_{\phi}(\pop) \geq 0$ for all populations $\pop$ and convex functions $\phi$. 
+If $\phi$ is strictly convex, then $\info_{\phi}(\pop) = 0$ if and only if $\vy_i = \bar{\vy}$ for all $i \in [n]$, i.e. every location has the same demographic distribution as the population as a whole.
 
 Although the Jensen information \cref{eq:jensen-information} is nonnegative, individual terms of the form $\phi(\vy_i) - \phi(\bar{\vy}) $ can be negative. 
 This means that a given location's ``contribution to segregation'' cannot simply be interpretably measured from the terms in \cref{eq:jensen-information}.
 It would instead be convenient for analytic purposes to write the Jensen information as a sum of nonnegative contributions from each location: 
 \begin{align}
-  I_{\phi}(\cP) = \sum_{i = 1}^n \mu_i g(\vy_i, \bar{\vy}) \;, \label{eq:information-equivalence}
+  I_{\phi}(\pop) = \sum_{i = 1}^n \mu_i g(\vy_i, \bar{\vy}) \;, \label{eq:information-equivalence}
 \end{align}
 \begin{thm}
   Let $\phi: \simplex{\ell} \rightarrow \R$ be a strictly convex function which is differentiable on $\relint{\simplex{\ell}}$. 
-  Then, \cref{eq:information-equivalence} holds for some function $g:\relint{\simplex{\ell}} \times \simplex{\ell} \rightarrow \R$ and for any population $\cP \in \Pops_{nd\ell}$ if and only if $g$ is the \emph{Bregman divergence} induced by $\phi$: 
+  Then, \cref{eq:information-equivalence} holds for some function $g:\relint{\simplex{\ell}} \times \simplex{\ell} \rightarrow \R$ and for any population $\pop \in \Pops_{nd\ell}$ if and only if $g$ is the \emph{Bregman divergence} induced by $\phi$: 
   \begin{align}
-    g(\vy, \bar{\vy}) = \divergence{\phi}{\vy}{\bar{\vy}} = \phi(\vy) - \phi(\bar{\vy}) - \nabla \phi(\bar{\vy})^{\top} (\vy - \bar{\vy}) \;. \label{eq:bregman-divergence}
+    g(\vy, \bar{\vy}) = \divergence{\phi}{\vy}{\bar{\vy}} \eqdef \phi(\vy) - \phi(\bar{\vy}) - \nabla \phi(\bar{\vy})^{\top} (\vy - \bar{\vy}) \;. \label{eq:bregman-divergence}
   \end{align}
 \end{thm}
-The ``if'' direction of this theorem is a standard result by direct calculation, while the ``only if'' direction was recently proved by the present author \cite{chodrowEquivalenceInformationsCharacterizes2025b}. 
+The ``if'' direction of this theorem is a standard result by direct calculation, while the ``only if'' direction was recently shown by the present author \cite{chodrowEquivalenceInformationsCharacterizes2025b}. 
 The Bregman divergence is a measure of the difference between the value of $\phi$ at $\vy$ and the value of the linearization (first-order Taylor expansion) of $\phi$ around $\bar{\vy}$ evaluated at $\vy$.
 The Bregman divergence can be interpreted as a measure of dissimilarity of $\vy$ from $\bar{\vy}$.  
 It is always nonnegative and is zero if and only if $\vy = \bar{\vy}$.
@@ -237,26 +240,26 @@ A geometric view of \Cref{eq:information-equivalence} is given in \Cref{fig:simp
     \caption{
       Illustration of \Cref{eq:information-equivalence}. 
       Points $\vy_i$, $i = 1,\ldots, 5$ are sized according to their weight $\mu_i$ and are located in the simplex $\simplex{3}$ according to their demographic distribution.
-      The Jensen information $I_\phi(\cP)$ is the weighted mean of the Bregman divergences $\divergence{\phi}{\vy_i}{\bar{\vy}}$ from each point to the mean $\bar{\vy}$.
+      The Jensen information $I_\phi(\pop)$ is the weighted mean of the Bregman divergences $\divergence{\phi}{\vy_i}{\bar{\vy}}$ from each point to the mean $\bar{\vy}$.
       The visual intuition relies on the viewing the Bregman divergence as ``distance-like,'' though it should be remembered that it is not a metric. 
     }\label{fig:simplex-information}
   \end{figure}
 
-A property of Bregman divergences which will be useful later on is that they are \emph{locally} quadratic, in the sense that for any $\vy \in \interior{\simplex{\ell}}$ and $\vdelta$ in the tangent space to $\simplex{\ell}$ at $\vy$, we have
+A property of Bregman divergences which will be useful later on is that they are \emph{locally} quadratic, in the sense that for any $\vy \in \relint{\simplex{\ell}}$ and $\vdelta$ in the tangent space to $\simplex{\ell}$ at $\vy$, we have
 \begin{align}
   \divergence{\phi}{\vy + \vdelta}{\vy} = \frac{1}{2} \vdelta^{\top} \hess{\phi}(\vy) \vdelta + o(\norm{\vdelta}_2^2)  \;, \label{eq:local-quadratic}
 \end{align}
 where $\hess{\phi}(\vy)$ is the Hessian of $\phi$ at $\vy$ and $o(\norm{\vdelta}_2^2)$ is a term which is asymptotically smaller than $\norm{\vdelta}_2^2$ as $\norm{\vdelta}_2 \rightarrow 0$. 
-Importantly, since $\phi$ is strictly convex, the Hessian $\hess{\phi}(\vy)$ is positive definite for all $\vy \in \interior{\simplex{\ell}}$, and so the leading term in the expansion is a positive definite quadratic form.
+Importantly, since $\phi$ is strictly convex, the Hessian $\hess{\phi}(\vy)$ is positive definite for all $\vy \in \relint{\simplex{\ell}}$, and so the leading term in the expansion is a positive definite quadratic form.
 This in turn provides another sense in which Bregman divergences are distance-like, behaving locally like squared Mahalanobis distances with respect to the Hessian of $\phi$.
 
-\subsection{Properties of the Jensen Information as a Segregation Measure} \label{sec:segregation-properties}
+\subsection{The Jensen Information as a Segregation Measure} \label{sec:segregation-properties}
 
 In an influential article, Reardon and Firebaugh \cite{reardonMeasuresMultigroupSegregation2002} propose a set of desirable criteria for multigroup segregation measures, and assess a number of existing measures against these criteria with proofs and counterexamples. 
 \footnote{In the segregation measurement setting the mutual information is sometimes referred to as the \emph{Theil index} or the \emph{information theory index}.}
 Of the six measures evaluated by the authors, exactly two of these are Jensen informations, corresponding to scaled versions of the Shannon entropy $\psi_H$ and the Simpson index $\psi_S$.
 These two measurements come out on top in terms of satisfying the various criteria proposed by the authors.
-In particular, Reardon and Firebaugh ``...conclude that the [Shannon mutual information] is the most conceptually and mathematically satisfactory index...''. 
+In particular, Reardon and Firebaugh ``...conclude that the [Shannon mutual information corresponding to $\psi_H$] is the most conceptually and mathematically satisfactory index...''. 
 It turns out this isn't a coincidence: many desirable intuitions about segregation come ``for free'' from convexity. 
 
 Some of the Reardon and Firebaugh criteria are trivially satisfied by any Jensen information; for example, their \emph{size invariance} criterion expresses simply the desire that $f$ be a function only of the joint population \emph{distribution} and not absolute population counts. 
@@ -265,7 +268,7 @@ The intuition expressed by the \emph{exchanges} property is that when individual
 Let $\tilde{\ve}_j \in \R^{\ell}$ denote a standard basis vector in $\R^{\ell}$. 
 
 \begin{dfn}
-  An \emph{exchange} of magnitude $\epsilon$ of groups $a$ and $b$ between locations $i$ and $j$ is a map $\exc{a}{b}{i}{j}{\epsilon}: \Pops_{nd\ell} \rightarrow \Pops_{nd\ell}$ which takes a population $\cP = (\cX, \mY, \mu)$ and returns a new population $\cP' = (\cX, \mY', \mu')$ such that
+  An \emph{exchange} of magnitude $\epsilon$ of groups $a$ and $b$ between locations $i$ and $j$ is a map $\exc{a}{b}{i}{j}{\epsilon}: \Pops_{nd\ell} \rightarrow \Pops_{nd\ell}$ which takes a population $\pop = (\cX, \mY, \mu)$ and returns a new population $\pop' = (\cX, \mY', \mu')$ such that
   \begin{align*}
     \vmu'  &= \vmu, \\ 
     \vy_i' &= \vy_i + \frac{\epsilon}{\mu_i} (\tilde{\ve}_b - \tilde{\ve}_a), \\
@@ -274,7 +277,7 @@ Let $\tilde{\ve}_j \in \R^{\ell}$ denote a standard basis vector in $\R^{\ell}$.
 \end{dfn}
 
 \begin{dfn}
-  A segregation measurement $S$ satisfies the \emph{exchanges property of Reardon and Firebaugh} \cite{reardonMeasuresMultigroupSegregation2002} if whenever $y_{i a} < y_{j a}$ and $y_{i b} > y_{j b}$, we have $S(\exc{a}{b}{i}{j}{\epsilon}(\cP)) < S(\cP)$ for all $\epsilon$ sufficiently small. 
+  A segregation measurement $S$ satisfies the \emph{exchanges property of Reardon and Firebaugh} \cite{reardonMeasuresMultigroupSegregation2002} if whenever $y_{i a} < y_{j a}$ and $y_{i b} > y_{j b}$, we have $S(\exc{a}{b}{i}{j}{\epsilon}(\pop)) < S(\pop)$ for all $\epsilon$ sufficiently small. 
 \end{dfn}
 
 \begin{thm} \label{thm:exchanges}
@@ -284,22 +287,16 @@ Let $\tilde{\ve}_j \in \R^{\ell}$ denote a standard basis vector in $\R^{\ell}$.
 The two Jensen informations in Reardon and Firebaugh's study are also the only two segregation measures to satisfy what they call ``additive organizational decomposability,'' which expresses predictable behavior at multiple levels of spatial aggregation. 
 This property is expressed by \cref{eq:information-decomposition} in \Cref{sec:decomposition}. 
 
-
-
-
-
-
-
 \section{Spatial Analysis with the Jensen Information} \label{sec:spatial-analysis}
 
   Somewhat figuratively, the problem of ``spatializing'' a segregation measure is the problem of distinguishing the checkered segregation pattern of \Cref{fig:checkerboard}(c) and the monolithic segregation pattern of \Cref{fig:checkerboard}(d).
   There are several intuitions that can help us distinguish the two patterns: 
   \begin{itemize}
-    \item \textbf{Boundaries}: The checkered pattern displays more \emph{boundaries} between regions of different demographic composition. 
-    \item \textbf{Scale}: The checkered pattern has a smaller \emph{spatial scale} of segregation, in the sense that it is easier to spatially partition the population into homogeneous subpopulations.
     \item \textbf{Perturbation}: If we imagine adding random noise by randomly moving individuals to nearby locations, the checkered pattern will tend to become integrated more rapidly than the monolithic pattern. 
+    \item \textbf{Scale}: The checkered pattern has a smaller \emph{spatial scale} of segregation, in the sense that it is easier to spatially partition the population into homogeneous subpopulations.
+    \item \textbf{Boundaries}: The checkered pattern displays more \emph{boundaries} between regions of different demographic composition. 
   \end{itemize}
-  These intuitions are all entangled, but lead to different directions in terms of measurement. 
+  These intuitions are interrelated, but can motivate different directions for segregation measurement. 
 
   \subsection{A Perturbative View: Spatial Smoothing} \label{sec:smoothing}
 
@@ -307,19 +304,20 @@ This property is expressed by \cref{eq:information-decomposition} in \Cref{sec:d
       \centering 
       \includegraphics[width=0.5\textwidth]{fig/smoother-curves.png}
       \caption{
-        Illustration of spatial profile curves for segregation under Gaussian Radial Basis (RBF) smoothing as the bandwidth is varied. 
-        Cities display spatially ``coarser'' segregation when the value of the Jensen information remains close to its maximum value even as the smoothing bandwidth is increased. 
+        Illustration of a perturbative approach to spatial segregation measurement. 
+        We show spatial profile curves for segregation under Gaussian Radial Basis (RBF) smoothing as the bandwidth is varied. 
+        Cities display spatially ``coarser'' segregation (i.e. are more like panel (d) of \Cref{fig:checkerboard} than panel (c)) when the value of the Jensen information remains close to its maximum value even as the smoothing bandwidth is increased. 
       }
     \end{figure}
 
     One approach to spatialization, now standard in the quantitative sociology literature \cite{reardon3MeasuresSpatial2004}, is to preprocess the population data by applying a spatial smoothing kernel. 
-    To construct a spatialized measure of segregation that can address the checkerboard problem, we simply replace the original population $\cP = (\cX, \mY, \mu)$ with a smoothed population $\cP' = (\cX, \mY', \mu)$, where $\mY'$ is obtained by applying a smoothing kernel to the rows of $\mY$: for each location $i$, 
+    To construct a spatialized measure of segregation that can address the checkerboard problem, we simply replace the original population $\pop = (\cX, \mY, \mu)$ with a smoothed population $\pop' = (\cX, \mY', \mu)$, where $\mY'$ is obtained by applying a smoothing kernel to the rows of $\mY$: for each location $i$, 
     \begin{align*}
       \vy_i' = \frac{1}{Z_i} \sum_{j = 1}^n k(\vx_i, \vx_j) \vy_j \;,
     \end{align*}
     where $k: \R^d \times \R^d \rightarrow [0, \infty)$ is a smoothing kernel and $Z_i = \sum_{j = 1}^n k(\vx_i, \vx_j)$ is a normalization constant.
     Possible choices of the smoothing kernel $k$ include parametric kernels such as the Gaussian radial basis function $k(\vx_i, \vx_j) = \exp \paren{-\norm{\vx_i - \vx_j}_2^2 / 2\sigma^2}$, or data driven kernels based on road network distance or commute time between locations \cite{robertoSpatialProximityConnectivity2018}. 
-    After applying the smoothing kernel, any Jensen information may be used to measure segregation in the smoothed population $\cP'$. 
+    After applying the smoothing kernel, any Jensen information may be used to measure segregation in the smoothed population $\pop'$. 
     In their theoretical analysis of spatialized segregation measures, Reardon and O'Sullivan \cite{reardon3MeasuresSpatial2004} find that spatialized measures corresponding to Shannon and Simpson informations, again the only Jensen informations amongst their considered measures,  satisfy the most of their proposed criteria for spatialized segregation measures, largely by inheriting the favorable properties the general class of Jensen informations. 
     
 
@@ -338,8 +336,8 @@ This property is expressed by \cref{eq:information-decomposition} in \Cref{sec:d
     Another response to the MAUP is to consider the question of how a segregation measure should change as we modify the areal units under study. 
     We cannot change the areal units arbitrarily, but we can \emph{aggregate} them into larger units. 
     The behavior of a segregation measure under aggregation can be used to describe the scale of segregation in a population.
-    Returning to the grid-cities in \Cref{fig:checkerboard}, for example, the aspatial Shannon mutual information of both panels (c) and (d) is equal to $\log 2$. 
-    If we draw a vertical, north-south line down the center of each city, however, aggregating each into two east-west mega-regions, their behaviors contrast: since the two mega-regions in panel (c) have identical demographic compositions, the aspatial Shannon mutual information of the aggregated population drops to $0$, while in panel (d), the two mega-regions are still perfectly segregated, and the aspatial Shannon mutual information remains $\log 2$.
+    Returning to the grid-cities in \Cref{fig:checkerboard}, for example, the aspatial Shannon mutual information $I_{\phi_{H}}(\pop_{(c)}) = I_{\phi_{H}}(\pop_{(d)}) = \log 2$. 
+    If we draw a vertical, north-south line down the center of each city, however, aggregating each into two east-west mega-regions, their behaviors contrast: since the two mega-regions in panel (c) have identical demographic compositions, $I_{{\phi_{H}}}(\pop_{(c')})$ of the aggregated population drops to $0$, while in panel (d), the two mega-regions are still perfectly segregated, and $I_{{\phi_{H}}}(\pop_{(d')}) = I_{{\phi_{H}}}(\pop_{(d)})\log 2$.
     It is intuitive that in the case of panel (c), the segregation no longer visible \emph{between} mega-regions should now be seen \emph{within} the mega-regions. 
     This intuition comes ``for free'' with Jensen information measures via \Cref{eq:information-decomposition} below. 
     
@@ -354,7 +352,7 @@ This property is expressed by \cref{eq:information-decomposition} in \Cref{sec:d
 
   \begin{dfn}[Spatial Aggregation]
     Let $n' < n$ and let $\pi: [n] \rightarrow [n']$ be a surjective map.
-    A \emph{spatial aggregation} of a population $\cP = (\cX, \mY, \mu) \in \Pops_{nd\ell}$ by $\pi$ is a new population $\cP' = (\cX', \mY', \mu') \in \Pops_{n'd'\ell}$ such that 
+    A \emph{spatial aggregation} of a population $\pop = (\cX, \mY, \mu) \in \Pops_{nd\ell}$ by $\pi$ is a new population $\pop' = (\cX', \mY', \mu') \in \Pops_{n'd'\ell}$ such that 
     \begin{align*}
       \mu'_j &= \sum_{i \in \pi^{-1}(j)} \mu_i, &\quad 
       \vy'_j &= \frac{1}{\mu'_j} \sum_{i \in \pi^{-1}(j)} \mu_i \vy_i\;, &\quad
@@ -364,18 +362,18 @@ This property is expressed by \cref{eq:information-decomposition} in \Cref{sec:d
   \end{dfn}
 
   \begin{dfn}[Conditional Jensen Information]
-    Let $\cP'$ be a spatial aggregation of $\cP$ by $\pi$.
-    The \emph{conditional Jensen information} of $\cP$ given $\cP'$ is 
+    Let $\pop'$ be a spatial aggregation of $\pop$ by $\pi$.
+    The \emph{conditional Jensen information} of $\pop$ given $\pop'$ is 
     \begin{align}
-      I_{\psi}(\cP \mid \cP') = \sum_{j = 1}^{n'} \mu_j' \underbrace{\paren{\phi(\vy_j') - \frac{1}{\mu_j'}\sum_{i \in \pi^{-1}(j)} \mu_i \phi(\vy_i)}}_{I_\psi(\cP_j)}   \;, \label{eq:conditional-jensen-information}
+      I_{\psi}(\pop \mid \pop') = \sum_{j = 1}^{n'} \mu_j' \underbrace{\paren{\phi(\vy_j') - \frac{1}{\mu_j'}\sum_{i \in \pi^{-1}(j)} \mu_i \phi(\vy_i)}}_{I_\psi(\pop_j)}   \;, \label{eq:conditional-jensen-information}
     \end{align}
-    where $\cP_j$ is the subpopulation of $\cP$ corresponding to the $j$th aggregated unit.
+    where $\pop_j$ is the subpopulation of $\pop$ corresponding to the $j$th aggregated unit.
     The conditional Jensen information is the mean Jensen information of the subpopulations defined by the aggregated units, weighted by the population of each aggregated unit.
   \end{dfn}
-  It follows that $I_{\psi}(\cP \mid \cP') \geq 0$ for all populations $\cP$ and spatial aggregations $\cP'$, with equality if and only if the demographic distribution is uniform within each aggregated unit.
+  It follows that $I_{\psi}(\pop \mid \pop') \geq 0$ for all populations $\pop$ and spatial aggregations $\pop'$, with equality if and only if the demographic distribution is uniform within each aggregated unit.
   A direct calculation shows 
   \begin{align}
-    I_\psi(\cP) = I_\psi(\cP') + I_\psi(\cP \mid \cP') \;. \label{eq:information-decomposition}
+    I_\psi(\pop) = I_\psi(\pop') + I_\psi(\pop \mid \pop') \;. \label{eq:information-decomposition}
   \end{align}
   \Cref{eq:information-decomposition} is a form of decomposition into ``between aggregated unit'' information (first term) and ``within aggregated unit'' information (second term).
   Since both terms are nonnegative, it follows that aggregation cannot increase the Jensen information. 
@@ -411,7 +409,7 @@ This property is expressed by \cref{eq:information-decomposition} in \Cref{sec:d
       I_\phi(\Upsilon, \cR) = \int_{\cR} \paren{\phi(\Upsilon(\vx)) - \bar{\vy}(\cR)} d\mu(\vx) \;,
     \end{align}
     where $\bar{\vy}(\cR) = \int_{\cR} \Upsilon(\vx) d\mu(\vx)$ is the mean demographic distribution over the region $\cR$.
-    \begin{dfn}
+    \begin{dfn} \label{dfn:local-info}
       Let $\Upsilon: \cR \rightarrow \simplex{\ell}$ be a differentiable function representing the demographic distribution over a region $\cR \subset \R^d$, and let $\phi: \simplex{\ell} \rightarrow \R$ be a strictly convex function. 
       The \emph{local information} of $\Upsilon$ at a point $\vx \in \relint{\cR}$ is 
       \begin{align}
@@ -583,10 +581,10 @@ A proof is given is given by Chakrabarti and Chakrabarty \cite{chakrabartiShanno
 
 
 \begin{proof}[Proof of \Cref{thm:exchanges}]
-  The proof is by direct calculation. Let $\cP' = \exc{a}{b}{i}{j}{\epsilon}(\cP)$, and let $\vy_i'$ and $\vy_j'$ be the demographic vectors at locations $i$ and $j$ in $\cP'$. 
+  The proof is by direct calculation. Let $\pop' = \exc{a}{b}{i}{j}{\epsilon}(\pop)$, and let $\vy_i'$ and $\vy_j'$ be the demographic vectors at locations $i$ and $j$ in $\pop'$. 
   Since the global demographic vector $\bar{\vy}$ is unchanged by the exchange, we have
   \begin{align*}
-    I_{\psi}(\cP) - I_{\psi}(\cP') &= \sum_{i = 1}^n \brackets{\mu_i \psi(\vy_i) - \mu_i' \psi(\vy_i')} \\ 
+    I_{\psi}(\pop) - I_{\psi}(\pop') &= \sum_{i = 1}^n \brackets{\mu_i \psi(\vy_i) - \mu_i' \psi(\vy_i')} \\ 
     &= \mu_i\brackets{ \psi(\vy_i) - \psi(\vy_i')} + \mu_j\brackets{ \psi(\vy_j)  - \psi(\vy_j')} \\ 
     &= \mu_i \nabla \psi(\vy_i)^{\top} (\vy_i - \vy_i') \\ 
     & + \mu_j \nabla \psi(\vy_j)^{\top} (\vy_j - \vy_j') \\ 
@@ -595,11 +593,11 @@ A proof is given is given by Chakrabarti and Chakrabarty \cite{chakrabartiShanno
   since $\vy_k = \vy_k'$ for all $k \notin \{i, j\}$ and $\mu_k = \mu_k'$ for all $k$.
   Using now that $\vy_i - \vy_i' = \lambda_i (\tilde{\ve}_a - \tilde{\ve}_b)$ and $\vy_j - \vy_j' = \lambda_j (\tilde{\ve}_b - \tilde{\ve}_a)$ and ignoring the higher-order terms, we have 
   \begin{align*}
-    I_{\psi}(\cP) - I_{\psi}(\cP') &\simeq \mu_i \lambda_i \nabla \psi(\vy_i)^{\top} (\tilde{\ve}_a - \tilde{\ve}_b) + \mu_j \lambda_j \nabla \psi(\vy_j)^{\top} (\tilde{\ve}_b - \tilde{\ve}_a)\;. 
+    I_{\psi}(\pop) - I_{\psi}(\pop') &\simeq \mu_i \lambda_i \nabla \psi(\vy_i)^{\top} (\tilde{\ve}_a - \tilde{\ve}_b) + \mu_j \lambda_j \nabla \psi(\vy_j)^{\top} (\tilde{\ve}_b - \tilde{\ve}_a)\;. 
   \end{align*}
   By the separability assumption, we have $\nabla \psi(\vy) = (\phi'(y_1), \ldots, \phi'(y_{\ell}))^{\top}$, and so 
   \begin{align*}
-    I_{\psi}(\cP) - I_{\psi}(\cP') &\simeq \mu_i \lambda_i (\phi'(y_{ia}) - \phi'(y_{ib})) + \mu_j \lambda_j (\phi'(y_{jb}) - \phi'(y_{ja})) \\ 
+    I_{\psi}(\pop) - I_{\psi}(\pop') &\simeq \mu_i \lambda_i (\phi'(y_{ia}) - \phi'(y_{ib})) + \mu_j \lambda_j (\phi'(y_{jb}) - \phi'(y_{ja})) \\ 
     &= \epsilon (\phi'(y_{ia}) - \phi'(y_{ib}) + \phi'(y_{jb}) - \phi'(y_{ja})) \\ 
     &= \epsilon (\phi'(y_{ia}) - \phi'(y_{ja}) + \phi'(y_{jb}) - \phi'(y_{ib})) \\ 
     &> 0\;.
@@ -609,22 +607,4 @@ A proof is given is given by Chakrabarti and Chakrabarty \cite{chakrabartiShanno
 \end{proof}
 
 
-\section{Supplementary Figures}
 
-
-\begin{figure}
-  \centering
-  \includegraphics[width=0.5\textwidth]{fig/checkerboard-smoothed-and-trace.png}
-  \caption{
-    The smoothing bandwidth is $\smoothingBandwidth{}$ pixels. The mean local information of the checkerboard pattern is $\meanTraceChecker{}$, while the mean local information of the segregated pattern is $\meanTraceSeg{}$.
-    } \label{fig:checkerboard-smoothed}
-\end{figure}
-
-
-
-
-\section{Supplementary Exercises}
-
-\begin{exercise}
-    Give a heuristic justification for the convention that $0 \log 0 = 0$ by proving that $\lim_{x \rightarrow 0^+} x \log x = 0$.
-\end{exercise}
