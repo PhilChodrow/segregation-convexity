@@ -7,15 +7,10 @@
 \usepackage{libertinus}
 \usepackage[colorinlistoftodos]{todonotes}
 \usepackage{float}
-\usepackage{xr}
-\externaldocument{supplementary}
-
-
 
 \title{
     Measuring Diversity and Segregation with Convex Functions
 }
-
 
 \author{
   Philip S. Chodrow
@@ -24,11 +19,10 @@
     }
 }
 
-
-\input{macros.tex}
-\input{params/checkerboard-params.tex}
-\input{params/local-info-illustration.tex}
-\input{params/local-info-viz.tex}
+\input{macros}
+\input{params/checkerboard-params}
+\input{params/local-info-illustration}
+\input{params/local-info-viz}
 
 \renewcommand{\textfraction}{0.1} 
 \renewcommand{\floatpagefraction}{0.8}
@@ -36,13 +30,12 @@
 \begin{document}
 \maketitle
 
-\input{content.tex}
+\input{content}
 
+\bibliography{refs}
 
+\appendix 
+
+\input{supplementary-content}
 
 \end{document}
-
-%%% Local Variables:
-%%% mode: latex
-%%% TeX-master: t
-%%% End:

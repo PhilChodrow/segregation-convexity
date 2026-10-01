@@ -8,8 +8,8 @@
 %\RequirePackage[export]{adjustbox}
 %\RequirePackage{graphicx} 
 
-\RequirePackage{hyperref} 
-\hypersetup{pdfborder = 0 0 0}
+% \RequirePackage{hyperref} 
+
 
 %\RequirePackage{etoolbox} % for boolean expressions
 

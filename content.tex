@@ -112,12 +112,13 @@ We aim to construct intuitive, tractable population measurements that capture na
 A population is \emph{diverse} with respect to an attribute when it contains many categories of that attribute in roughly equal or equitable proportions.
 Diversity is usually considered to be a property of a population as a whole, without regard for spatial subdivisions. 
 Thus, a diversity measurement $f:\Pops_{nd\ell} \rightarrow \R$ is a function of the mean population demographic vector: $f(\pop) = \psi(\bar{\vy})$ for some function $\psi: \simplex{\ell} \rightarrow \R$.
-Working in mathematical ecology, Pielou \cite{pielouMathematicalEcology1977} gives a proposed set of criteria for diversity measurements: 
+
+Working in mathematical ecology, Pielou \cite{pielou1977mathematical} gives a proposed set of criteria for diversity measurements: 
 \begin{enumerate}
   \item \textbf{Uniform maximization.} ``\emph{Diversity should be maximized when all groups are present in equal proportions.}'' 
   Formally, $\frac{1}{\ell} \ve_{[\ell]} = \argmax_{\vy \in \simplex{\ell}} \psi(\vy)$. 
   \item \textbf{Monotonicity under group addition.} ``\emph{In two populations in which all groups are equally represented, the population with the greatest number of groups will be more diverse.}'' 
-  Formally, if $I\subset [\ell]$, then $\psi\paren{\ve_{I}/|I|} < \psi\paren{\ve_{[\ell]}/\ell}$.\footnote{Pielou also offers a third axiom, which is more restrictive and essentially characterizes a single diversity measure \cite{chakrabartiShannonEntropyAxiomatic2005}; we discuss it in \Cref{sec:pielou-third-axiom}.} 
+  Formally, if $I\subset [\ell]$, then $\psi\paren{\ve_{I}/|I|} < \psi\paren{\ve_{[\ell]}/\ell}$.\footnote{Pielou also offers a third axiom, which is more restrictive and essentially characterizes a single diversity measure \cite{chakrabarti2005shannon}; we discuss it in the supplementary material.} 
 \end{enumerate}
 Pielou's proposed axioms capture important intuitions, but they don't offer a recipe for constructing useful diversity functions $\psi$. 
 A hint is offered by monotonicity; we can think of a population uniformly distributed across $\ell$ demographic categories as a weighted mixture of two populations, one with $\abs{I}$ categories (where $I \subset [\ell]$) and another with $\ell - \abs{I}$ categories.
@@ -230,7 +231,7 @@ If $\phi$ is strictly convex, then $\info_{\phi}(\pop) = 0$ if and only if $\vy_
   \begin{align}
     I_{\phi_{\mathrm{eq}}}(\pop) = \sum_{i = 1}^n \mu_i \norm{\mC\vy_i}_2^2 - \norm{\mC\bar{\vy}}_2^2 \;. \label{eq:wealth-jensen-info}
   \end{align}
-  Importantly, this Jensen information is independent of the reference distribution $\vyref$. A derivation is provided in \Cref{sec:supplementary-proofs}. 
+  Importantly, this Jensen information is independent of the reference distribution $\vyref$. A derivation is provided in the supplementary material. 
 \end{example}
 
 Although the Jensen information in \cref{eq:jensen-information} is nonnegative, individual terms of the form $\phi(\vy_i) - \phi(\bar{\vy}) $ can be negative. 
@@ -327,7 +328,7 @@ Since the wealth equality function $\phi_{\mathrm{eq}}$ is not separable, \Cref{
     \item \textbf{Boundaries}: The checkered city (c) displays more \emph{boundaries} between regions of different demographic composition. 
   \end{itemize}
   These intuitions are interrelated, but can motivate different directions for segregation measurement. 
-  All of them may be viewed as attempts to construct spatially-aware segregation measurements which are robust to the Modifiable Areal Unit Problem (MAUP) \cite{openshawModifiableArealUnit1984}.
+  All of them may be viewed as attempts to construct spatially-aware segregation measurements which are robust to the Modifiable Areal Unit Problem (MAUP) \cite{openshaw1984modifiable}.
   In this section, we survey one approach in each direction and illustrate with computational experiments. 
   In each, we apply the Shannon mutual information $I_{\phi_H}$ as our segregation measurement to demographics of American cities using race and ethnicity data from the 2024 American Community Survey (ACS), which we aggregate into the same five categories used in \Cref{fig:dot-viz}. 
   
@@ -519,18 +520,6 @@ Since the wealth equality function $\phi_{\mathrm{eq}}$ is not separable, \Cref{
     Although several studies (e.g. \cite{hwangRacializedReshufflingUrban2022}) track changes in the value of segregation measures over time, this author is aware of relatively few works connecting mechanistic or agent-based modeling of segregation with empirical data; one notable exception is \cite{benensonSchellingSpatiallyExplicit2009}. 
     Further work towards measuring and modeling the dynamics of spatial segregation would be of considerable interest. 
   
-\section*{Acknowledgements}
-
-  I am grateful for support of the National Science Foundation's Division of Mathematical Sciences under award number DMS-2407058.
-
-\section*{Software and Supplementary Information}
-
-  Code sufficient to generate all figures from this article is available at \url{https://github.com/PhilChodrow/segregation-convexity}. 
-  I used VSCode Copilot Pro for assistance in code generation. 
-  Portions of the code were adapted from previous work \cite{chodrowStructureInformationSpatial2017}. 
 
   
 %\bibliographystyle{foo}
-\bibliography{refs}
-
-\appendix 

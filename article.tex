@@ -1,0 +1,57 @@
+\documentclass{style/notices}
+\usepackage{amsfonts,amssymb,amsmath,amscd,amsthm}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{cleveref}
+\usepackage{float}
+\usepackage{xr-hyper}
+\usepackage{hyperref}
+\hypersetup{pdfborder = 0 0 0}
+
+\title{
+    Measuring Diversity and Segregation with Convex Functions
+}
+
+\author{
+  Philip S. Chodrow
+  \affil{
+    Phil is an assistant professor of computer science at Middlebury College. His email address is \tt{pchodrow@middlebury.edu}.
+    }
+}
+
+
+\input{macros.tex}
+\input{params/checkerboard-params.tex}
+\input{params/local-info-illustration.tex}
+\input{params/local-info-viz.tex}
+
+\renewcommand{\textfraction}{0.1} 
+\renewcommand{\floatpagefraction}{0.8}
+
+\begin{document}
+
+\maketitle
+
+\input{content.tex}
+
+
+\section*{Acknowledgements}
+
+  I am grateful for support of the National Science Foundation's Division of Mathematical Sciences under award number DMS-2407058.
+
+\section*{Software and Supplementary Information}
+
+  Code sufficient to generate all figures from this article is available at \url{https://github.com/PhilChodrow/segregation-convexity}. 
+  I used VSCode Copilot Pro for assistance in code generation. 
+  Portions of the code were adapted from previous work \cite{chodrowStructureInformationSpatial2017}. 
+
+\bibliography{refs}
+
+
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

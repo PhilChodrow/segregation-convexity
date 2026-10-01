@@ -1,16 +1,21 @@
 \documentclass{style/notices}
 \usepackage{amsfonts,amssymb,amsmath,amscd,amsthm}
 \usepackage{graphicx}
-\usepackage{hyperref}
+\hypersetup{pdfborder = 0 0 0}
 \usepackage{cleveref}
-\usepackage{libertinus}
+% \usepackage{libertinus}
 \usepackage[colorinlistoftodos]{todonotes}
 \usepackage{float}
-
+\usepackage{xr-hyper}
+\usepackage{hyperref}
 \input{macros.tex}
 \input{params/checkerboard-params.tex}
 \input{params/local-info-illustration.tex}
 \input{params/local-info-viz.tex}
+
+\externaldocument{article}
+
+
 
 \renewcommand{\textfraction}{0.1} 
 \renewcommand{\floatpagefraction}{0.8}
@@ -29,105 +34,7 @@
 
 \maketitle
 
-
-\section{Pielou's Third Diversity Axiom} \label{sec:pielou-third-axiom}
-
-The last of Pielou's three axioms relates to the behavior of a diversity measure when multiple, independent demographic attributes are considered simultaneously.
-
-\textbf{Additivity under independent attributes.} ``\emph{In a multiple classification (two or more qualitative variates) where the classifications are independent, the total diversity should equal the sum of the respective diversities.}'' \cite{pielouMathematicalEcology1977}.  
-This statement can be formalized as follows, interpreting ``independent'' in the sense of probability distributions: suppose that, for a given population $\pop = \standardTriple \in \Pops_{nd\ell}$, there exist two other populations $\pop_1 = (\mX, \mU \in \R^{n\times \ell_1}, \mu)$ and $\pop_2 = (\mX, \mV \in \R^{n\times \ell_2}, \mu)$ such that $\ell = \ell_1\ell_2$ and a bijection $\alpha: [\ell_1] \times [\ell_2] \rightarrow [\ell]$ such that $y_{ij} = u_{i\alpha_1(j)} v_{i\alpha_2(j)}$ for all $i \in [n]$ and $j \in [\ell]$. 
-Then $f(\pop) = f(\pop_1) + f(\pop_2)$.
-
-This axiom, in combination with Pielou's other two and under the mild assumption of separability and continuity, is sufficient to uniquely characterize the Shannon entropy: 
-\begin{thm}
-    If a function $\psi: \simplex{\ell} \rightarrow \R$ is strictly concave, continuous\footnote{Convex functions are continuous on the interior of their domain, so this stipulation requires only that they are also continuous at the boundary.}, separable,  and satisfies the additivity under independent attributes property, then\footnote{Throughout this article, we will use the notation $\log$ to denote the natural logarithm, as well as the standard convention that $0 \log 0 = 0$.}  
-    \begin{align}
-      \psi(\vy) = -c\sum_{j = 1}^{\ell} y_j \log y_j \; \label{eq:shannon-entropy}
-    \end{align}
-    for some constant $c > 0$.
-\end{thm}
-A proof is given is given by Chakrabarti and Chakrabarty \cite{chakrabartiShannonEntropyAxiomatic2005}, where additivity under independent attributes corresponds to the authors' Axiom 4.\footnote{The authors' statement of their result also hypothesizes nonnegativity of $\phi$, but this hypothesis is not required by their proof.}
-
-
-
-
-
-
-
-\section{Supplementary Proofs} \label{sec:supplementary-proofs}
-
-\begin{proof}[Proof of \Cref{thm:monotone-under-group-addition}]
-    Let $\phi$ be strictly convex. 
-    We'll first assume that $\phi$ is nonnegative. 
-    Then, for any $I \subset [\ell]$ and $\lambda = \frac{|I|}{\ell}$, we have
-    \begin{align*}
-      \phi\paren{\frac{1}{\ell} \ve_{[\ell]} } 
-      & = \phi\paren{\lambda \frac{1}{|I|} \ve_{I} + (1-\lambda) \frac{1}{\ell - |I|} \ve_{[\ell]\setminus I}} \\
-      & < \lambda \phi\paren{\frac{1}{|I|} \ve_{I}} + (1-\lambda) \phi\paren{\frac{1}{\ell - |I|} \ve_{[\ell]\setminus I}} \\
-      & \leq \phi\paren{\frac{1}{|I|} \ve_{I}} \;,
-    \end{align*}
-    where the first inequality is by convexity and the second is by nonnegativity. 
-
-    Now, relax the requirement that $\phi$ is nonnegative. 
-    Since the simplex $\simplex{\ell}$ is compact (closed and bounded) and $\phi$ is continuous, $\phi$ attains a minimum on $\simplex{\ell}$, which we denote $\phi_{\min} = \min_{\vy \in \simplex{\ell}} \phi(\vy)$.
-    Then, let $\phi'(\vy) = \phi(\vy) - \phi_{\min}$, which is nonnegative and convex. 
-    The calculation above now goes through replacing $\phi$ with $\phi'$, proving that $\phi'\paren{\frac{1}{\ell} \ve_{[\ell]}} \leq \phi'\paren{\frac{1}{|I|} \ve_{I}}$  and therefore that $\phi\paren{\frac{1}{\ell} \ve_{[\ell]}} \leq \phi\paren{\frac{1}{|I|} \ve_{I}}$.
-  \end{proof}
-
-\begin{proof}[Proof of \Cref{thm:diversity-axioms-1}]
-      To demonstrate maximization under the uniform, for any vector $\vy \in \simplex{\ell}$,
-      \begin{align*}
-        \ve_{[\ell]}/\ell = \frac{1}{\abs{\cS}}\sum_{\sigma \in \cS} \sigma(\vy) \;,
-      \end{align*}
-      where $\cS$ is the set of all permutations of $[\ell]$.
-      It follows that 
-      \begin{align*}
-        \psi\paren{\frac{1}{\ell} \ve_{[\ell]}} 
-        & = \psi\paren{\frac{1}{\abs{\cS}}\sum_{\sigma \in \cS} \sigma(\vy)} \\
-        & < \frac{1}{\abs{\cS}}\sum_{\sigma \in \cS} \psi\paren{\sigma(\vy)} = \psi(\vy) \;,
-      \end{align*}
-      where the inequality is by an inductive application of strict concavity and the final equality is by symmetry.
-  \end{proof}
-
-
-\begin{proof}[Proof of \Cref{thm:exchanges}]
-  The proof is by direct calculation. Let $\pop' = \exc{a}{b}{i}{j}{\epsilon}(\pop)$, and let $\vy_i'$ and $\vy_j'$ be the demographic vectors at locations $i$ and $j$ in $\pop'$. 
-  Since the global demographic vector $\bar{\vy}$ is unchanged by the exchange, we have
-  \begin{align*}
-    I_{\phi}(\pop) - I_{\phi}(\pop') &= \sum_{i = 1}^n \brackets{\mu_i \phi(\vy_i) - \mu_i' \phi(\vy_i')} \\ 
-    &= \mu_i\brackets{ \phi(\vy_i) - \phi(\vy_i')} + \mu_j\brackets{ \phi(\vy_j)  - \phi(\vy_j')} \\ 
-    &= \mu_i \nabla \phi(\vy_i)^{\top} (\vy_i - \vy_i') \\ 
-    & + \mu_j \nabla \phi(\vy_j)^{\top} (\vy_j - \vy_j') \\ 
-    &+ o(\norm{\vy_i - \vy_i'}) + o(\norm{\vy_j - \vy_j'})\;. 
-  \end{align*}
-  since $\vy_k = \vy_k'$ for all $k \notin \{i, j\}$ and $\mu_k = \mu_k'$ for all $k$.
-  Using now that $\vy_i - \vy_i' = \lambda_i (\tilde{\ve}_a - \tilde{\ve}_b)$ and $\vy_j - \vy_j' = \lambda_j (\tilde{\ve}_b - \tilde{\ve}_a)$ and ignoring the higher-order terms, we have 
-  \begin{align*}
-    I_{\phi}(\pop) - I_{\phi}(\pop') &\simeq \mu_i \lambda_i \nabla \phi(\vy_i)^{\top} (\tilde{\ve}_a - \tilde{\ve}_b) + \mu_j \lambda_j \nabla \phi(\vy_j)^{\top} (\tilde{\ve}_b - \tilde{\ve}_a)\;. 
-  \end{align*}
-  By the separability assumption, we have $\nabla \phi(\vy) = (\phi'(y_1), \ldots, \phi'(y_{\ell}))^{\top}$, and so 
-  \begin{align*}
-    I_{\phi}(\pop) - I_{\phi}(\pop') &\simeq \mu_i \lambda_i (\phi'(y_{ia}) - \phi'(y_{ib})) + \mu_j \lambda_j (\phi'(y_{jb}) - \phi'(y_{ja})) \\ 
-    &= \epsilon (\phi'(y_{ia}) - \phi'(y_{ib}) + \phi'(y_{jb}) - \phi'(y_{ja})) \\ 
-    &= \epsilon (\phi'(y_{ia}) - \phi'(y_{ja}) + \phi'(y_{jb}) - \phi'(y_{ib})) \\ 
-    &> 0\;.
-  \end{align*}
-  The last line follows from the assumptions that $y_{ia} < y_{ja}$ and $y_{ib} > y_{jb}$, and the fact that, if $\phi$ is strictly convex, then $\phi'$ is strictly increasing, and so $\phi'(y_{ia}) - \phi'(y_{ja}) > 0$ and $\phi'(y_{jb}) - \phi'(y_{ib}) > 0$.
-  Choosing $\epsilon$ sufficiently small to justify the linear approximation completes the proof. 
-\end{proof}
-
-\begin{proof}[Derivation of \cref{eq:wealth-jensen-info}]
-  We have 
-  \begin{align*}
-    I_{\phi_{\mathrm{eq}}}(\pop) &= \sum_{i = 1}^n \mu_i \paren{\norm{\mC(\vy_i - \vyref)}^2 - \norm{\mC(\bar{\vy} - \vyref)}^2} \\
-    &= \sum_{i = 1}^n \mu_i \paren{\norm{\mC\vy_i}^2 - 2\inner{\mC\vy_i}{\mC\vyref} + \norm{\mC\vyref}^2} \\ 
-    &\quad - \sum_{i = 1}^n \mu_i\paren{\norm{\mC\bar{\vy}}^2 + 2\inner{\mC\bar{\vy}}{\mC\vyref} - \norm{\mC\vyref}^2} \\
-    &= \sum_{i = 1}^n \mu_i \paren{\norm{\mC\vy_i}^2 - 2\inner{\mC\vy_i}{\mC\vyref} - \norm{\mC\bar{\vy}}^2 + 2\inner{\mC\bar{\vy}}{\mC\vyref}} \\
-    &= \sum_{i = 1}^n \mu_i \paren{\norm{\mC\vy_i}^2 - 2\inner{\mC(\vy_i - \bar{\vy})}{\mC\vyref} - \norm{\mC\bar{\vy}}^2 }\\
-    &= \paren{\sum_{i = 1}^n \mu_i \norm{\mC\vy_i}^2} - \norm{\mC\bar{\vy}}^2 \;,
-  \end{align*}
-  since $\sum_{i = 1}^n \mu_i \vy_i = \bar{\vy}$. 
-\end{proof}
+\input{supplementary-content.tex}
 
 \bibliography{refs}
 
