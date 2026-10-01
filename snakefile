@@ -8,10 +8,12 @@ rule all:
 
 rule arXiv:
     input: 
+        "style/notices.cls",
         "main.tex",
         "macros.tex",
         "content.tex",
         "refs.bib",
+        "supplementary-content.tex",
         "fig/dot-diagram.png",
         "fig/dot-viz.png",
         "fig/simplex-isocontours.png",
@@ -24,17 +26,21 @@ rule arXiv:
     shell:
         """
         mkdir -p arXiv
+        mkdir -p arXiv/fig
+        mkdir -p arxiv/style
+        cp style/notices.cls arXiv/style/
         cp main.tex arXiv/
         cp macros.tex arXiv/
         cp content.tex arXiv/
+        cp supplementary-content.tex arXiv/
         cp refs.bib arXiv/
-        cp fig/dot-diagram.png arXiv/
-        cp fig/dot-viz.png arXiv/
-        cp fig/simplex-isocontours.png arXiv/
-        cp fig/simplex-jensen-info.png arXiv/
-        cp fig/smoother-curves.png arXiv/
-        cp fig/aggregation-viz.png arXiv/
-        cp fig/local-info.png arXiv/
+        cp fig/dot-diagram.png arXiv/fig/
+        cp fig/dot-viz.png arXiv/fig/
+        cp fig/simplex-isocontours.png arXiv/fig/
+        cp fig/simplex-jensen-info.png arXiv/fig/
+        cp fig/smoother-curves.png arXiv/fig/
+        cp fig/aggregation-viz.png arXiv/fig/
+        cp fig/local-info.png arXiv/fig/
         zip -r arXiv.zip arXiv
         rm -rf arXiv
         """

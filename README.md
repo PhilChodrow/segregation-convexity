@@ -11,10 +11,7 @@ Formalizing segregation as a local-to-global comparison of diversity measures, r
 We describe and computationally illustrate three ways to incorporate spatial structure into segregation measurements: spatial smoothing, aggregation, and local Jensen information. 
 We close with several suggestions for future work. 
 
-
-
-
-## Requirements
+## Code Requirements
 
 Running individual scripts in this repository requires a recent installation of `R` with packages `tidyverse`, `systemfonts`, `sf`, `patchwork`, `tidycensus`, `tigris`, `ggtern`, and `nleqslv`. Modification to `scripts/style.R` may be necessary for users whose systems do not include the `Avenir` font family. A recent installation of $\LaTeX$ and the `latexmk` utility are also required. 
 
