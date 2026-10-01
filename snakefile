@@ -1,16 +1,21 @@
 ALL_CITIES = ["Detroit",  "Atlanta",  "Milwaukee", "Washington_DC"]
 
+rule all: 
+    input:
+        "main.pdf",
+        "article.pdf",
+        "supplementary.pdf",
+
 rule arXiv:
     input: 
         "main.tex",
         "macros.tex",
         "content.tex",
         "refs.bib",
-        "params/checkerboard-params.tex",
-        "fig/checkerboard.png",
         "fig/dot-diagram.png",
         "fig/dot-viz.png",
         "fig/simplex-isocontours.png",
+        "fig/simplex-jensen-info.png",
         "fig/smoother-curves.png",
         "fig/aggregation-viz.png",
         "fig/local-info.png",
@@ -23,11 +28,10 @@ rule arXiv:
         cp macros.tex arXiv/
         cp content.tex arXiv/
         cp refs.bib arXiv/
-        cp params/checkerboard-params.tex arXiv/
-        cp fig/checkerboard.png arXiv/
         cp fig/dot-diagram.png arXiv/
         cp fig/dot-viz.png arXiv/
         cp fig/simplex-isocontours.png arXiv/
+        cp fig/simplex-jensen-info.png arXiv/
         cp fig/smoother-curves.png arXiv/
         cp fig/aggregation-viz.png arXiv/
         cp fig/local-info.png arXiv/
@@ -36,19 +40,13 @@ rule arXiv:
         """
         
 
-rule all: 
-    input:
-        "main.pdf",
-        "article.pdf",
-        "supplementary.pdf",
 
 rule paper: 
     input:
-        "params/checkerboard-params.tex",
-        "fig/checkerboard.png",
         "fig/dot-diagram.png",
         "fig/dot-viz.png",
         "fig/simplex-isocontours.png",
+        "fig/simplex-jensen-info.png",
         "fig/smoother-curves.png",
         "fig/aggregation-viz.png",
         "fig/local-info.png",
@@ -63,8 +61,6 @@ rule paper:
 
 rule article: 
     input:
-        "params/checkerboard-params.tex",
-        "fig/checkerboard.png",
         "fig/dot-diagram.png",
         "fig/dot-viz.png",
         "fig/simplex-isocontours.png",
@@ -184,25 +180,6 @@ rule grid_diagram:
         magick fig/dot-diagram.png -trim fig/dot-diagram.png
         """
 
-rule checkerboard_viz: 
-    input: 
-        "throughput/checkerboard/shapefile", 
-        "throughput/checkerboard/demographics.csv"
-    output: 
-        "fig/checkerboard.png"
-    shell: 
-        """
-        Rscript scripts/checkerboard-viz.R
-        magick fig/checkerboard.png -trim fig/checkerboard.png
-        """
-
-rule checkerboard_data:        
-    output:
-        directory("throughput/checkerboard/shapefile"),
-        "throughput/checkerboard/demographics.csv", 
-        "params/checkerboard-params.tex"
-    shell:
-        "Rscript scripts/checkerboard-data.R"
 
 rule clean: 
     shell: 

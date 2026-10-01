@@ -5,12 +5,12 @@ In the quantitative sociology literature, a prototypical segregation measurement
 My focus here will be on the common case of \emph{spatial} segregation, in which individuals are assumed to be located in space (often at their place of residence) and we seek to understand how strongly space separates individuals with different demographic traits. 
 
 To motivate this problem, as well as some of its complexities, \Cref{fig:dot-viz} visualizes the spatial distribution of racial demographics in Detroit, Michigan and Atlanta, Georgia.\footnote{
-  I obtained these and other data for this article from the 2024 American Community Survey (ACS) 5-year estimates, which are available from the U.S. Census Bureau at \url{https://data.census.gov/}.
-  I then aggregated the resulting table, which contains a total of 16 distinct ethic and racial categories, into the five supercategories shown in each visualization.
+  I obtained these data for this article from the 2024 American Community Survey (ACS) 5-year estimates, which are available from the U.S. Census Bureau at \url{https://data.census.gov/}.
+  I then aggregated the resulting table, which contains a total of 16 distinct ethnic and racial categories, into the five supercategories shown in each visualization.
   }
 Of these two cities, we may wish to measure how \emph{diverse} or \emph{segregated} each one is, and perhaps compare them. 
 To do so, we must decide how the \emph{spatial} distribution of individuals should factor into our analyses. 
-We must also grapple with the \emph{modifiable areal unit problem} (MAUP) \cite{openshaw1984modifiable}: our spatial information is typically mediated by the geographic units in which our data is reported, such as counties, county subdivisions (pictured here), census tracts, or block groups; changing these boundaries would alter our segregation measurements.
+We must also grapple with the \emph{modifiable areal unit problem} (MAUP) \cite{openshaw1984modifiable}: our spatial information is typically mediated by the geographic units in which our data are reported, such as counties, county subdivisions (pictured here), census tracts, or block groups; changing these boundaries would alter our segregation measurements.
 Since these units are often arbitrary from an analytical point of view, we must also aim to construct measures which are robust to the choice of spatial partitioning.
 
 \begin{figure}
@@ -36,7 +36,7 @@ Since these units are often arbitrary from an analytical point of view, we must 
 Questions such as these have been studied for a sufficiently long time that a review article in 1955 could already express frustration with the chaotic state of the methodology. 
 Commenting then on the methods available at the time, Duncan and Duncan \cite{duncanMethodologicalAnalysisSegregation1955} wrote: 
 \begin{enumerate}
-  \item \emph{The proposed indexes of segregation have a number of hitherto unnoticed interrelationships which can be mathematically demonstrated.} 
+  \item \emph{The proposed indices of segregation have a number of hitherto unnoticed interrelationships which can be mathematically demonstrated.} 
   \item \emph{Some of them have mathematical properties of which their proponents were unaware, and which lead to difficulties of interpretation.} 
   \item \emph{As a consequence, the status of the empirical work already done with segregation indices is questionable, and their validity for further research is undermined.} 
 \end{enumerate}
@@ -52,7 +52,7 @@ In this article, I present a mathematical perspective on segregation measurement
 I argue that sticking close to this literature not only enriches opportunities for conversation between mathematicians and social scientists but also provides a fertile ground for interesting, accessible mathematics and data analysis.
 This article is not a review and does not offer a comprehensive survey of segregation measurement; rather, it is an opinionated tour of one path through this constellation of topics. 
 \Cref{sec:preliminaries} further describes the segregation measurement problem and establishes notation. 
-In \Cref{sec:diversity-convexity} I discuss diversity and argue that common intuitions lead us naturally to the class of convex functions defined on the probability simplex.
+In \Cref{sec:diversity-convexity}, I discuss diversity and argue that common intuitions lead us naturally to the class of convex functions defined on the probability simplex.
 I then formulate segregation in \Cref{sec:segregation} as a \emph{Jensen information}: a comparison between global and average local diversity. 
 I formalize several properties from the quantitative sociology literature and show that the Jensen information satisfies these properties.
 In \Cref{sec:spatial-analysis}, I describe and illustrate three methods of conducting spatial analysis using the Jensen information: spatial smoothing, spatial information decomposition, and local Jensen information. 
@@ -69,7 +69,7 @@ In both, each block is demographically homogeneous.
 Furthermore, each city has exactly the same number of blocks dominated by the same groups.
 Any measure of segregation which depends only on cross-tabulations of blocks and demographics will assign the same value of segregation to both panels. 
 Such a measure may be called \emph{aspatial}. 
-City (c), however, is arguably less segregated than (d) due to the spatial structure of the blocks: in (c), each block is surrounded by unlike blocks, while in (d) like blocks cluster together, producing monolithic homogeneous regions.  
+The ``checkerboard'' pattern of City (c), however, is arguably less segregated than (d) due to the spatial structure of the blocks: in (c), each block is surrounded by unlike blocks, while in (d) like blocks cluster together, producing monolithic homogeneous regions.  
 The problem of constructing \emph{spatial} measures, which successfully distinguish between (c) and (d) in intuitive ways, has often been called the ``checkerboard problem'' in the quantitative sociology literature \cite{reardon3MeasuresSpatial2004}; as discussed above, such a measure must address the modifiable areal unit problem (MAUP) \cite{openshaw1984modifiable}.
 Summarizing, a \emph{diversity} measure can distinguish panels (a) and (b); an aspatial \emph{segregation} measure can distinguish both from panel (c), and a \emph{spatial} segregation measure can distinguish panel (d) from panel (c).
 
@@ -78,7 +78,7 @@ For $\ell \in \N$, let $[\ell] = \{1, 2, \ldots, \ell\}$.
 \begin{dfn} \label{def:simplex}
     For $\ell \in \N,$ the \emph{probability simplex} $\simplex{\ell}$ is the set 
     \begin{align*}
-        \simplex{\ell} \eqdef \braces{\vy \in \R^{\ell} : \sum_{j = 1}^{\ell} y_j = 1, y_j \geq 0 \text{ for all } j \in [\ell]}\;.
+        \simplex{\ell} \eqdef \braces{\vy \in \R^{\ell} : \sum_{j = 1}^{\ell} y_j = 1, y_j \geq 0 \text{ for all } j \in [\ell]}
     \end{align*}
     of probability vectors on $\ell$ elements.\footnote{
       Although it is sometimes common to refer to $\simplex{\ell}$ as an $(\ell-1)$-simplex (this being its manifold dimension), we write $\simplex{\ell}$ to emphasize its role as the set of probability distributions over $\ell$ categories.
@@ -91,7 +91,7 @@ Let $\relint{\simplex{\ell}}$ be the relative interior of $\simplex{\ell}$; if $
 \begin{dfn} \label{def:population}
     A \emph{population} $\pop$ with $n$ locations in $d$ spatial dimensions and $\ell$ demographic categories is a triple $\pop = \standardTriple$, where: 
     \begin{itemize}
-      \item $\mX \in \R^{n\times d}$ is a matrix with rows $\vx_i$, $i = 1, \ldots, n$.\footnote{In all our examples $n = 2$, though nothing in our results below formally depends on this. The matrix $\mX$ can be replaced by a discrete metric space $(\cX, d)$ where $d$ describes measurement of distance between locations; under this replacement all the remaining results in this work hold except for \Cref{dfn:local-info,thm:local-info}, which rely on smooth approximations to discrete functions in Euclidean space.} 
+      \item $\mX \in \R^{n\times d}$ is a matrix with rows $\vx_i$, $i = 1, \ldots, n$.\footnote{In all our examples $n = 2$, though nothing in our results below formally depends on this. The matrix $\mX$ can be replaced by a discrete metric space $(\cX, d)$ where $d$ describes generalized distance between locations; under this replacement all the remaining results in this work hold except for \Cref{dfn:local-info,thm:local-info}, which rely on smooth approximations to discrete functions in Euclidean space.} 
       \item $\mY \in \R^{n \times \ell}$ is a row-stochastic matrix: for each row $i$, $\vy_i \in \simplex{\ell}$.
       \item $\vmu \in \simplex{n}$.   
     \end{itemize}
@@ -165,7 +165,7 @@ Thus, our intuition expressed by \cref{eq:concave} is that a population diversit
 \end{example}
 
 \begin{example}[A Bespoke Measurement of Wealth Distribution] \label{example:equality}
-  For each $w \in 0,\ldots,w_\mathrm{max}$, let $y_{iw}$ gives the proportion of individuals in location $i$ possessing $w$ units of wealth.
+  For each $w \in 0,\ldots,w_\mathrm{max}$, let $y_{iw}$ give the proportion of individuals in location $i$ who possess $w$ units of wealth.
   Let $\mC$ be the  lower triangular matrix of ones: $\mC_{ij} = 1$ if $i \geq j$ and $\mC_{ij} = 0$ otherwise. 
   Then $\mC \vy_i$ gives the cumulative distribution vector of wealth at location $i$. 
   Fix a reference distribution vector $\vyref$. 
@@ -191,7 +191,7 @@ The uniform maximizer property, however, requires additional conditions.
   \begin{thm}\label{thm:diversity-axioms-1}
     If $\phi: \simplex{\ell} \rightarrow \R$ is strictly convex and symmetric, then the population measurement $f(\pop) = -\phi(\bar{\vy})$ satisfies Pielou's uniform maximization property.
   \end{thm}
-  Both the Shannon entropy given by $\phi_{H}$ and the Simpson index given by $\phi_{S}$ are separable, therefore symmetric, and thus also induce satisfy the uniform maximizer property, while the wealth measurement $\phi_{\mathrm{eq}}$ is not symmetric and does not.
+  Both the Shannon entropy given by $\phi_{H}$ and the Simpson index given by $\phi_{S}$ are separable, therefore symmetric, and thus also satisfy the uniform maximizer property, while the wealth measurement $\phi_{\mathrm{eq}}$ is not symmetric and does not.
   We can see these results visually in \Cref{fig:isocontours}. 
   
 
@@ -265,7 +265,7 @@ Finally, in the case of the wealth information \eqref{eq:wealth-jensen-info}, th
       Geometric illustration of \cref{eq:information-equivalence}. 
       Points $\vy_i$, $i = 1,\ldots, 5$ are sized according to their weight $\mu_i$ and are located in the simplex $\simplex{3}$ according to their demographic distribution.
       The Jensen information $\info_\phi(\pop)$ is the weighted mean of the Bregman divergences $\divergence{\phi}{\vy_i}{\bar{\vy}}$ of each point from the mean $\bar{\vy}$.
-      The visual intuition relies on the viewing the Bregman divergence as ``distance-like,'' though it should be remembered that it is not a metric. 
+      The visual intuition relies on viewing the Bregman divergence as ``distance-like,'' though it should be remembered that it is not a metric. 
     }\label{fig:simplex-information}
   \end{figure}
 
@@ -285,7 +285,7 @@ In an influential article, Reardon and Firebaugh \cite{reardonMeasuresMultigroup
 Of the six measures evaluated by the authors, exactly two of these are Jensen informations, corresponding to scaled versions of the Shannon mutual information\footnote{In the segregation measurement setting the mutual information is sometimes referred to as the \emph{Theil index} or the \emph{information theory index}.} induced by the negative Shannon entropy $\phi_H$ and the Simpson index induced by the square norm $\phi_S$.
 These two measurements come out on top in satisfying the various criteria proposed by the authors.
 In particular, Reardon and Firebaugh ``...\emph{conclude that the [Shannon mutual information] is the most conceptually and mathematically satisfactory index}...''. 
-It turns out this isn't a coincidence: many desirable intuitions about segregation follow from convexity.\footnote{Indeed, a set of relatively natural desiderata for a segregation measurement, including symmetry and a generalized motonicity property, is sufficient to uniquely determine the Shannon information \cite{frankelMeasuringSchoolSegregation2011}.} 
+It turns out this isn't a coincidence: many desirable intuitions about segregation follow from convexity.\footnote{Indeed, a set of relatively natural desiderata for a segregation measurement, including symmetry and a generalized monotonicity property, is sufficient to uniquely determine the Shannon information \cite{frankelMeasuringSchoolSegregation2011}.} 
 
 Some of the Reardon and Firebaugh criteria are trivially satisfied by any Jensen information; for example, their \emph{size invariance} criterion expresses simply the desire that $f$ be a function only of the joint population \emph{distribution} and not absolute population counts. 
 Here we'll state one of the nontrivial properties and give sufficient criteria for a Jensen information to satisfy it.
@@ -339,7 +339,7 @@ Since the wealth equality function $\phi_{\mathrm{eq}}$ is not separable, \Cref{
       \centering 
       \includegraphics[width=0.5\textwidth]{fig/smoother-curves.png}
       \caption{
-        Illustration of a perturbative approach to spatial segregation measurement for Atlanta Georgia, Detroit Michigan, and Washington D.C.
+        Illustration of a perturbative approach to spatial segregation measurement for Atlanta, Georgia; Detroit, Michigan; and Washington D.C.
         We show spatial profile curves for segregation under Gaussian Radial Basis (RBF) smoothing as the bandwidth $\gamma$ is varied. 
       }
       \label{fig:smoother}
@@ -356,10 +356,10 @@ Since the wealth equality function $\phi_{\mathrm{eq}}$ is not separable, \Cref{
     These smoothing kernels may be viewed as continuum limits of a random perturbation in which we randomly move individuals from their original location to nearby locations with probability proportional to the kernel value $k_\gamma$.
     Increasing the bandwidth parameter $\gamma$ will tend to reduce the impact of the Modifiable Areal Unit Problem (MAUP) by reducing sensitivity to the original areal units, but will also tend to reduce the measured segregation.
 
-    In their theoretical analysis of spatialized segregation measures, Reardon and O'Sullivan \cite{reardon3MeasuresSpatial2004} find that spatialized measures corresponding to Shannon and Simpson informations, again the only Jensen informations amongst their considered measures,  satisfy the most of their proposed criteria for spatialized segregation measures.  
-    This follows largely by inheriting the favorable properties the general class of Jensen informations. 
+    In their theoretical analysis of spatialized segregation measures, Reardon and O'Sullivan \cite{reardon3MeasuresSpatial2004} find that spatialized measures corresponding to Shannon and Simpson informations, again the only Jensen informations amongst their considered measures, satisfy the greatest number of their proposed criteria for spatialized segregation measures.  
+    This follows largely by inheriting the favorable properties of the general class of Jensen informations. 
 
-    \Cref{fig:smoother} illustrates the smoothing-based approach on three sample American cities: Atlanta Georgia, Detroit Michigan, and Washington D.C. 
+    \Cref{fig:smoother} illustrates the smoothing-based approach on three sample American cities: Atlanta, Georgia; Detroit, Michigan; and Washington D.C. 
     We apply Gaussian radial basis smoothing with varying bandwidth $\gamma$ prior to computing the information $\info_{\phi_H}$.  
     The results highlight the relative spatial scales of segregation in each city; whereas Atlanta and Detroit have relatively similar curves which display persistent segregation even at $\gamma = 5\;\mathrm{km}$, Washington D.C. displays a much more rapid drop in segregation as the smoothing bandwidth is increased.
     In this sense, we might say that Washington D.C. displays a ``finer'' scale of segregation than Atlanta or Detroit.
@@ -430,8 +430,8 @@ Since the wealth equality function $\phi_{\mathrm{eq}}$ is not separable, \Cref{
   
   \subsection{A Boundary-Based View: Local Information}
   
-    A third approach to spatializing segregation measurements follows the intuition that the checkerboard pattern of \Cref{fig:checkerboard}(c) has more \emph{boundaries} or \emph{transitions} between demographically contrasting regions than the monolithic pattern of \Cref{fig:checkerboard}(d).
-    To formalize this idea, it is convenient to to model the observed demographic distribution via a differentiable function $\Upsilon: \cR \rightarrow \simplex{\ell}$, where an open set $\cR \subset \R^d$ represents continuous geographic space and $\vy = \Upsilon(\vx)$ gives the demographic distribution at location $\vx \in \cR$.
+    A third approach to spatializing segregation measurements follows the intuition that the ``checkerboard'' pattern of \Cref{fig:checkerboard}(c) has more \emph{boundaries} or \emph{transitions} between demographically contrasting regions than the monolithic pattern of \Cref{fig:checkerboard}(d).
+    To formalize this idea, it is convenient to model the observed demographic distribution via a differentiable function $\Upsilon: \cR \rightarrow \simplex{\ell}$, where an open set $\cR \subset \R^d$ represents continuous geographic space and $\vy = \Upsilon(\vx)$ gives the demographic distribution at location $\vx \in \cR$.
     This modeling assumption is arguably unrealistic given the presence of sharp boundaries in real-world settled environments, but can be enforced in data analysis through the application of a differentiable smoothing kernel to the demographic data as described in \Cref{sec:smoothing}.
     Under this assumption, we can describe the sensitivity of demographics $\Upsilon$ to space through the Jacobian $\jacobian{\Upsilon}(\vx) \in \R^{\ell \times d}$.
     One could in principle define the ``boundariness'' of $\Upsilon$ at a point $\vx \in \relint{\cR}$ via a measure of the magnitude of the Jacobian such as $b(\vx) = \norm{\jacobian{\Upsilon}(\vx)}_1 \eqdef \sum_{i=1}^{\ell} \sum_{j=1}^d \abs{\partial \Upsilon_i / \partial x_j}$. 
@@ -470,7 +470,7 @@ Since the wealth equality function $\phi_{\mathrm{eq}}$ is not separable, \Cref{
     \begin{figure}
       \includegraphics[width=0.45\textwidth]{fig/local-info.png}
       \caption{Local information in Milwaukee, Wisconsin. A smoothing kernel of bandwidth 1km was applied to the original population data, and the local information was then computed at each block group using \cref{eq:local-info-trace} with local linear regression to estimate the spatial derivatives of $\Upsilon$.
-      The map contains 10,000 dots corresponding equal units of population within each demographic category and block group.}
+      The map contains 10,000 dots corresponding to equal units of population within each demographic category and block group.}
       \label{fig:local-info}
     \end{figure}
     
@@ -482,11 +482,11 @@ Since the wealth equality function $\phi_{\mathrm{eq}}$ is not separable, \Cref{
     % \end{align}
     % This expression can be viewed as a weighted Frobenius norm with weights given by the entries of the Hessian of the diversity function $\phi$.
     To compute the local information in practice, we must approximate the spatial derivatives of $\Upsilon$. 
-    I previously performed this task via smoothing followed by local least-squares approximation \cite{chodrowStructureInformationSpatial2017}, but other estimation methods may prove prferable.
+    I previously performed this task via smoothing followed by local least-squares approximation \cite{chodrowStructureInformationSpatial2017}, but other estimation methods may prove preferable.
 
     \Cref{fig:local-info} illustrates the local information racial segregation in Milwaukee, Wisconsin, again using the Shannon mutual information $I_{\phi_H}$ as the segregation measure.
-    The local information is large in along boundaries where the demographic distribution changes rapidly, and is small in the interior of regions of relatively homogeneous demographic composition. 
-    In previous work, I found that, the mean local information can be used in tandem with the Jensen information as a two-dimensional description of the structure of spatial segregation in a population \cite{chodrowStructureInformationSpatial2017}. 
+    The local information is large along boundaries where the demographic distribution changes rapidly, and is small in the interior of regions of relatively homogeneous demographic composition. 
+    In previous work, I found that the mean local information can be used in tandem with the Jensen information as a two-dimensional description of the structure of spatial segregation in a population \cite{chodrowStructureInformationSpatial2017}. 
 
     
 

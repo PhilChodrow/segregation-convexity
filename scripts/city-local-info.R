@@ -43,9 +43,4 @@ geo_with_info <- geo |>
 
 
 
-tex_macros <- paste0(
-    "\\newcommand{\\citySmootherBandwidth}{", round(smoother_bandwidth/1000, 0), "}\n" # km
-)
-cat(tex_macros, file = "params/local-info-viz.tex")
-
 saveRDS(geo_with_info, paste0("throughput/local-info/", city, ".rds"))
