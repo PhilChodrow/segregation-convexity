@@ -9,12 +9,13 @@
 \usepackage{xr-hyper}
 \usepackage{hyperref}
 \input{macros.tex}
-\input{params/checkerboard-params.tex}
-\input{params/local-info-illustration.tex}
-\input{params/local-info-viz.tex}
 
+\makeatletter
+\let\savedbibcite\bibcite
+\def\bibcite#1#2{} % Suppress bibcite while loading external aux
 \externaldocument{article}
-
+\let\bibcite\savedbibcite
+\makeatother
 
 
 \renewcommand{\textfraction}{0.1} 

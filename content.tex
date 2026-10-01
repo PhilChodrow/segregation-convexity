@@ -156,7 +156,7 @@ Thus, our intuition expressed by \cref{eq:concave} is that a population diversit
 
 
 \begin{example}[Shannon Entropy] \label{example:shannon}
-  If $\phi_H(\vy) = \sum_{j = 1}^\ell y_j \log y_j$, the resulting diversity measurement $\psi_H = -\phi_H$ is the \emph{Shannon entropy}, which is widely used in ecology, sociology, and information theory. 
+  If $\phi_H(\vy) = \sum_{j = 1}^\ell y_j \log y_j$, the resulting diversity measurement $\psi_H = -\phi_H$ is the \emph{Shannon entropy}, which is widely used in ecology, sociology, and information theory.\footnote{Throughout this article, we will use the notation $\log$ to denote the natural logarithm, as well as the standard convention that $0 \log 0 = 0$.} 
 \end{example}
 
 \begin{example}[Simpson Index] \label{example:simpson}
@@ -469,7 +469,7 @@ Since the wealth equality function $\phi_{\mathrm{eq}}$ is not separable, \Cref{
     
     \begin{figure}
       \includegraphics[width=0.45\textwidth]{fig/local-info.png}
-      \caption{Local information in Milwaukee, Wisconsin. A smoothing kernel of bandwidth \citySmootherBandwidth{} km was applied to the original population data, and the local information was then computed at each block group using \cref{eq:local-info-trace} with local linear regression to estimate the spatial derivatives of $\Upsilon$.
+      \caption{Local information in Milwaukee, Wisconsin. A smoothing kernel of bandwidth 1km was applied to the original population data, and the local information was then computed at each block group using \cref{eq:local-info-trace} with local linear regression to estimate the spatial derivatives of $\Upsilon$.
       The map contains 10,000 dots corresponding equal units of population within each demographic category and block group.}
       \label{fig:local-info}
     \end{figure}

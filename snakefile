@@ -1,18 +1,54 @@
 ALL_CITIES = ["Detroit",  "Atlanta",  "Milwaukee", "Washington_DC"]
 
+rule arXiv:
+    input: 
+        "main.tex",
+        "macros.tex",
+        "content.tex",
+        "refs.bib",
+        "params/checkerboard-params.tex",
+        "fig/checkerboard.png",
+        "fig/dot-diagram.png",
+        "fig/dot-viz.png",
+        "fig/simplex-isocontours.png",
+        "fig/smoother-curves.png",
+        "fig/aggregation-viz.png",
+        "fig/local-info.png",
+    output: 
+        "arXiv.zip"
+    shell:
+        """
+        mkdir -p arXiv
+        cp main.tex arXiv/
+        cp macros.tex arXiv/
+        cp content.tex arXiv/
+        cp refs.bib arXiv/
+        cp params/checkerboard-params.tex arXiv/
+        cp fig/checkerboard.png arXiv/
+        cp fig/dot-diagram.png arXiv/
+        cp fig/dot-viz.png arXiv/
+        cp fig/simplex-isocontours.png arXiv/
+        cp fig/smoother-curves.png arXiv/
+        cp fig/aggregation-viz.png arXiv/
+        cp fig/local-info.png arXiv/
+        zip -r arXiv.zip arXiv
+        rm -rf arXiv
+        """
+        
+
 rule all: 
     input:
-        "main.pdf"
+        "main.pdf",
+        "article.pdf",
+        "supplementary.pdf",
 
 rule paper: 
     input:
         "params/checkerboard-params.tex",
-        "params/local-info-illustration.tex",
-        "fig/checkerboard-smoothed-and-trace.png",
         "fig/checkerboard.png",
-        "fig/simplex-entropy.png", 
-        "fig/simplex-cumulative.png", 
-        "fig/simplex-jensen-info.png",
+        "fig/dot-diagram.png",
+        "fig/dot-viz.png",
+        "fig/simplex-isocontours.png",
         "fig/smoother-curves.png",
         "fig/aggregation-viz.png",
         "fig/local-info.png",
@@ -25,6 +61,30 @@ rule paper:
     shell: 
         "latexmk -pdf main.tex"
 
+rule article: 
+    input:
+        "params/checkerboard-params.tex",
+        "fig/checkerboard.png",
+        "fig/dot-diagram.png",
+        "fig/dot-viz.png",
+        "fig/simplex-isocontours.png",
+        "fig/simplex-jensen-info.png",
+        "fig/smoother-curves.png",
+        "fig/aggregation-viz.png",
+        "fig/local-info.png",
+        "article.tex",
+        "macros.tex",
+        "content.tex",
+        "refs.bib",
+    output: 
+        "article.pdf", 
+        "supplementary.pdf"
+    shell: 
+        """
+        latexmk -pdf article.tex
+        latexmk -pdf supplementary.tex
+        """
+
 # SPATIAL KERNEL SMOOTHING FIGURE
 EXAMPLE_CITIES = ["Atlanta", "Detroit", "Washington_DC"]
 rule smoother_fig: 
@@ -33,7 +93,10 @@ rule smoother_fig:
     output: 
         "fig/smoother-curves.png"
     shell: 
-        "Rscript scripts/smoother-curves.R {EXAMPLE_CITIES}"
+        """
+        Rscript scripts/smoother-curves.R {EXAMPLE_CITIES}
+        magick fig/smoother-curves.png -trim fig/smoother-curves.png
+        """
 
 rule dot_fig:
     input: 
@@ -41,8 +104,10 @@ rule dot_fig:
     output: 
         "fig/dot-viz.png"
     shell: 
-        "Rscript scripts/dot-viz.R {EXAMPLE_CITIES}"
-        "magick fig/dot-viz.png -trim fig/dot-viz.png"
+        """
+        Rscript scripts/dot-viz.R {EXAMPLE_CITIES}
+        magick fig/dot-viz.png -trim fig/dot-viz.png
+        """
 
 rule aggregation_fig: 
     input: 
@@ -50,7 +115,10 @@ rule aggregation_fig:
     output: 
         "fig/aggregation-viz.png"
     shell: 
-        "Rscript scripts/hclust-viz.R {EXAMPLE_CITIES}"
+        """
+        Rscript scripts/hclust-viz.R {EXAMPLE_CITIES}
+        magick fig/aggregation-viz.png -trim fig/aggregation-viz.png
+        """
 
 LOCAL_INFO_CITY = "Milwaukee"
 rule local_info_fig: 
@@ -59,11 +127,10 @@ rule local_info_fig:
     output: 
         "fig/local-info.png"
     shell: 
-        "Rscript scripts/city-local-info-viz.R {LOCAL_INFO_CITY}"
-
-
-
-
+        """
+        Rscript scripts/city-local-info-viz.R {LOCAL_INFO_CITY}
+        magick fig/local-info.png -trim fig/local-info.png
+        """
 
 rule city_local_info:
     input:
@@ -85,36 +152,37 @@ rule grab_city_data:
     shell:
         "Rscript scripts/grab-city-data.R {params.city}"
 
-
-rule checkerboard_local_info: 
-    input: 
-        "throughput/checkerboard/shapefile",
-        "throughput/checkerboard/demographics.csv"
-    output: 
-        "fig/checkerboard-smoothed-and-trace.png",
-        "params/local-info-illustration.tex"
-    shell: 
-        "Rscript scripts/checkerboard-local-info-viz.R"
-
-
 # various simplex diagrams
 rule simplex: 
     input: 
     output: 
-        "fig/{fig}.png"
+        "fig/simplex-isocontours.png"
     shell: 
-        "Rscript scripts/{wildcards.fig}.R"
-        "magick fig/simplex-entropy-cumulative.png -trim fig/simplex-entropy-cumulative.png"
-        "magick fig/simplex-isocontours.png -trim fig/simplex-isocontours.png"
-        "magick fig/simplex-jensen-info.png -trim fig/simplex-jensen-info.png"
+        """
+        Rscript scripts/simplex-isocontours.R
+        magick fig/simplex-isocontours.png -trim fig/simplex-isocontours.png
+        """
+
+rule simplex_info: 
+    input: 
+    output: 
+        "fig/simplex-jensen-info.png"
+    shell: 
+        """
+        Rscript scripts/simplex-jensen-info.R
+        magick fig/simplex-jensen-info.png -trim fig/simplex-jensen-info.png
+        """
+
 
 rule grid_diagram: 
     input: 
     output: 
         "fig/dot-diagram.png"
     shell: 
-        "Rscript scripts/grid-diagrams.R"
-        "magick fig/dot-diagram.png -trim fig/dot-diagram.png"
+        """
+        Rscript scripts/grid-diagrams.R
+        magick fig/dot-diagram.png -trim fig/dot-diagram.png
+        """
 
 rule checkerboard_viz: 
     input: 
@@ -123,7 +191,10 @@ rule checkerboard_viz:
     output: 
         "fig/checkerboard.png"
     shell: 
-        "Rscript scripts/checkerboard-viz.R"
+        """
+        Rscript scripts/checkerboard-viz.R
+        magick fig/checkerboard.png -trim fig/checkerboard.png
+        """
 
 rule checkerboard_data:        
     output:

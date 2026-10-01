@@ -3,6 +3,7 @@
 \usepackage{amsfonts,amssymb,amsmath,amscd,amsthm}
 \usepackage{graphicx}
 \usepackage{hyperref}
+\hypersetup{pdfborder = 0 0 0}
 \usepackage{cleveref}
 \usepackage{libertinus}
 \usepackage[colorinlistoftodos]{todonotes}
@@ -20,15 +21,20 @@
 }
 
 \input{macros}
-\input{params/checkerboard-params}
-\input{params/local-info-illustration}
-\input{params/local-info-viz}
+
+
+
 
 \renewcommand{\textfraction}{0.1} 
 \renewcommand{\floatpagefraction}{0.8}
 
+
+
 \begin{document}
 \maketitle
+
+
+\section{Introduction}
 
 \input{content}
 
