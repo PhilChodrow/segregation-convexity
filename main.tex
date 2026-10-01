@@ -6,7 +6,9 @@
 \usepackage{cleveref}
 \usepackage{libertinus}
 \usepackage[colorinlistoftodos]{todonotes}
-
+\usepackage{float}
+\usepackage{xr}
+\externaldocument{supplementary}
 
 
 
@@ -28,17 +30,15 @@
 \input{params/local-info-illustration.tex}
 \input{params/local-info-viz.tex}
 
+\renewcommand{\textfraction}{0.1} 
+\renewcommand{\floatpagefraction}{0.8}
+
 \begin{document}
-
-
-\listoftodos
-
-
 \maketitle
 
-% motivation around here
-
 \input{content.tex}
+
+
 
 \end{document}
 

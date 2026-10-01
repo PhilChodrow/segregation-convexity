@@ -35,6 +35,15 @@ rule smoother_fig:
     shell: 
         "Rscript scripts/smoother-curves.R {EXAMPLE_CITIES}"
 
+rule dot_fig:
+    input: 
+        expand("throughput/geo/{city}.rds", city=EXAMPLE_CITIES)
+    output: 
+        "fig/dot-viz.png"
+    shell: 
+        "Rscript scripts/dot-viz.R {EXAMPLE_CITIES}"
+        "magick fig/dot-viz.png -trim fig/dot-viz.png"
+
 rule aggregation_fig: 
     input: 
         expand("throughput/geo/{city}.rds", city=EXAMPLE_CITIES)
@@ -95,6 +104,17 @@ rule simplex:
         "fig/{fig}.png"
     shell: 
         "Rscript scripts/{wildcards.fig}.R"
+        "magick fig/simplex-entropy-cumulative.png -trim fig/simplex-entropy-cumulative.png"
+        "magick fig/simplex-isocontours.png -trim fig/simplex-isocontours.png"
+        "magick fig/simplex-jensen-info.png -trim fig/simplex-jensen-info.png"
+
+rule grid_diagram: 
+    input: 
+    output: 
+        "fig/dot-diagram.png"
+    shell: 
+        "Rscript scripts/grid-diagrams.R"
+        "magick fig/dot-diagram.png -trim fig/dot-diagram.png"
 
 rule checkerboard_viz: 
     input: 

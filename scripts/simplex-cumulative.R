@@ -87,7 +87,7 @@ r <- DF |>
           panel.grid.minor = element_line(color = "white"), 
           plot.margin = margin(0, 0.2, 0, 0.2), 
           tern.axis.line = element_line(color = darkgrey, size = 0.1), 
-          tern.axis.title = element_text(face = "italic"), 
+          tern.axis.title = element_text(face = "italic", size = 20), 
           tern.axis.title.L = element_text(hjust = -.05),
           tern.axis.title.R = element_text(hjust = 1)) + 
     labs(color = "Squared distance from target cumulative distribution") + 

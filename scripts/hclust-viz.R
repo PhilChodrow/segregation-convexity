@@ -62,7 +62,7 @@ for(i in 1:length(cities)){
             legend.text = element_text(size = 11), 
             plot.margin=unit(c(0,0,0,0),"mm")) + 
         font_theme + 
-        ggtitle(paste0(city, "\n(", nrow(geo), " blockgroups)")) +
+        ggtitle(paste0(city, "\n(", nrow(geo), " block groups)")) +
         scale_x_continuous(expand = c(0,0)) +
         scale_y_continuous(expand = c(0,0)) 
 
